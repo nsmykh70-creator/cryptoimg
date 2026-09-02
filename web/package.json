@@ -1,0 +1,10 @@
+{
+  "name": "cryptoimg",
+  "version": "5.2.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

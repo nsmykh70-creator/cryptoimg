@@ -1,0 +1,7 @@
+{
+  "name": "Cryptoimg Desktop",
+  "description": "Desktop cryptographic steganography application featuring AES-256-GCM, Argon2id, Reed-Solomon ECC, and crypto donations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

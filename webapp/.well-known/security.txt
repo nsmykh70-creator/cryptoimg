@@ -1,0 +1,4 @@
+Contact: https://cryptoimg.wasmer.app/
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: en, ru, de, fr, es, zh
+Policy: https://cryptoimg.wasmer.app/llms.txt
