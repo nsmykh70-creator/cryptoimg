@@ -24,3 +24,4 @@ android/capacitor-cordova-android-plugins/build/
 .freebuff/
 _copy_qrcode.js
 electron-buildrelease/
+webapp.zip
