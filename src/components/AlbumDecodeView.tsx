@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
   Layers, UploadCloud, Download, CheckCircle2, RefreshCw,
-  AlertTriangle, X, Clock, File
+  AlertTriangle, X, Clock, File, Eye, EyeOff
 } from 'lucide-react';
 import { Language } from '../types';
 import { TRANSLATIONS } from '../i18n/translations';
@@ -28,8 +28,11 @@ export const AlbumDecodeView: React.FC<AlbumDecodeViewProps> = ({ lang }) => {
   const t = TRANSLATIONS[lang];
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [authMode, setAuthMode] = useState<'pin' | 'passphrase'>('pin');
   const [pin, setPin] = useState('');
+  const [pinConfirm, setPinConfirm] = useState('');
   const [showPin, setShowPin] = useState(false);
+  const [showPinConfirm, setShowPinConfirm] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressPct, setProgressPct] = useState(0);
   const [progressStage, setProgressStage] = useState('');
@@ -131,9 +134,20 @@ export const AlbumDecodeView: React.FC<AlbumDecodeViewProps> = ({ lang }) => {
 
   // Handle multi-file selection — first file sequential, rest parallel
   const handleFiles = async (fileList: FileList) => {
-    if (!pin || pin.length < 8) {
-      alert(t.err_pin_len);
-      return;
+    if (authMode === 'pin') {
+      if (!pin || pin.length < 8 || pin.length > 11 || !/^\d+$/.test(pin)) {
+        alert(t.err_pin_len);
+        return;
+      }
+    } else {
+      if (!pin || pin.length < 12) {
+        alert('Passphrase must be at least 12 characters');
+        return;
+      }
+      if (pin !== pinConfirm) {
+        alert('Passphrases do not match');
+        return;
+      }
     }
 
     const files: File[] = Array.from(fileList);
@@ -265,23 +279,75 @@ export const AlbumDecodeView: React.FC<AlbumDecodeViewProps> = ({ lang }) => {
           <p className="text-xs text-slate-400 mt-0.5">Select all chunk images at once to extract the hidden file</p>
         </div>
 
-        {/* PIN */}
+        {/* Secret — PIN or Passphrase */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-300">{t.dec_step2_pin}</label>
-          <div className="relative">
-            <input
-              type={showPin ? 'text' : 'password'}
-              value={pin}
-              onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 11))}
-              placeholder={t.dec_pin_placeholder}
-              maxLength={11}
-              inputMode="numeric"
-              className="w-full bg-slate-950/80 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-2.5 text-xs text-slate-100 font-mono outline-none pr-8"
-            />
-            <button onClick={() => setShowPin(!showPin)} className="absolute right-2.5 top-3 text-slate-500 hover:text-slate-300 cursor-pointer">
-              {showPin ? '🙈' : '👁'}
-            </button>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold text-slate-300">{t.dec_step2_pin}</label>
+            <div className="flex items-center gap-1 bg-slate-950/80 rounded-lg border border-slate-800 p-0.5">
+              <button type="button" onClick={() => { setAuthMode('pin'); setPin(''); setPinConfirm(''); }}
+                className={`px-2 py-0.5 text-[10px] rounded-md font-medium transition-all cursor-pointer ${authMode === 'pin' ? 'bg-amber-600/30 text-amber-300 border border-amber-500/40' : 'text-slate-500 hover:text-slate-300'}`}>
+                PIN (Quick)
+              </button>
+              <button type="button" onClick={() => { setAuthMode('passphrase'); setPin(''); setPinConfirm(''); }}
+                className={`px-2 py-0.5 text-[10px] rounded-md font-medium transition-all cursor-pointer ${authMode === 'passphrase' ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40' : 'text-slate-500 hover:text-slate-300'}`}>
+                Passphrase (Secure)
+              </button>
+            </div>
           </div>
+
+          {authMode === 'pin' ? (
+            <div className="relative">
+              <input
+                type={showPin ? 'text' : 'password'}
+                value={pin}
+                onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                placeholder={t.dec_pin_placeholder}
+                maxLength={11}
+                inputMode="numeric"
+                className="w-full bg-slate-950/80 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-2.5 text-xs text-slate-100 font-mono outline-none pr-8"
+              />
+              <button onClick={() => setShowPin(!showPin)} className="absolute right-2.5 top-3 text-slate-500 hover:text-slate-300 cursor-pointer">
+                {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <div className="relative">
+                <input
+                  type={showPin ? 'text' : 'password'}
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  placeholder="Enter passphrase (12+ characters)"
+                  className="w-full bg-slate-950/80 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-2.5 text-xs text-slate-100 font-mono outline-none pr-8"
+                />
+                <button onClick={() => setShowPin(!showPin)} className="absolute right-2.5 top-3 text-slate-500 hover:text-slate-300 cursor-pointer">
+                  {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPinConfirm ? 'text' : 'password'}
+                  value={pinConfirm}
+                  onChange={(e) => setPinConfirm(e.target.value)}
+                  placeholder="Confirm passphrase"
+                  className="w-full bg-slate-950/80 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3 py-2.5 text-xs text-slate-100 font-mono outline-none pr-8"
+                />
+                <button onClick={() => setShowPinConfirm(!showPinConfirm)} className="absolute right-2.5 top-3 text-slate-500 hover:text-slate-300 cursor-pointer">
+                  {showPinConfirm ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              {pin.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full transition-all ${pin.length >= 20 ? 'bg-emerald-500 w-full' : pin.length >= 16 ? 'bg-green-500 w-3/4' : pin.length >= 12 ? 'bg-amber-500 w-1/2' : 'bg-red-500 w-1/4'}`} />
+                  </div>
+                  <span className="text-[9px] text-slate-500 w-16 text-right">
+                    {pin.length >= 20 ? 'Strong' : pin.length >= 16 ? 'Good' : pin.length >= 12 ? 'Fair' : 'Too short'}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Multi-file picker */}
@@ -295,7 +361,7 @@ export const AlbumDecodeView: React.FC<AlbumDecodeViewProps> = ({ lang }) => {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          disabled={isProcessing || !pin}
+          disabled={isProcessing || !pin || (authMode === 'passphrase' && pin !== pinConfirm)}
           className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
             isProcessing ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-amber-600 hover:bg-amber-500 text-white shadow-lg cursor-pointer'
           }`}
