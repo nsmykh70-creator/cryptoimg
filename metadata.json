@@ -1,7 +1,8 @@
 {
-  "name": "Cryptoimg Desktop",
-  "description": "Desktop cryptographic steganography application featuring AES-256-GCM, Argon2id, Reed-Solomon ECC, and crypto donations.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "Cryptoimg",
+  "description": "Client-side steganography tool. Hide files inside images using AES-256-GCM, Argon2id, and Reed-Solomon error correction. Web, Windows, and Android.",
+  "homepage": "https://cryptoimg.wasmer.app",
+  "repository": "https://github.com/nsmykh70-creator/cryptoimg",
+  "license": "MIT"
 }
 
