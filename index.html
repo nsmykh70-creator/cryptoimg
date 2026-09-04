@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <meta name="theme-color" content="#059669" />
-  <title>Cryptoimg тАФ Crypto-Steganography</title>
+  <title>Cryptoimg — Crypto-Steganography</title>
   <meta name="description" content="AES-256-GCM + Argon2id + Reed-Solomon steganography. Hide any file inside any image. 100% client-side." />
   <link rel="preload" href="./bundle.v2.js" as="script">
   <link rel="preload" href="./favicon.svg" as="image">
@@ -66,7 +66,7 @@
     .lp-tech-table td{color:var(--text-dim)}.lp-tech-table td:first-child{font-weight:600;color:var(--text)}
     .lp-faq{margin-bottom:20px}
     .lp-faq summary{font-weight:700;font-size:1.05rem;cursor:pointer;padding:18px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;list-style:none;display:flex;align-items:center;gap:12px}
-    .lp-faq summary::before{content:'тЦ╕';transition:transform .2s}
+    .lp-faq summary::before{content:'▸';transition:transform .2s}
     .lp-faq[open] summary::before{transform:rotate(90deg)}
     .lp-faq summary::-webkit-details-marker{display:none}
     .lp-faq .answer{padding:18px 24px;color:var(--text-dim);font-size:.95rem;border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;background:var(--bg)}
@@ -130,7 +130,7 @@
 <body>
   <nav class="lp-nav">
     <div class="lp-nav-inner">
-      <a class="lp-brand" href="#top"><div class="lp-brand-icon">ЁЯЫбя╕П</div>Cryptoimg</a>
+      <a class="lp-brand" href="#top"><div class="lp-brand-icon">🛡️</div>Cryptoimg</a>
       <div class="lp-nav-links">
         <a href="#how-it-works" data-i18n="nav_how">How It Works</a>
         <a href="#guide" data-i18n="nav_guide">Guide</a>
@@ -146,12 +146,12 @@
 
   <header class="lp-hero" id="top">
     <div class="lp-hero-inner">
-      <span class="lp-hero-badge" data-i18n="hero_badge">ЁЯФТ 100% Client-Side ┬╖ Zero Server</span>
+      <span class="lp-hero-badge" data-i18n="hero_badge">🔒 100% Client-Side · Zero Server</span>
       <h1 data-i18n-html="hero_title">Hide Any Secret<br>Inside <em>Any Image</em></h1>
       <p data-i18n="hero_sub">Steganography + AES-256-GCM encryption + Argon2id key derivation + Reed-Solomon error correction. Your data never leaves your browser.</p>
       <div class="lp-hero-actions">
-        <a class="lp-btn lp-btn-primary" href="#app" data-i18n="hero_app">ЁЯФР Open App</a>
-        <a class="lp-btn lp-btn-outline" href="#guide" data-i18n="hero_guide">ЁЯУЦ Read Guide</a>
+        <a class="lp-btn lp-btn-primary" href="#app" data-i18n="hero_app">🔐 Open App</a>
+        <a class="lp-btn lp-btn-outline" href="#guide" data-i18n="hero_guide">📖 Read Guide</a>
       </div>
     </div>
   </header>
@@ -164,23 +164,23 @@
         <p data-i18n="how_sub">Multi-layer protection: encryption makes data unreadable, steganography makes it invisible.</p>
       </div>
       <div class="lp-pipeline">
-        <div class="lp-pipeline-step"><span class="icon">ЁЯУД</span><span class="label" data-i18n="pipe_file">Your File</span></div>
-        <span class="lp-pipeline-arrow">тЖТ</span>
-        <div class="lp-pipeline-step"><span class="icon">ЁЯУж</span><span class="label" data-i18n="pipe_deflate">Deflate</span></div>
-        <span class="lp-pipeline-arrow">тЖТ</span>
-        <div class="lp-pipeline-step"><span class="icon">ЁЯФС</span><span class="label">AES-256-GCM</span></div>
-        <span class="lp-pipeline-arrow">тЖТ</span>
-        <div class="lp-pipeline-step"><span class="icon">ЁЯЫбя╕П</span><span class="label">Reed-Solomon</span></div>
-        <span class="lp-pipeline-arrow">тЖТ</span>
-        <div class="lp-pipeline-step"><span class="icon">ЁЯЦ╝я╕П</span><span class="label" data-i18n="pipe_stego">Stego Embed</span></div>
-        <span class="lp-pipeline-arrow">тЖТ</span>
-        <div class="lp-pipeline-step"><span class="icon">ЁЯУ╕</span><span class="label" data-i18n="pipe_output">Output Image</span></div>
+        <div class="lp-pipeline-step"><span class="icon">📄</span><span class="label" data-i18n="pipe_file">Your File</span></div>
+        <span class="lp-pipeline-arrow">→</span>
+        <div class="lp-pipeline-step"><span class="icon">📦</span><span class="label" data-i18n="pipe_deflate">Deflate</span></div>
+        <span class="lp-pipeline-arrow">→</span>
+        <div class="lp-pipeline-step"><span class="icon">🔑</span><span class="label">AES-256-GCM</span></div>
+        <span class="lp-pipeline-arrow">→</span>
+        <div class="lp-pipeline-step"><span class="icon">🛡️</span><span class="label">Reed-Solomon</span></div>
+        <span class="lp-pipeline-arrow">→</span>
+        <div class="lp-pipeline-step"><span class="icon">🖼️</span><span class="label" data-i18n="pipe_stego">Stego Embed</span></div>
+        <span class="lp-pipeline-arrow">→</span>
+        <div class="lp-pipeline-step"><span class="icon">📸</span><span class="label" data-i18n="pipe_output">Output Image</span></div>
       </div>
       <div class="lp-grid lp-grid-4">
-        <div class="lp-card"><div class="lp-card-icon">ЁЯУж</div><h3 data-i18n="c1_t">Deflate Compression</h3><p data-i18n="c1_d">Your file is compressed using DEFLATE before encryption, maximizing the amount of data that fits inside the image.</p></div>
-        <div class="lp-card"><div class="lp-card-icon">ЁЯФС</div><h3 data-i18n="c2_t">AES-256-GCM</h3><p data-i18n="c2_d">Authenticated encryption. Even if someone knows you used Cryptoimg, they cannot read the data without your PIN. Any tampering is detected via the auth tag.</p></div>
-        <div class="lp-card"><div class="lp-card-icon">ЁЯзм</div><h3 data-i18n="c3_t">Argon2id KDF</h3><p data-i18n="c3_d">Your PIN is transformed into a cryptographic key using Argon2id тАФ the winner of the Password Hashing Competition. Resistant to GPU and ASIC attacks.</p></div>
-        <div class="lp-card"><div class="lp-card-icon">ЁЯЫбя╕П</div><h3 data-i18n="c4_t">Reed-Solomon ECC</h3><p data-i18n="c4_d">Error-correcting codes protect against minor image modifications (re-saving, format conversion). The data survives JPEGтЖТPNG conversion.</p></div>
+        <div class="lp-card"><div class="lp-card-icon">📦</div><h3 data-i18n="c1_t">Deflate Compression</h3><p data-i18n="c1_d">Your file is compressed using DEFLATE before encryption, maximizing the amount of data that fits inside the image.</p></div>
+        <div class="lp-card"><div class="lp-card-icon">🔑</div><h3 data-i18n="c2_t">AES-256-GCM</h3><p data-i18n="c2_d">Authenticated encryption. Even if someone knows you used Cryptoimg, they cannot read the data without your PIN. Any tampering is detected via the auth tag.</p></div>
+        <div class="lp-card"><div class="lp-card-icon">🧬</div><h3 data-i18n="c3_t">Argon2id KDF</h3><p data-i18n="c3_d">Your PIN is transformed into a cryptographic key using Argon2id — the winner of the Password Hashing Competition. Resistant to GPU and ASIC attacks.</p></div>
+        <div class="lp-card"><div class="lp-card-icon">🛡️</div><h3 data-i18n="c4_t">Reed-Solomon ECC</h3><p data-i18n="c4_d">Error-correcting codes protect against minor image modifications (re-saving, format conversion). The data survives JPEG→PNG conversion.</p></div>
       </div>
     </div>
   </section>
@@ -192,21 +192,21 @@
         <h2 data-i18n="guide_title">Step-by-Step Guide</h2>
         <p data-i18n="guide_sub">Complete walkthrough for hiding and extracting files from images.</p>
       </div>
-      <h3 style="font-size:1.4rem;margin-bottom:24px;color:var(--primary)" data-i18n="enc_h">ЁЯФР How to Hide a File (Encode)</h3>
+      <h3 style="font-size:1.4rem;margin-bottom:24px;color:var(--primary)" data-i18n="enc_h">🔐 How to Hide a File (Encode)</h3>
       <div class="lp-steps">
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e1_t">Choose a Carrier Image</h3><p data-i18n="e1_d">Click <strong>"Select Image"</strong> and pick a PNG, WebP, or AVIF file. The app will auto-convert JPEGs to lossless format. Larger images = more storage capacity.</p></div></div>
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e2_t">Enter Your Secret Data</h3><p data-i18n="e2_d">Switch between <strong>Text</strong> and <strong>File</strong> tabs. For files, drag-and-drop or click to browse. The capacity indicator shows exactly how much data fits.</p></div></div>
-        <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e3_t">Set a PIN Code</h3><p data-i18n="e3_d">Enter and confirm your PIN. This is the <strong>only</strong> thing you need to remember. The PIN is never stored тАФ it is used to derive the encryption key via Argon2id + HKDF.</p></div></div>
+        <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e3_t">Set a PIN Code</h3><p data-i18n="e3_d">Enter and confirm your PIN. This is the <strong>only</strong> thing you need to remember. The PIN is never stored — it is used to derive the encryption key via Argon2id + HKDF.</p></div></div>
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e4_t">Choose Output Format</h3><p data-i18n="e4_d">Select <strong>PNG</strong> (lossless, best), <strong>WebP</strong> (smaller, still lossless), or <strong>AVIF</strong> (newest, smallest). All formats preserve the hidden data.</p></div></div>
-        <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e5_t">Encrypt & Download</h3><p data-i18n="e5_d">Click <strong>"Encrypt & Embed"</strong>. The app will: compress тЖТ encrypt тЖТ add error correction тЖТ embed in pixels тЖТ self-test verify тЖТ download the output image.</p></div></div>
+        <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="e5_t">Encrypt & Download</h3><p data-i18n="e5_d">Click <strong>"Encrypt & Embed"</strong>. The app will: compress → encrypt → add error correction → embed in pixels → self-test verify → download the output image.</p></div></div>
       </div>
-      <h3 style="font-size:1.4rem;margin-bottom:24px;margin-top:48px;color:var(--primary)" data-i18n="dec_h">ЁЯФУ How to Extract a File (Decode)</h3>
+      <h3 style="font-size:1.4rem;margin-bottom:24px;margin-top:48px;color:var(--primary)" data-i18n="dec_h">🔓 How to Extract a File (Decode)</h3>
       <div class="lp-steps">
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="d1_t">Upload the Stego Image</h3><p data-i18n="d1_d">Click <strong>"Select Image"</strong> and pick the image that contains hidden data.</p></div></div>
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="d2_t">Enter the PIN</h3><p data-i18n="d2_d">Type the same PIN you used when encoding. The app will run Argon2id to derive the decryption key.</p></div></div>
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="d3_t">Extract & Download</h3><p data-i18n="d3_d">Click <strong>"Extract"</strong>. The app reads the hidden data, verifies Reed-Solomon error correction, decrypts, decompresses, and shows the result.</p></div></div>
       </div>
-      <h3 style="font-size:1.4rem;margin-bottom:24px;margin-top:48px;color:var(--primary)" data-i18n="album_h">ЁЯУж Album Mode (Large Files)</h3>
+      <h3 style="font-size:1.4rem;margin-bottom:24px;margin-top:48px;color:var(--primary)" data-i18n="album_h">📦 Album Mode (Large Files)</h3>
       <div class="lp-steps">
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="a1_t">Select Multiple Carrier Images</h3><p data-i18n="a1_d">Switch to <strong>"Album Encode"</strong> tab. Select 2+ images. The app auto-calculates how many are needed.</p></div></div>
         <div class="lp-step"><div class="lp-step-num"></div><div class="lp-step-body"><h3 data-i18n="a2_t">File is Split Automatically</h3><p data-i18n="a2_d">Your file is split into chunks, each encrypted independently with its own salt/nonce. Empty images are skipped.</p></div></div>
@@ -226,13 +226,13 @@
         <table class="lp-tech-table">
           <thead><tr><th data-i18n="th_comp">Component</th><th data-i18n="th_algo">Algorithm</th><th data-i18n="th_purpose">Purpose</th></tr></thead>
           <tbody>
-            <tr><td data-i18n="t1_c">Key Derivation</td><td>Argon2id (65 MB, 3 iter, p=4)</td><td data-i18n="t1_p">PIN тЖТ 256-bit stego key + 256-bit enc key. GPU/ASIC resistant.</td></tr>
+            <tr><td data-i18n="t1_c">Key Derivation</td><td>Argon2id (65 MB, 3 iter, p=4)</td><td data-i18n="t1_p">PIN → 256-bit stego key + 256-bit enc key. GPU/ASIC resistant.</td></tr>
             <tr><td data-i18n="t2_c">Key Expansion</td><td>HKDF-SHA256</td><td data-i18n="t2_p">Derives separate stego key and encryption key from Argon2 output.</td></tr>
             <tr><td data-i18n="t3_c">Encryption</td><td>AES-256-GCM</td><td data-i18n="t3_p">Authenticated encryption. 12-byte nonce, 16-byte auth tag, AAD = envelope header.</td></tr>
             <tr><td data-i18n="t4_c">Compression</td><td>DEFLATE (raw)</td><td data-i18n="t4_p">Reduces payload size before encryption. ~50-70% ratio on text.</td></tr>
             <tr><td data-i18n="t5_c">Error Correction</td><td>Reed-Solomon (GF(2^8))</td><td data-i18n="t5_p">Protects against minor image modifications. 25% overhead.</td></tr>
             <tr><td data-i18n="t6_c">Steganography</td><td>LSB in variance-filtered pixels</td><td data-i18n="t6_p">Data hidden in least-significant bits. Designed to minimize statistical artifacts via adaptive pixel selection.</td></tr>
-            <tr><td data-i18n="t7_c">Self-Test</td><td>Extract тЖТ decrypt тЖТ verify MAGIC</td><td data-i18n="t7_p">After encoding, immediately verifies data can be extracted correctly.</td></tr>
+            <tr><td data-i18n="t7_c">Self-Test</td><td>Extract → decrypt → verify MAGIC</td><td data-i18n="t7_p">After encoding, immediately verifies data can be extracted correctly.</td></tr>
             <tr><td data-i18n="t8_c">Album Mode</td><td>CHUNK record + SHA-256</td><td data-i18n="t8_p">Splits large files across multiple images. Each chunk independently encrypted.</td></tr>
           </tbody>
         </table>
@@ -244,11 +244,11 @@
   <section class="lp-section" id="faq">
     <div class="lp-section-inner">
       <div class="lp-section-title"><h2 data-i18n="faq_title">Frequently Asked Questions</h2></div>
-      <details class="lp-faq"><summary data-i18n="faq1_q">Is the data really hidden?</summary><div class="answer" data-i18n="faq1_a">Cryptoimg uses LSB steganography in variance-filtered pixels with keyed permutation. The changes are designed to minimize statistical artifacts тАФ the modified pixels look visually identical to the original. Note: no steganography is truly undetectable against a determined adversary with the original image.</div></details>
+      <details class="lp-faq"><summary data-i18n="faq1_q">Is the data really hidden?</summary><div class="answer" data-i18n="faq1_a">Cryptoimg uses LSB steganography in variance-filtered pixels with keyed permutation. The changes are designed to minimize statistical artifacts — the modified pixels look visually identical to the original. Note: no steganography is truly undetectable against a determined adversary with the original image.</div></details>
       <details class="lp-faq"><summary data-i18n="faq2_q">What happens if I lose the PIN?</summary><div class="answer" data-i18n="faq2_a">The data is gone. The PIN is the only way to derive the decryption key. There is no backdoor or recovery mechanism. This is by design.</div></details>
       <details class="lp-faq"><summary data-i18n="faq3_q">Can I share the output on social media?</summary><div class="answer" data-i18n="faq3_a">Social media re-compresses images, which can destroy hidden data. Use lossless sharing: email, cloud storage, or direct file transfer.</div></details>
-      <details class="lp-faq"><summary data-i18n="faq4_q">How is this different from encryption?</summary><div class="answer" data-i18n="faq4_a">Encryption makes data unreadable. Steganography makes data invisible. Cryptoimg does both тАФ the image looks normal, there is nothing to intercept.</div></details>
-      <details class="lp-faq"><summary data-i18n="faq5_q">What image formats work?</summary><div class="answer" data-i18n="faq5_a">Input: any image (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-converts to lossless. Output: PNG, WebP, or AVIF тАФ all lossless.</div></details>
+      <details class="lp-faq"><summary data-i18n="faq4_q">How is this different from encryption?</summary><div class="answer" data-i18n="faq4_a">Encryption makes data unreadable. Steganography makes data invisible. Cryptoimg does both — the image looks normal, there is nothing to intercept.</div></details>
+      <details class="lp-faq"><summary data-i18n="faq5_q">What image formats work?</summary><div class="answer" data-i18n="faq5_a">Input: any image (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-converts to lossless. Output: PNG, WebP, or AVIF — all lossless.</div></details>
       <details class="lp-faq"><summary data-i18n="faq6_q">Is anything sent to a server?</summary><div class="answer" data-i18n="faq6_a">No. Everything happens in your browser using Web Crypto API, WebAssembly, and Canvas API. Zero network requests during encode/decode.</div></details>
     </div>
   </section>
@@ -267,21 +267,21 @@
   <!-- DONATE -->
   <section class="lp-donate" id="donate">
     <div class="lp-donate-inner">
-      <h2 data-i18n="don_title">тЭдя╕П Support Cryptoimg</h2>
+      <h2 data-i18n="don_title">❤️ Support Cryptoimg</h2>
       <p data-i18n="don_sub">If this tool is useful to you, consider supporting development.</p>
       <div class="donate-tabs" id="donateTabs">
-        <button class="donate-tab active" data-coin="btc" onclick="switchDonate('btc')"><span class="coin-dot coin-btc">тВ┐</span> Bitcoin</button>
-        <button class="donate-tab" data-coin="eth" onclick="switchDonate('eth')"><span class="coin-dot coin-eth">╬Ю</span> Ethereum</button>
-        <button class="donate-tab" data-coin="usdt" onclick="switchDonate('usdt')"><span class="coin-dot coin-usdt">тВо</span> USDT</button>
+        <button class="donate-tab active" data-coin="btc" onclick="switchDonate('btc')"><span class="coin-dot coin-btc">₿</span> Bitcoin</button>
+        <button class="donate-tab" data-coin="eth" onclick="switchDonate('eth')"><span class="coin-dot coin-eth">Ξ</span> Ethereum</button>
+        <button class="donate-tab" data-coin="usdt" onclick="switchDonate('usdt')"><span class="coin-dot coin-usdt">₮</span> USDT</button>
       </div>
       <div class="donate-pane active" id="pane-btc">
         <div class="donate-content">
           <div class="donate-qr" id="qr-btc"></div>
           <div class="donate-info">
-            <h3>ЁЯЯа Bitcoin <span class="donate-network">BTC</span></h3>
+            <h3>🟠 Bitcoin <span class="donate-network">BTC</span></h3>
             <div class="donate-addr-row">
               <div class="donate-addr" id="addr-btc">bc1q48l0mfvrs6kza5xs6qmzagatmpelrxzyqcwfhpz</div>
-              <button class="donate-copy" onclick="copyAddr('btc',this)" data-i18n="copy">ЁЯУЛ Copy</button>
+              <button class="donate-copy" onclick="copyAddr('btc',this)" data-i18n="copy">📋 Copy</button>
             </div>
           </div>
         </div>
@@ -290,10 +290,10 @@
         <div class="donate-content">
           <div class="donate-qr" id="qr-eth"></div>
           <div class="donate-info">
-            <h3>ЁЯФ╖ Ethereum <span class="donate-network">ETH / ERC-20</span></h3>
+            <h3>🔷 Ethereum <span class="donate-network">ETH / ERC-20</span></h3>
             <div class="donate-addr-row">
               <div class="donate-addr" id="addr-eth">0x6889fD4d5B688d6E3c4b7E5A2B1D6E8F2C3A4b5D</div>
-              <button class="donate-copy" onclick="copyAddr('eth',this)" data-i18n="copy">ЁЯУЛ Copy</button>
+              <button class="donate-copy" onclick="copyAddr('eth',this)" data-i18n="copy">📋 Copy</button>
             </div>
           </div>
         </div>
@@ -302,37 +302,37 @@
         <div class="donate-content">
           <div class="donate-qr" id="qr-usdt"></div>
           <div class="donate-info">
-            <h3>ЁЯЯв USDT <span class="donate-network">TRC-20</span></h3>
+            <h3>🟢 USDT <span class="donate-network">TRC-20</span></h3>
             <div class="donate-addr-row">
               <div class="donate-addr" id="addr-usdt">TN7V3t8EKjRTJFXNJwMjYpLqHGSQN7BTyv</div>
-              <button class="donate-copy" onclick="copyAddr('usdt',this)" data-i18n="copy">ЁЯУЛ Copy</button>
+              <button class="donate-copy" onclick="copyAddr('usdt',this)" data-i18n="copy">📋 Copy</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="donate-warning">тЪая╕П <span data-i18n="don_warn">Always verify the address after copying. Send only BTC to the Bitcoin address, ETH to the Ethereum address, and USDT (TRC-20) to the TRON address.</span></div>
+      <div class="donate-warning">⚠️ <span data-i18n="don_warn">Always verify the address after copying. Send only BTC to the Bitcoin address, ETH to the Ethereum address, and USDT (TRC-20) to the TRON address.</span></div>
     </div>
   </section>
 
   <footer class="lp-footer">
     <div class="dl-bar">
-      <span class="dl-bar-label" data-i18n="dl_title">тмЗя╕П Download</span>
+      <span class="dl-bar-label" data-i18n="dl_title">⬇️ Download</span>
       <div class="dl-bar-icons">
         <a class="dl-android-link" href="https://github.com/nsmykh70-creator/cryptoimg/releases/download/v5.1.0/Cryptoimg-Android-v1.0.apk" download title="Android APK">
           <svg viewBox="0 0 24 24" fill="#3DDC84"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V7H6v11zM3.5 7C2.67 7 2 7.67 2 8.5v7c0 .83.67 1.5 1.5 1.5S5 16.33 5 15.5v-7C5 7.67 4.33 7 3.5 7zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zM15.53 2.16l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>
           <span>Android</span>
         </a>
-        <a class="dl-win-link" href="https://github.com/nsmykh70-creator/cryptoimg/releases/tag/v5.1.0" target="_blank" title="Windows Installer">
+        <a class="dl-win-link" href="https://cryptoimg.wasmer.app/windows/Cryptoimg-5.1.0-x64.exe" target="_blank" title="Windows Installer">
           <svg viewBox="0 0 24 24"><path d="M0 0h11.5v11.5H0zM12.5 0H24v11.5H12.5zM0 12.5h11.5V24H0zM12.5 12.5H24V24H12.5z" fill="#3B82F6"/></svg>
           <span>Install</span>
         </a>
-        <a class="dl-win-link dl-portable" href="https://github.com/nsmykh70-creator/cryptoimg/releases/tag/v5.1.0" target="_blank" title="Windows Portable">
+        <a class="dl-win-link dl-portable" href="https://cryptoimg.wasmer.app/windows/Cryptoimg-Portable-v5.1.0.exe" target="_blank" title="Windows Portable">
           <svg viewBox="0 0 24 24"><path d="M0 0h11.5v11.5H0zM12.5 0H24v11.5H12.5zM0 12.5h11.5V24H0zM12.5 12.5H24V24H12.5z" fill="#3B82F6"/></svg>
           <span>Portable</span>
         </a>
       </div>
     </div>
-    <p>Cryptoimg v5.2 ┬╖ AES-256-GCM + Argon2id + Reed-Solomon</p>
+    <p>Cryptoimg v5.2 · AES-256-GCM + Argon2id + Reed-Solomon</p>
     <p style="margin-top:8px" data-i18n="footer_note">All processing happens locally. No data leaves your device.</p>
   </footer>
 
@@ -350,34 +350,34 @@
   const T={
     en:{
       nav_how:'How It Works',nav_guide:'Guide',nav_tech:'Technology',nav_faq:'FAQ',nav_launch:'Launch App',
-      hero_badge:'ЁЯФТ 100% Client-Side ┬╖ Zero Server',
+      hero_badge:'🔒 100% Client-Side · Zero Server',
       hero_title:'Hide Any Secret<br><em>Inside Any Image</em>',
       hero_sub:'Steganography + AES-256-GCM encryption + Argon2id key derivation + Reed-Solomon error correction. Your data never leaves your browser.',
-      hero_app:'ЁЯФР Open App',hero_guide:'ЁЯУЦ Read Guide',
+      hero_app:'🔐 Open App',hero_guide:'📖 Read Guide',
       how_title:'How Crypto-Steganography Works',how_sub:'Multi-layer protection: encryption makes data unreadable, steganography makes it invisible.',
       pipe_file:'Your File',pipe_deflate:'Deflate',pipe_stego:'Stego Embed',pipe_output:'Output Image',
       c1_t:'Deflate Compression',c1_d:'Your file is compressed using DEFLATE before encryption, maximizing the amount of data that fits inside the image.',
       c2_t:'AES-256-GCM',c2_d:'Authenticated encryption. Even if someone knows you used Cryptoimg, they cannot read the data without your PIN. Any tampering is detected via the auth tag.',
-      c3_t:'Argon2id KDF',c3_d:'Your PIN is transformed into a cryptographic key using Argon2id тАФ the winner of the Password Hashing Competition. Resistant to GPU and ASIC attacks.',
-      c4_t:'Reed-Solomon ECC',c4_d:'Error-correcting codes protect against minor image modifications (re-saving, format conversion). The data survives JPEGтЖТPNG conversion.',
+      c3_t:'Argon2id KDF',c3_d:'Your PIN is transformed into a cryptographic key using Argon2id — the winner of the Password Hashing Competition. Resistant to GPU and ASIC attacks.',
+      c4_t:'Reed-Solomon ECC',c4_d:'Error-correcting codes protect against minor image modifications (re-saving, format conversion). The data survives JPEG→PNG conversion.',
       guide_title:'Step-by-Step Guide',guide_sub:'Complete walkthrough for hiding and extracting files from images.',
-      enc_h:'ЁЯФР How to Hide a File (Encode)',
+      enc_h:'🔐 How to Hide a File (Encode)',
       e1_t:'Choose a Carrier Image',e1_d:'Click <strong>"Select Image"</strong> and pick a PNG, WebP, or AVIF file. The app will auto-convert JPEGs to lossless format. Larger images = more storage capacity.',
       e2_t:'Enter Your Secret Data',e2_d:'Switch between <strong>Text</strong> and <strong>File</strong> tabs. For files, drag-and-drop or click to browse. The capacity indicator shows exactly how much data fits.',
-      e3_t:'Set a PIN Code',e3_d:'Enter and confirm your PIN. This is the <strong>only</strong> thing you need to remember. The PIN is never stored тАФ is used to derive the encryption key via Argon2id + HKDF.',
+      e3_t:'Set a PIN Code',e3_d:'Enter and confirm your PIN. This is the <strong>only</strong> thing you need to remember. The PIN is never stored — is used to derive the encryption key via Argon2id + HKDF.',
       e4_t:'Choose Output Format',e4_d:'Select <strong>PNG</strong> (lossless, best), <strong>WebP</strong> (smaller, still lossless), or <strong>AVIF</strong> (newest, smallest). All formats preserve the hidden data.',
-      e5_t:'Encrypt & Download',e5_d:'Click <strong>"Encrypt & Embed"</strong>. The app will: compress тЖТ encrypt тЖТ add error correction тЖТ embed in pixels тЖТ self-test verify тЖТ download the output image.',
-      dec_h:'ЁЯФУ How to Extract a File (Decode)',
+      e5_t:'Encrypt & Download',e5_d:'Click <strong>"Encrypt & Embed"</strong>. The app will: compress → encrypt → add error correction → embed in pixels → self-test verify → download the output image.',
+      dec_h:'🔓 How to Extract a File (Decode)',
       d1_t:'Upload the Stego Image',d1_d:'Click <strong>"Select Image"</strong> and pick the image that contains hidden data.',
       d2_t:'Enter the PIN',d2_d:'Type the same PIN you used when encoding. The app will run Argon2id to derive the decryption key.',
       d3_t:'Extract & Download',d3_d:'Click <strong>"Extract"</strong>. The app reads the hidden data, verifies Reed-Solomon error correction, decrypts, decompresses, and shows the result.',
-      album_h:'ЁЯУж Album Mode (Large Files)',
+      album_h:'📦 Album Mode (Large Files)',
       a1_t:'Select Multiple Carrier Images',a1_d:'Switch to <strong>"Album Encode"</strong> tab. Select 2+ images. The app auto-calculates how many are needed.',
       a2_t:'File is Split Automatically',a2_d:'Your file is split into chunks, each encrypted independently with its own salt/nonce. Empty images are skipped.',
       a3_t:'Extract from Album',a3_d:'Switch to <strong>"Album Extract"</strong> tab, enter your PIN, select all album images at once. All chunks decoded in parallel and reassembled.',
       tech_title:'Technical Details',tech_sub:'The full cryptographic pipeline powering Cryptoimg.',
       th_comp:'Component',th_algo:'Algorithm',th_purpose:'Purpose',
-      t1_c:'Key Derivation',t1_p:'PIN тЖТ 256-bit stego key + 256-bit enc key. GPU/ASIC resistant.',
+      t1_c:'Key Derivation',t1_p:'PIN → 256-bit stego key + 256-bit enc key. GPU/ASIC resistant.',
       t2_c:'Key Expansion',t2_p:'Derives separate stego key and encryption key from Argon2 output.',
       t3_c:'Encryption',t3_p:'Authenticated encryption. 12-byte nonce, 16-byte auth tag, AAD = envelope header.',
       t4_c:'Compression',t4_p:'Reduces payload size before encryption. ~50-70% ratio on text.',
@@ -386,279 +386,279 @@
       t7_c:'Self-Test',t7_p:'After encoding, immediately verifies data can be extracted correctly.',
       t8_c:'Album Mode',t8_p:'Splits large files across multiple images. Each chunk independently encrypted.',
       faq_title:'Frequently Asked Questions',
-      faq1_q:'Is the data really hidden?',faq1_a:'Cryptoimg uses LSB steganography in variance-filtered pixels with keyed permutation. The changes are designed to minimize statistical artifacts тАФ the modified pixels look visually identical to the original. Note: no steganography is truly undetectable against a determined adversary with the original image.',
+      faq1_q:'Is the data really hidden?',faq1_a:'Cryptoimg uses LSB steganography in variance-filtered pixels with keyed permutation. The changes are designed to minimize statistical artifacts — the modified pixels look visually identical to the original. Note: no steganography is truly undetectable against a determined adversary with the original image.',
       faq2_q:'What happens if I lose the PIN?',faq2_a:'The data is gone. The PIN is the only way to derive the decryption key. There is no backdoor or recovery mechanism. This is by design.',
       faq3_q:'Can I share the output on social media?',faq3_a:'Social media re-compresses images, which can destroy hidden data. Use lossless sharing: email, cloud storage, or direct file transfer.',
-      faq4_q:'How is this different from encryption?',faq4_a:'Encryption makes data unreadable. Steganography makes data invisible. Cryptoimg does both тАФ the image looks normal, there is nothing to intercept.',
-      faq5_q:'What image formats work?',faq5_a:'Input: any image (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-converts to lossless. Output: PNG, WebP, or AVIF тАФ all lossless.',
+      faq4_q:'How is this different from encryption?',faq4_a:'Encryption makes data unreadable. Steganography makes data invisible. Cryptoimg does both — the image looks normal, there is nothing to intercept.',
+      faq5_q:'What image formats work?',faq5_a:'Input: any image (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-converts to lossless. Output: PNG, WebP, or AVIF — all lossless.',
       faq6_q:'Is anything sent to a server?',faq6_a:'No. Everything happens in your browser using Web Crypto API, WebAssembly, and Canvas API. Zero network requests during encode/decode.',
-      don_title:'тЭдя╕П Support Cryptoimg',don_sub:'If this tool is useful to you, consider supporting development.',
+      don_title:'❤️ Support Cryptoimg',don_sub:'If this tool is useful to you, consider supporting development.',
       don_warn:'Always verify the address after copying. Send only BTC to the Bitcoin address, ETH to the Ethereum address, and USDT (TRC-20) to the TRON address.',
-      copy:'ЁЯУЛ Copy',app_title:'Launch Cryptoimg',app_sub:'The full-featured steganography app runs right here in your browser.',
+      copy:'📋 Copy',app_title:'Launch Cryptoimg',app_sub:'The full-featured steganography app runs right here in your browser.',
       footer_note:'All processing happens locally. No data leaves your device.',
       nav_download:'Download',dl_title:'\u2B07\uFE0F Download Cryptoimg',dl_sub:'Get the native app for your platform or use the web version above.',
       dl_android:'Android',dl_android_desc:'Install the APK on any Android device (requires Android 7.0+).',dl_apk:'Download APK',
       dl_windows:'Windows',dl_windows_desc:'Full-featured desktop application for Windows 10/11.',dl_installer:'Installer',dl_portable:'Portable'
     },
     ru:{
-      nav_how:'╨Ъ╨░╨║ ╤А╨░╨▒╨╛╤В╨░╨╡╤В',nav_guide:'╨а╤Г╨║╨╛╨▓╨╛╨┤╤Б╤В╨▓╨╛',nav_tech:'╨в╨╡╤Е╨╜╨╛╨╗╨╛╨│╨╕╨╕',nav_faq:'FAQ',nav_launch:'╨Ч╨░╨┐╤Г╤Б╤В╨╕╤В╤М',
-      hero_badge:'ЁЯФТ 100% ╨╗╨╛╨║╨░╨╗╤М╨╜╨╛ ┬╖ ╨Э╤Г╨╗╨╡╨▓╨╛╨╣ ╤Б╨╡╤А╨▓╨╡╤А',
-      hero_title:'╨б╨┐╤А╤П╤З╤М╤В╨╡ ╤Б╨╡╨║╤А╨╡╤В╤Л<br><em>╨▓ ╨╗╤О╨▒╨╛╨╝ ╤Д╨╛╤В╨╛</em>',
-      hero_sub:'╨б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П + AES-256-GCM + Argon2id + ╨║╨╛╨┤ ╨а╨╕╨┤╨░-╨б╨╛╨╗╨╛╨╝╨╛╨╜╨░. ╨Ф╨░╨╜╨╜╤Л╨╡ ╨╜╨╡ ╨┐╨╛╨║╨╕╨┤╨░╤О╤В ╨▓╨░╤И ╨▒╤А╨░╤Г╨╖╨╡╤А.',
-      hero_app:'ЁЯФР ╨Ю╤В╨║╤А╤Л╤В╤М ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡',hero_guide:'ЁЯУЦ ╨а╤Г╨║╨╛╨▓╨╛╨┤╤Б╤В╨▓╨╛',
-      how_title:'╨Ъ╨░╨║ ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨║╤А╨╕╨┐╤В╨╛-╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П',how_sub:'╨Ь╨╜╨╛╨│╨╛╤Г╤А╨╛╨▓╨╜╨╡╨▓╨░╤П ╨╖╨░╤Й╨╕╤В╨░: ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╡╨╗╨░╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡ ╨╜╨╡╤З╨╕╤В╨░╨╡╨╝╤Л╨╝╨╕, ╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П тАФ ╨╜╨╡╨▓╨╕╨┤╨╕╨╝╤Л╨╝╨╕.',
-      pipe_file:'╨Т╨░╤И ╤Д╨░╨╣╨╗',pipe_deflate:'Deflate',pipe_stego:'╨Т╤Б╤В╤А╨░╨╕╨▓╨░╨╜╨╕╨╡',pipe_output:'╨Ш╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡',
-      c1_t:'╨б╨╢╨░╤В╨╕╨╡ Deflate',c1_d:'╨д╨░╨╣╨╗ ╤Б╨╢╨╕╨╝╨░╨╡╤В╤Б╤П DEFLATE ╨┐╨╡╤А╨╡╨┤ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡╨╝, ╤Г╨▓╨╡╨╗╨╕╤З╨╕╨▓╨░╤П ╨╛╨▒╤К╤С╨╝ ╨┤╨░╨╜╨╜╤Л╤Е, ╨▓╨╝╨╡╤Й╨░╤О╤Й╨╕╤Е╤Б╤П ╨▓ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡.',
-      c2_t:'AES-256-GCM',c2_d:'╨Р╤Г╤В╨╡╨╜╤В╨╕╤Д╨╕╤Ж╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨╡ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡. ╨Ф╨░╨╢╨╡ ╨╡╤Б╨╗╨╕ ╨║╤В╨╛-╤В╨╛ ╨╖╨╜╨░╨╡╤В ╨╛ Cryptoimg, ╨▒╨╡╨╖ ╨Я╨Ш╨Э-╨║╨╛╨┤╨░ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╜╨╡ ╨┐╤А╨╛╤З╨╕╤В╨░╤В╤М. ╨Ы╤О╨▒╨░╤П ╨┐╨╛╨┤╨┤╨╡╨╗╨║╨░ ╨╛╨▒╨╜╨░╤А╤Г╨╢╨╕╨▓╨░╨╡╤В╤Б╤П ╤З╨╡╤А╨╡╨╖ auth tag.',
-      c3_t:'Argon2id KDF',c3_d:'╨Я╨Ш╨Э-╨║╨╛╨┤ ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╤Г╨╡╤В╤Б╤П ╨▓ ╨║╤А╨╕╨┐╤В╨╛╨│╤А╨░╤Д╨╕╤З╨╡╤Б╨║╨╕╨╣ ╨║╨╗╤О╤З ╤З╨╡╤А╨╡╨╖ Argon2id тАФ ╨┐╨╛╨▒╨╡╨┤╨╕╤В╨╡╨╗╤М Password Hashing Competition. ╨г╤Б╤В╨╛╨╣╤З╨╕╨▓ ╨║ GPU/ASIC ╨░╤В╨░╨║╨░╨╝.',
-      c4_t:'╨Ъ╨╛╨┤ ╨а╨╕╨┤╨░-╨б╨╛╨╗╨╛╨╝╨╛╨╜╨░',c4_d:'╨Ъ╨╛╨┤╤Л ╨║╨╛╤А╤А╨╡╨║╤Ж╨╕╨╕ ╨╛╤И╨╕╨▒╨╛╨║ ╨╖╨░╤Й╨╕╤Й╨░╤О╤В ╨╛╤В ╨╜╨╡╨╖╨╜╨░╤З╨╕╤В╨╡╨╗╤М╨╜╤Л╤Е ╨╝╨╛╨┤╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╣ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П (╨┐╨╡╤А╨╡╤Б╨╛╤Е╤А╨░╨╜╨╡╨╜╨╕╨╡, ╨║╨╛╨╜╨▓╨╡╤А╤В╨░╤Ж╨╕╤П ╤Д╨╛╤А╨╝╨░╤В╨░).',
-      guide_title:'╨Я╨╛╤И╨░╨│╨╛╨▓╨╛╨╡ ╤А╤Г╨║╨╛╨▓╨╛╨┤╤Б╤В╨▓╨╛',guide_sub:'╨Я╨╛╨╗╨╜╨╛╨╡ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╨╡ ╤Б╨║╤А╤Л╤В╨╕╤П ╨╕ ╨╕╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕╤П ╤Д╨░╨╣╨╗╨╛╨▓ ╨╕╨╖ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╣.',
-      enc_h:'ЁЯФР ╨Ъ╨░╨║ ╤Б╨║╤А╤Л╤В╤М ╤Д╨░╨╣╨╗ (╨Ъ╨╛╨┤╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡)',
-      e1_t:'╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡-╨║╨╛╨╜╤В╨╡╨╣╨╜╨╡╤А',e1_d:'╨Э╨░╨╢╨╝╨╕╤В╨╡ <strong>"╨Т╤Л╨▒╤А╨░╤В╤М ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡"</strong> ╨╕ ╨▓╤Л╨▒╨╡╤А╨╕╤В╨╡ PNG, WebP ╨╕╨╗╨╕ AVIF. JPEG ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╤З╨╡╤Б╨║╨╕ ╨║╨╛╨╜╨▓╨╡╤А╤В╨╕╤А╤Г╨╡╤В╤Б╤П ╨▓ ╨▒╨╡╨╖ ╨┐╨╛╤В╨╡╤А╤М.',
-      e2_t:'╨Т╨▓╨╡╨┤╨╕╤В╨╡ ╤Б╨╡╨║╤А╨╡╤В╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡',e2_d:'╨Я╨╡╤А╨╡╨║╨╗╤О╤З╨░╨╣╤В╨╡╤Б╤М ╨╝╨╡╨╢╨┤╤Г ╨▓╨║╨╗╨░╨┤╨║╨░╨╝╨╕ <strong>╨в╨╡╨║╤Б╤В</strong> ╨╕ <strong>╨д╨░╨╣╨╗</strong>. ╨Ф╨╗╤П ╤Д╨░╨╣╨╗╨╛╨▓ тАФ ╨┐╨╡╤А╨╡╤В╨░╤Й╨╕╤В╨╡ ╨╕╨╗╨╕ ╨╜╨░╨╢╨╝╨╕╤В╨╡ ╨┤╨╗╤П ╨▓╤Л╨▒╨╛╤А╨░.',
-      e3_t:'╨г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╨╡ ╨Я╨Ш╨Э-╨║╨╛╨┤',e3_d:'╨Т╨▓╨╡╨┤╨╕╤В╨╡ ╨╕ ╨┐╨╛╨┤╤В╨▓╨╡╤А╨┤╨╕╤В╨╡ ╨Я╨Ш╨Э. ╨н╤В╨╛ <strong>╨╡╨┤╨╕╨╜╤Б╤В╨▓╨╡╨╜╨╜╨╛╨╡</strong>, ╤З╤В╨╛ ╨╜╤Г╨╢╨╜╨╛ ╨╖╨░╨┐╨╛╨╝╨╜╨╕╤В╤М. ╨Я╨Ш╨Э ╨╜╨╡ ╤Е╤А╨░╨╜╨╕╤В╤Б╤П тАФ ╨╛╨╜ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П ╨┤╨╗╤П ╨▓╤Л╨▓╨╛╨┤╨░ ╨║╨╗╤О╤З╨░ ╤З╨╡╤А╨╡╨╖ Argon2id + HKDF.',
-      e4_t:'╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╤Д╨╛╤А╨╝╨░╤В',e4_d:'╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ <strong>PNG</strong> (╨▒╨╡╨╖ ╨┐╨╛╤В╨╡╤А╤М, ╨╗╤Г╤З╤И╨╕╨╣), <strong>WebP</strong> (╨╝╨╡╨╜╤М╤И╨╡) ╨╕╨╗╨╕ <strong>AVIF</strong> (╨╜╨╛╨▓╨╡╨╣╤И╨╕╨╣,╤Г╨╗╤М╤В╤А╨░╨║╨╛╨╝╨┐╨░╨║╤В╨╜╤Л╨╣).',
-      e5_t:'╨Ч╨░╤И╨╕╤Д╤А╨╛╨▓╨░╤В╤М ╨╕ ╤Б╨║╨░╤З╨░╤В╤М',e5_d:'╨Э╨░╨╢╨╝╨╕╤В╨╡ <strong>"╨Ч╨░╤И╨╕╤Д╤А╨╛╨▓╨░╤В╤М"</strong>. ╨Я╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡: ╤Б╨╛╨╢╨╝╤С╤В тЖТ ╨╖╨░╤И╨╕╤Д╤А╤Г╨╡╤В тЖТ ╨┤╨╛╨▒╨░╨▓╨╕╤В ╨║╨╛╤А╤А╨╡╨║╤Ж╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║ тЖТ ╨▓╤Б╤В╤А╨╛╨╕╤В ╨▓ ╨┐╨╕╨║╤Б╨╡╨╗╨╕ тЖТ ╨┐╤А╨╛╨▓╨╡╤А╨╕╤В тЖТ ╤Б╨║╨░╤З╨░╨╡╤В.',
-      dec_h:'ЁЯФУ ╨Ъ╨░╨║ ╨╕╨╖╨▓╨╗╨╡╤З╤М ╤Д╨░╨╣╨╗ (╨Ф╨╡╨║╨╛╨┤╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡)',
-      d1_t:'╨Ч╨░╨│╤А╤Г╨╖╨╕╤В╨╡ ╤Б╤В╨╡╨│╨╛-╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡',d1_d:'╨Э╨░╨╢╨╝╨╕╤В╨╡ <strong>"╨Т╤Л╨▒╤А╨░╤В╤М ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╡"</strong> ╨╕ ╨▓╤Л╨▒╨╡╤А╨╕╤В╨╡ ╤Д╨╛╤В╨╛ ╤Б╨╛ ╤Б╨║╤А╤Л╤В╤Л╨╝╨╕ ╨┤╨░╨╜╨╜╤Л╨╝╨╕.',
-      d2_t:'╨Т╨▓╨╡╨┤╨╕╤В╨╡ ╨Я╨Ш╨Э-╨║╨╛╨┤',d2_d:'╨Т╨▓╨╡╨┤╨╕╤В╨╡ ╤В╨╛╤В ╨╢╨╡ ╨Я╨Ш╨Э, ╤З╤В╨╛ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╗╤Б╤П ╨┐╤А╨╕ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨░╨╜╨╕╨╕. ╨Я╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╨▓╤Л╨▓╨╡╨┤╨╡╤В ╨║╨╗╤О╤З ╤З╨╡╤А╨╡╨╖ Argon2id.',
-      d3_t:'╨Ш╨╖╨▓╨╗╨╡╤З╤М ╨╕ ╤Б╨║╨░╤З╨░╤В╤М',d3_d:'╨Э╨░╨╢╨╝╨╕╤В╨╡ <strong>"╨Ш╨╖╨▓╨╗╨╡╤З╤М"</strong>. ╨Я╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╤Б╤З╨╕╤В╨░╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡, ╨┐╤А╨╛╨▓╨╡╤А╨╕╤В ╨║╨╛╤А╤А╨╡╨║╤Ж╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║, ╤А╨░╤Б╤И╨╕╤Д╤А╤Г╨╡╤В ╨╕ ╨┐╨╛╨║╨░╨╢╨╡╤В ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В.',
-      album_h:'ЁЯУж ╨а╨╡╨╢╨╕╨╝ ╨░╨╗╤М╨▒╨╛╨╝╨░ (╨▒╨╛╨╗╤М╤И╨╕╨╡ ╤Д╨░╨╣╨╗╤Л)',
-      a1_t:'╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╣',a1_d:'╨Я╨╡╤А╨╡╨║╨╗╤О╤З╨╕╤В╨╡╤Б╤М ╨╜╨░ ╨▓╨║╨╗╨░╨┤╨║╤Г <strong>"╨Р╨╗╤М╨▒╨╛╨╝"</strong>. ╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ 2+ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П. ╨Я╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╤З╨╡╤Б╨║╨╕ ╤А╨░╤Б╤Б╤З╨╕╤В╨░╨╡╤В ╤Б╨║╨╛╨╗╤М╨║╨╛ ╨╜╤Г╨╢╨╜╨╛.',
-      a2_t:'╨д╨░╨╣╨╗ ╤А╨░╨╖╨┤╨╡╨╗╤П╨╡╤В╤Б╤П ╨░╨▓╤В╨╛╨╝╨░╤В╨╕╤З╨╡╤Б╨║╨╕',a2_d:'╨д╨░╨╣╨╗ ╤А╨░╨╖╨▒╨╕╨▓╨░╨╡╤В╤Б╤П ╨╜╨░ ╤З╨░╤Б╤В╨╕, ╨║╨░╨╢╨┤╨░╤П ╤И╨╕╤Д╤А╤Г╨╡╤В╤Б╤П ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛ ╤Б╨╛ ╤Б╨▓╨╛╨╕╨╝ salt/nonce. ╨Я╤Г╤Б╤В╤Л╨╡ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П ╨┐╤А╨╛╨┐╤Г╤Б╨║╨░╤О╤В╤Б╤П.',
-      a3_t:'╨Ш╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕╨╡ ╨╕╨╖ ╨░╨╗╤М╨▒╨╛╨╝╨░',a3_d:'╨Я╨╡╤А╨╡╨║╨╗╤О╤З╨╕╤В╨╡╤Б╤М ╨╜╨░ <strong>"╨Ш╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕╨╡ ╨╕╨╖ ╨░╨╗╤М╨▒╨╛╨╝╨░"</strong>, ╨▓╨▓╨╡╨┤╨╕╤В╨╡ ╨Я╨Ш╨Э, ╨▓╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨▓╤Б╨╡ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П ╤Б╤А╨░╨╖╤Г. ╨Т╤Б╨╡ ╤З╨░╤Б╤В╨╕ ╨┤╨╡╨║╨╛╨┤╨╕╤А╤Г╤О╤В╤Б╤П ╨┐╨░╤А╨░╨╗╨╗╨╡╨╗╤М╨╜╨╛.',
-      tech_title:'╨в╨╡╤Е╨╜╨╕╤З╨╡╤Б╨║╨╕╨╡ ╨┤╨╡╤В╨░╨╗╨╕',tech_sub:'╨Я╨╛╨╗╨╜╤Л╨╣ ╨║╤А╨╕╨┐╤В╨╛╨│╤А╨░╤Д╨╕╤З╨╡╤Б╨║╨╕╨╣ ╨║╨╛╨╜╨▓╨╡╨╣╨╡╤А Cryptoimg.',
-      th_comp:'╨Ъ╨╛╨╝╨┐╨╛╨╜╨╡╨╜╤В',th_algo:'╨Р╨╗╨│╨╛╤А╨╕╤В╨╝',th_purpose:'╨Э╨░╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡',
-      t1_c:'╨Т╤Л╨▓╨╛╨┤ ╨║╨╗╤О╤З╨░',t1_p:'╨Я╨Ш╨Э тЖТ 256-╨▒╨╕╤В stego key + 256-╨▒╨╕╤В enc key. ╨г╤Б╤В╨╛╨╣╤З╨╕╨▓ ╨║ GPU/ASIC.',
-      t2_c:'╨а╨░╤Б╤И╨╕╤А╨╡╨╜╨╕╨╡ ╨║╨╗╤О╤З╨░',t2_p:'╨Т╤Л╨▓╨╛╨┤╨╕╤В ╨╛╤В╨┤╨╡╨╗╤М╨╜╤Л╨╡ ╨║╨╗╤О╤З╨╕ ╨┤╨╗╤П ╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╨╕ ╨╕ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╤П ╨╕╨╖ ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╨░ Argon2.',
-      t3_c:'╨и╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡',t3_p:'╨Р╤Г╤В╨╡╨╜╤В╨╕╤Д╨╕╤Ж╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨╡ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡. 12-╨▒╨░╨╣╤В╨╛╨▓╤Л╨╣ nonce, 16-╨▒╨░╨╣╤В╨╛╨▓╤Л╨╣ auth tag.',
-      t4_c:'╨б╨╢╨░╤В╨╕╨╡',t4_p:'╨г╨╝╨╡╨╜╤М╤И╨░╨╡╤В ╤А╨░╨╖╨╝╨╡╤А ╨┤╨░╨╜╨╜╤Л╤Е ╨┐╨╡╤А╨╡╨┤ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡╨╝. ~50-70% ╨┤╨╗╤П ╤В╨╡╨║╤Б╤В╨░.',
-      t5_c:'╨Ъ╨╛╤А╤А╨╡╨║╤Ж╨╕╤П ╨╛╤И╨╕╨▒╨╛╨║',t5_p:'╨Ч╨░╤Й╨╕╤В╨░ ╨╛╤В ╨╝╨╛╨┤╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╣ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П. 25% ╨╜╨░╨║╨╗╨░╨┤╨╜╤Л╨╡ ╤А╨░╤Б╤Е╨╛╨┤╤Л.',
-      t6_c:'╨б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П',t6_p:'╨Ф╨░╨╜╨╜╤Л╨╡ ╤Б╨║╤А╤Л╤В╤Л ╨▓ ╨╝╨╗╨░╨┤╤И╨╕╤Е ╨▒╨╕╤В╨░╤Е. ╨Ь╨╕╨╜╨╕╨╝╨╕╨╖╨░╤Ж╨╕╤П ╤Б╤В╨░╤В╨╕╤Б╤В╨╕╤З╨╡╤Б╨║╨╕╤Е ╨░╤А╤В╨╡╤Д╨░╨║╤В╨╛╨▓ ╨░╨┤╨░╨┐╤В╨╕╨▓╨╜╤Л╨╝ ╨▓╤Л╨▒╨╛╤А╨╛╨╝ ╨┐╨╕╨║╤Б╨╡╨╗╨╡╨╣.',
-      t7_c:'Self-Test',t7_p:'╨Я╨╛╤Б╨╗╨╡ ╨║╨╛╨┤╨╕╤А╨╛╨▓╨░╨╜╨╕╤П ╨╜╨╡╨╝╨╡╨┤╨╗╨╡╨╜╨╜╨╛ ╨┐╤А╨╛╨▓╨╡╤А╤П╨╡╤В ╨║╨╛╤А╤А╨╡╨║╤В╨╜╨╛╤Б╤В╤М ╨╕╨╖╨▓╨╗╨╡╤З╨╡╨╜╨╕╤П.',
-      t8_c:'╨а╨╡╨╢╨╕╨╝ ╨░╨╗╤М╨▒╨╛╨╝╨░',t8_p:'╨а╨░╨╖╨┤╨╡╨╗╤П╨╡╤В ╤Д╨░╨╣╨╗╤Л ╨╜╨░ ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╣. ╨Ъ╨░╨╢╨┤╨░╤П ╤З╨░╤Б╤В╤М ╤И╨╕╤Д╤А╤Г╨╡╤В╤Б╤П ╨╛╤В╨┤╨╡╨╗╤М╨╜╨╛.',
-      faq_title:'╨з╨░╤Б╤В╨╛ ╨╖╨░╨┤╨░╨▓╨░╨╡╨╝╤Л╨╡ ╨▓╨╛╨┐╤А╨╛╤Б╤Л',
-      faq1_q:'╨Я╤А╨░╨▓╨┤╨░ ╨╗╨╕ ╨┤╨░╨╜╨╜╤Л╨╡ ╤Б╨║╤А╤Л╤В╤Л?',faq1_a:'Cryptoimg ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В LSB-╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤О ╨▓ ╤Д╨╕╨╗╤М╤В╤А╨╛╨▓╨░╨╜╨╜╤Л╤Е ╨┐╨╛ ╨▓╨░╤А╨╕╨░╤В╨╕╨▓╨╜╨╛╤Б╤В╨╕ ╨┐╨╕╨║╤Б╨╡╨╗╤П╤Е ╤Б ╨║╨╗╤О╤З╨╡╨▓╨╛╨╣ ╨┐╨╡╤А╨╡╤Б╤В╨░╨╜╨╛╨▓╨║╨╛╨╣. ╨Ш╨╖╨╝╨╡╨╜╨╡╨╜╨╕╤П ╨╝╨░╨║╤Б╨╕╨╝╨░╨╗╤М╨╜╨╛ ╨╝╨╕╨╜╨╕╨╝╨╕╨╖╨╕╤А╤Г╤О╤В ╤Б╤В╨░╤В╨╕╤Б╤В╨╕╤З╨╡╤Б╨║╨╕╨╡ ╨░╤А╤В╨╡╤Д╨░╨║╤В╤Л тАФ ╨┐╨╕╨║╤Б╨╡╨╗╨╕ ╨▓╤Л╨│╨╗╤П╨┤╤П╤В ╨▓╨╕╨╖╤Г╨░╨╗╤М╨╜╨╛ ╨╕╨┤╨╡╨╜╤В╨╕╤З╨╜╤Л╨╝╨╕ ╨╛╤А╨╕╨│╨╕╨╜╨░╨╗╤Г. ╨Я╤А╨╕╨╝╨╡╤З╨░╨╜╨╕╨╡: ╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П ╨╜╨╡ ╤П╨▓╨╗╤П╨╡╤В╤Б╤П ╨┐╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨╜╨╡╨╛╨▒╨╜╨░╤А╤Г╨╢╨╕╨╝╨╛╨╣ ╨┐╤А╨╕ ╨╜╨░╨╗╨╕╤З╨╕╨╕ ╨╛╤А╨╕╨│╨╕╨╜╨░╨╗╤М╨╜╨╛╨│╨╛ ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П.',
-      faq2_q:'╨з╤В╨╛ ╨▒╤Г╨┤╨╡╤В, ╨╡╤Б╨╗╨╕ ╨╖╨░╨▒╤Л╤В╤М ╨Я╨Ш╨Э?',faq2_a:'╨Ф╨░╨╜╨╜╤Л╨╡ ╨┐╨╛╤В╨╡╤А╤П╨╜╤Л. ╨Я╨Ш╨Э тАФ ╨╡╨┤╨╕╨╜╤Б╤В╨▓╨╡╨╜╨╜╤Л╨╣ ╤Б╨┐╨╛╤Б╨╛╨▒ ╨┐╨╛╨╗╤Г╤З╨╕╤В╤М ╨║╨╗╤О╤З. ╨Э╨╡╤В ╨▒╤Н╨║╨┤╨╛╤А╨╛╨▓ ╨╕╨╗╨╕ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П. ╨н╤В╨╛ ╤Б╨┤╨╡╨╗╨░╨╜╨╛ ╨╜╨░╨╝╨╡╤А╨╡╨╜╨╜╨╛.',
-      faq3_q:'╨Ь╨╛╨╢╨╜╨╛ ╨╗╨╕ ╨┐╨╛╨┤╨╡╨╗╨╕╤В╤М╤Б╤П ╤Д╨╛╤В╨╛ ╨▓ ╤Б╨╛╤Ж╤Б╨╡╤В╤П╤Е?',faq3_a:'╨б╨╛╤Ж╤Б╨╡╤В╨╕ ╨┐╨╡╤А╨╡╨╢╨╕╨╝╨░╤О╤В ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╤П, ╤Г╨╜╨╕╤З╤В╨╛╨╢╨░╤П ╤Б╨║╤А╤Л╤В╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╣╤В╨╡ email, ╨╛╨▒╨╗╨░╤З╨╜╤Л╨╡ ╤Е╤А╨░╨╜╨╕╨╗╨╕╤Й╨░ ╨╕╨╗╨╕ ╨┐╤А╤П╨╝╤Г╤О ╨┐╨╡╤А╨╡╨┤╨░╤З╤Г ╤Д╨░╨╣╨╗╨╛╨▓.',
-      faq4_q:'╨з╨╡╨╝ ╤Н╤В╨╛ ╨╛╤В╨╗╨╕╤З╨░╨╡╤В╤Б╤П ╨╛╤В ╨┐╤А╨╛╤Б╤В╨╛╨│╨╛ ╤И╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╤П?',faq4_a:'╨и╨╕╤Д╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╡╨╗╨░╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡ ╨╜╨╡╤З╨╕╤В╨░╨╡╨╝╤Л╨╝╨╕. ╨б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╤П ╨┤╨╡╨╗╨░╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡ ╨╜╨╡╨▓╨╕╨┤╨╕╨╝╤Л╨╝╨╕. Cryptoimg ╨┤╨╡╨╗╨░╨╡╤В ╨╕ ╤В╨╛, ╨╕ ╨┤╤А╤Г╨│╨╛╨╡.',
-      faq5_q:'╨Ъ╨░╨║╨╕╨╡ ╤Д╨╛╤А╨╝╨░╤В╤Л ╨╕╨╖╨╛╨▒╤А╨░╨╢╨╡╨╜╨╕╨╣ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╤О╤В╤Б╤П?',faq5_a:'╨Т╤Е╨╛╨┤: ╨╗╤О╨▒╨╛╨╣ (JPEG, PNG, WebP, AVIF, BMP, TIFF). ╨Р╨▓╤В╨╛-╨║╨╛╨╜╨▓╨╡╤А╤В╨░╤Ж╨╕╤П. ╨Т╤Л╤Е╨╛╨┤: PNG, WebP ╨╕╨╗╨╕ AVIF тАФ ╨▓╤Б╨╡ ╨▒╨╡╨╖ ╨┐╨╛╤В╨╡╤А╤М.',
-      faq6_q:'╨з╤В╨╛-╤В╨╛ ╨╛╤В╨┐╤А╨░╨▓╨╗╤П╨╡╤В╤Б╤П ╨╜╨░ ╤Б╨╡╤А╨▓╨╡╤А?',faq6_a:'╨Э╨╕╤З╨╡╨│╨╛. ╨Т╤Б╤С ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨▓ ╨▒╤А╨░╤Г╨╖╨╡╤А╨╡ ╤З╨╡╤А╨╡╨╖ Web Crypto API, WebAssembly ╨╕ Canvas API. ╨Э╤Г╨╗╨╡╨▓╤Л╨╡ ╤Б╨╡╤В╨╡╨▓╤Л╨╡ ╨╖╨░╨┐╤А╨╛╤Б╤Л.',
-      don_title:'тЭдя╕П ╨Я╨╛╨┤╨┤╨╡╤А╨╢╨░╤В╤М Cryptoimg',don_sub:'╨Х╤Б╨╗╨╕ ╨╕╨╜╤Б╤В╤А╤Г╨╝╨╡╨╜╤В ╨┐╨╛╨╗╨╡╨╖╨╡╨╜, ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╤В╨╡ ╤А╨░╨╖╨▓╨╕╤В╨╕╨╡ ╨┐╤А╨╛╨╡╨║╤В╨░.',
-      don_warn:'╨Т╤Б╨╡╨│╨┤╨░ ╨┐╤А╨╛╨▓╨╡╤А╤П╨╣╤В╨╡ ╨░╨┤╤А╨╡╤Б ╨┐╨╛╤Б╨╗╨╡ ╨║╨╛╨┐╨╕╤А╨╛╨▓╨░╨╜╨╕╤П. ╨Ю╤В╨┐╤А╨░╨▓╨╗╤П╨╣╤В╨╡ ╤В╨╛╨╗╤М╨║╨╛ BTC ╨╜╨░ ╨▒╨╕╤В╨║╨╛╨╣╨╜-╨░╨┤╤А╨╡╤Б, ETH ╨╜╨░ ╨░╨┤╤А╨╡╤Б Ethereum ╨╕ USDT (TRC-20) ╨╜╨░ ╨░╨┤╤А╨╡╤Б TRON.',
-      copy:'ЁЯУЛ ╨Ъ╨╛╨┐╨╕╤А╨╛╨▓╨░╤В╤М',app_title:'╨Ч╨░╨┐╤Г╤Б╤В╨╕╤В╤М Cryptoimg',app_sub:'╨Я╨╛╨╗╨╜╨╛╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗╤М╨╜╨╛╨╡ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╤Б╤В╨╡╨│╨░╨╜╨╛╨│╤А╨░╤Д╨╕╨╕ ╤А╨░╨▒╨╛╤В╨░╨╡╤В ╨┐╤А╤П╨╝╨╛ ╨╖╨┤╨╡╤Б╤М, ╨▓ ╨▓╨░╤И╨╡╨╝ ╨▒╤А╨░╤Г╨╖╨╡╤А╨╡.',
-      footer_note:'╨Т╤Б╨╡ ╨▓╤Л╤З╨╕╤Б╨╗╨╡╨╜╨╕╤П ╨┐╤А╨╛╨╕╤Б╤Е╨╛╨┤╤П╤В ╨╗╨╛╨║╨░╨╗╤М╨╜╨╛. ╨Ф╨░╨╜╨╜╤Л╨╡ ╨╜╨╡ ╨┐╨╛╨║╨╕╨┤╨░╤О╤В ╨▓╨░╤И╨╡ ╤Г╤Б╤В╤А╨╛╨╣╤Б╤В╨▓╨╛.',
-      nav_download:'╨б╨║╨░╤З╨░╤В╤М',dl_title:'тмЗя╕П ╨б╨║╨░╤З╨░╤В╤М Cryptoimg',dl_sub:'╨Я╨╛╨╗╤Г╤З╨╕╤В╨╡ ╨╜╨░╤В╨╕╨▓╨╜╨╛╨╡ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╨┤╨╗╤П ╨▓╨░╤И╨╡╨╣ ╨┐╨╗╨░╤В╤Д╨╛╤А╨╝╤Л ╨╕╨╗╨╕ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╣╤В╨╡ ╨▓╨╡╨▒-╨▓╨╡╤А╤Б╨╕╤О ╨▓╤Л╤И╨╡.',
-      dl_android:'Android',dl_android_desc:'╨г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╨╡ APK ╨╜╨░ ╨╗╤О╨▒╨╛╨╡ ╤Г╤Б╤В╤А╨╛╨╣╤Б╤В╨▓╨╛ Android (╤В╤А╨╡╨▒╤Г╨╡╤В╤Б╤П Android 7.0+).',dl_apk:'╨б╨║╨░╤З╨░╤В╤М APK',
-      dl_windows:'Windows',dl_windows_desc:'╨Я╨╛╨╗╨╜╨╛╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗╤М╨╜╨╛╨╡ ╨┤╨╡╤Б╨║╤В╨╛╨┐╨╜╨╛╨╡ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╡ ╨┤╨╗╤П Windows 10/11.',dl_installer:'╨г╤Б╤В╨░╨╜╨╛╨▓╤Й╨╕╨║',dl_portable:'╨Я╨╛╤А╤В╨░╨▒╨╡╨╗╤М╨╜╤Л╨╣'
+      nav_how:'Как работает',nav_guide:'Руководство',nav_tech:'Технологии',nav_faq:'FAQ',nav_launch:'Запустить',
+      hero_badge:'🔒 100% локально · Нулевой сервер',
+      hero_title:'Спрячьте секреты<br><em>в любом фото</em>',
+      hero_sub:'Стеганография + AES-256-GCM + Argon2id + код Рида-Соломона. Данные не покидают ваш браузер.',
+      hero_app:'🔐 Открыть приложение',hero_guide:'📖 Руководство',
+      how_title:'Как работает крипто-стеганография',how_sub:'Многоуровневая защита: шифрование делает данные нечитаемыми, стеганография — невидимыми.',
+      pipe_file:'Ваш файл',pipe_deflate:'Deflate',pipe_stego:'Встраивание',pipe_output:'Изображение',
+      c1_t:'Сжатие Deflate',c1_d:'Файл сжимается DEFLATE перед шифрованием, увеличивая объём данных, вмещающихся в изображение.',
+      c2_t:'AES-256-GCM',c2_d:'Аутентифицированное шифрование. Даже если кто-то знает о Cryptoimg, без ПИН-кода данные не прочитать. Любая подделка обнаруживается через auth tag.',
+      c3_t:'Argon2id KDF',c3_d:'ПИН-код преобразуется в криптографический ключ через Argon2id — победитель Password Hashing Competition. Устойчив к GPU/ASIC атакам.',
+      c4_t:'Код Рида-Соломона',c4_d:'Коды коррекции ошибок защищают от незначительных модификаций изображения (пересохранение, конвертация формата).',
+      guide_title:'Пошаговое руководство',guide_sub:'Полное описание скрытия и извлечения файлов из изображений.',
+      enc_h:'🔐 Как скрыть файл (Кодирование)',
+      e1_t:'Выберите изображение-контейнер',e1_d:'Нажмите <strong>"Выбрать изображение"</strong> и выберите PNG, WebP или AVIF. JPEG автоматически конвертируется в без потерь.',
+      e2_t:'Введите секретные данные',e2_d:'Переключайтесь между вкладками <strong>Текст</strong> и <strong>Файл</strong>. Для файлов — перетащите или нажмите для выбора.',
+      e3_t:'Установите ПИН-код',e3_d:'Введите и подтвердите ПИН. Это <strong>единственное</strong>, что нужно запомнить. ПИН не хранится — он используется для вывода ключа через Argon2id + HKDF.',
+      e4_t:'Выберите формат',e4_d:'Выберите <strong>PNG</strong> (без потерь, лучший), <strong>WebP</strong> (меньше) или <strong>AVIF</strong> (новейший,ультракомпактный).',
+      e5_t:'Зашифровать и скачать',e5_d:'Нажмите <strong>"Зашифровать"</strong>. Приложение: сожмёт → зашифрует → добавит коррекцию ошибок → встроит в пиксели → проверит → скачает.',
+      dec_h:'🔓 Как извлечь файл (Декодирование)',
+      d1_t:'Загрузите стего-изображение',d1_d:'Нажмите <strong>"Выбрать изображение"</strong> и выберите фото со скрытыми данными.',
+      d2_t:'Введите ПИН-код',d2_d:'Введите тот же ПИН, что использовался при кодировании. Приложение выведет ключ через Argon2id.',
+      d3_t:'Извлечь и скачать',d3_d:'Нажмите <strong>"Извлечь"</strong>. Приложение считает данные, проверит коррекцию ошибок, расшифрует и покажет результат.',
+      album_h:'📦 Режим альбома (большие файлы)',
+      a1_t:'Выберите несколько изображений',a1_d:'Переключитесь на вкладку <strong>"Альбом"</strong>. Выберите 2+ изображения. Приложение автоматически рассчитает сколько нужно.',
+      a2_t:'Файл разделяется автоматически',a2_d:'Файл разбивается на части, каждая шифруется отдельно со своим salt/nonce. Пустые изображения пропускаются.',
+      a3_t:'Извлечение из альбома',a3_d:'Переключитесь на <strong>"Извлечение из альбома"</strong>, введите ПИН, выберите все изображения сразу. Все части декодируются параллельно.',
+      tech_title:'Технические детали',tech_sub:'Полный криптографический конвейер Cryptoimg.',
+      th_comp:'Компонент',th_algo:'Алгоритм',th_purpose:'Назначение',
+      t1_c:'Вывод ключа',t1_p:'ПИН → 256-бит stego key + 256-бит enc key. Устойчив к GPU/ASIC.',
+      t2_c:'Расширение ключа',t2_p:'Выводит отдельные ключи для стеганографии и шифрования из результата Argon2.',
+      t3_c:'Шифрование',t3_p:'Аутентифицированное шифрование. 12-байтовый nonce, 16-байтовый auth tag.',
+      t4_c:'Сжатие',t4_p:'Уменьшает размер данных перед шифрованием. ~50-70% для текста.',
+      t5_c:'Коррекция ошибок',t5_p:'Защита от модификаций изображения. 25% накладные расходы.',
+      t6_c:'Стеганография',t6_p:'Данные скрыты в младших битах. Минимизация статистических артефактов адаптивным выбором пикселей.',
+      t7_c:'Self-Test',t7_p:'После кодирования немедленно проверяет корректность извлечения.',
+      t8_c:'Режим альбома',t8_p:'Разделяет файлы на несколько изображений. Каждая часть шифруется отдельно.',
+      faq_title:'Часто задаваемые вопросы',
+      faq1_q:'Правда ли данные скрыты?',faq1_a:'Cryptoimg использует LSB-стеганографию в фильтрованных по вариативности пикселях с ключевой перестановкой. Изменения максимально минимизируют статистические артефакты — пиксели выглядят визуально идентичными оригиналу. Примечание: стеганография не является полностью необнаружимой при наличии оригинального изображения.',
+      faq2_q:'Что будет, если забыть ПИН?',faq2_a:'Данные потеряны. ПИН — единственный способ получить ключ. Нет бэкдоров или восстановления. Это сделано намеренно.',
+      faq3_q:'Можно ли поделиться фото в соцсетях?',faq3_a:'Соцсети пережимают изображения, уничтожая скрытые данные. Используйте email, облачные хранилища или прямую передачу файлов.',
+      faq4_q:'Чем это отличается от простого шифрования?',faq4_a:'Шифрование делает данные нечитаемыми. Стеганография делает данные невидимыми. Cryptoimg делает и то, и другое.',
+      faq5_q:'Какие форматы изображений поддерживаются?',faq5_a:'Вход: любой (JPEG, PNG, WebP, AVIF, BMP, TIFF). Авто-конвертация. Выход: PNG, WebP или AVIF — все без потерь.',
+      faq6_q:'Что-то отправляется на сервер?',faq6_a:'Ничего. Всё работает в браузере через Web Crypto API, WebAssembly и Canvas API. Нулевые сетевые запросы.',
+      don_title:'❤️ Поддержать Cryptoimg',don_sub:'Если инструмент полезен, поддержите развитие проекта.',
+      don_warn:'Всегда проверяйте адрес после копирования. Отправляйте только BTC на биткойн-адрес, ETH на адрес Ethereum и USDT (TRC-20) на адрес TRON.',
+      copy:'📋 Копировать',app_title:'Запустить Cryptoimg',app_sub:'Полнофункциональное приложение стеганографии работает прямо здесь, в вашем браузере.',
+      footer_note:'Все вычисления происходят локально. Данные не покидают ваше устройство.',
+      nav_download:'Скачать',dl_title:'⬇️ Скачать Cryptoimg',dl_sub:'Получите нативное приложение для вашей платформы или используйте веб-версию выше.',
+      dl_android:'Android',dl_android_desc:'Установите APK на любое устройство Android (требуется Android 7.0+).',dl_apk:'Скачать APK',
+      dl_windows:'Windows',dl_windows_desc:'Полнофункциональное десктопное приложение для Windows 10/11.',dl_installer:'Установщик',dl_portable:'Портабельный'
     },
     de:{
       nav_how:'Wie es funktioniert',nav_guide:'Anleitung',nav_tech:'Technologie',nav_faq:'FAQ',nav_launch:'App starten',
-      hero_badge:'ЁЯФТ 100% Client-Seitig ┬╖ Kein Server',
+      hero_badge:'🔒 100% Client-Seitig · Kein Server',
       hero_title:'Verstecke jedes Geheimnis<br><em>in jedem Bild</em>',
       hero_sub:'Steganographie + AES-256-GCM + Argon2id + Reed-Solomon-Fehlerkorrektur. Deine Daten verlassen nie deinen Browser.',
-      hero_app:'ЁЯФР App ├╢ffnen',hero_guide:'ЁЯУЦ Anleitung lesen',
-      how_title:'Krypto-Steganographie erkl├дrt',how_sub:'Mehrschichtiger Schutz: Verschl├╝sselung macht Daten unlesbar, Steganographie macht sie unsichtbar.',
+      hero_app:'🔐 App öffnen',hero_guide:'📖 Anleitung lesen',
+      how_title:'Krypto-Steganographie erklärt',how_sub:'Mehrschichtiger Schutz: Verschlüsselung macht Daten unlesbar, Steganographie macht sie unsichtbar.',
       pipe_file:'Deine Datei',pipe_deflate:'Deflate',pipe_stego:'Stego-Einbettung',pipe_output:'Ausgabebild',
-      c1_t:'Deflate-Komprimierung',c1_d:'Deine Datei wird mit DEFLATE komprimiert, bevor sie verschl├╝sselt wird тАФ mehr Daten passen ins Bild.',
-      c2_t:'AES-256-GCM',c2_d:'Authentifizierte Verschl├╝sselung. Ohne PIN sind die Daten unzug├дnglich. Jede Manipulation wird via Auth-Tag erkannt.',
-      c3_t:'Argon2id KDF',c3_d:'Der PIN wird mit Argon2id in einen kryptografischen Schl├╝ssel umgewandelt тАФ resistent gegen GPU- und ASIC-Angriffe.',
-      c4_t:'Reed-Solomon ECC',c4_d:'Fehlerkorrekturcodes sch├╝tzen vor kleinen Bildmodifikationen (Neuspeicherung, Formatkonvertierung).',
-      guide_title:'Schritt-f├╝r-Schritt-Anleitung',guide_sub:'Vollst├дndige Anleitung zum Verstecken und Extrahieren von Dateien.',
-      enc_h:'ЁЯФР Datei verstecken (Kodierung)',
-      e1_t:'Tr├дgerbild w├дhlen',e1_d:'Klicke <strong>"Bild ausw├дhlen"</strong> und w├дhle PNG, WebP oder AVIF. JPEG wird automatisch in verlustfrei konvertiert.',
-      e2_t:'Geheimdaten eingeben',e2_d:'Wechsle zwischen <strong>Text</strong> und <strong>Datei</strong>. F├╝r Dateien: Drag & Drop oder Klick zum Durchsuchen.',
-      e3_t:'PIN-Code festlegen',e3_d:'Gib deinen PIN ein und best├дtige ihn. Der PIN wird nie gespeichert тАФ er dient zur Schl├╝sselableitung via Argon2id + HKDF.',
-      e4_t:'Ausgabeformat w├дhlen',e4_d:'W├дhle <strong>PNG</strong> (verlustfrei), <strong>WebP</strong> (kleiner) oder <strong>AVIF</strong> (neuestes).',
-      e5_t:'Verschl├╝sseln & Herunterladen',e5_d:'Klicke <strong>"Verschl├╝sseln"</strong>. Das Programm: komprimiert тЖТ verschl├╝sselt тЖТ Fehlerkorrektur тЖТ bettet ein тЖТ pr├╝ft тЖТ l├дdt herunter.',
-      dec_h:'ЁЯФУ Datei extrahieren (Dekodierung)',
-      d1_t:'Stego-Bild hochladen',d1_d:'Klicke <strong>"Bild ausw├дhlen"</strong> und w├дhle das Bild mit versteckten Daten.',
-      d2_t:'PIN eingeben',d2_d:'Gib denselben PIN wie bei der Kodierung ein. Argon2id leitet den Entschl├╝sselungs-Key ab.',
-      d3_t:'Extrahieren & Herunterladen',d3_d:'Klicke <strong>"Extrahieren"</strong>. Das Programm liest die Daten, pr├╝ft Reed-Solomon, entschl├╝sselt und zeigt das Ergebnis.',
-      album_h:'ЁЯУж Album-Modus (gro├Яe Dateien)',
-      a1_t:'Mehrere Tr├дgerbilder w├дhlen',a1_d:'Wechsle zum <strong>"Album"</strong>-Tab. W├дhle 2+ Bilder. Die App berechnet automatisch, wie viele ben├╢tigt werden.',
-      a2_t:'Datei wird automatisch aufgeteilt',a2_d:'Die Datei wird in Bl├╢cke aufgeteilt, jeder unabh├дngig mit eigenem Salt/Nonce verschl├╝sselt.',
-      a3_t:'Aus Album extrahieren',a3_d:'Wechsle zum <strong>"Album extrahieren"</strong>-Tab, gib den PIN ein, w├дhle alle Bilder auf einmal.',
+      c1_t:'Deflate-Komprimierung',c1_d:'Deine Datei wird mit DEFLATE komprimiert, bevor sie verschlüsselt wird — mehr Daten passen ins Bild.',
+      c2_t:'AES-256-GCM',c2_d:'Authentifizierte Verschlüsselung. Ohne PIN sind die Daten unzugänglich. Jede Manipulation wird via Auth-Tag erkannt.',
+      c3_t:'Argon2id KDF',c3_d:'Der PIN wird mit Argon2id in einen kryptografischen Schlüssel umgewandelt — resistent gegen GPU- und ASIC-Angriffe.',
+      c4_t:'Reed-Solomon ECC',c4_d:'Fehlerkorrekturcodes schützen vor kleinen Bildmodifikationen (Neuspeicherung, Formatkonvertierung).',
+      guide_title:'Schritt-für-Schritt-Anleitung',guide_sub:'Vollständige Anleitung zum Verstecken und Extrahieren von Dateien.',
+      enc_h:'🔐 Datei verstecken (Kodierung)',
+      e1_t:'Trägerbild wählen',e1_d:'Klicke <strong>"Bild auswählen"</strong> und wähle PNG, WebP oder AVIF. JPEG wird automatisch in verlustfrei konvertiert.',
+      e2_t:'Geheimdaten eingeben',e2_d:'Wechsle zwischen <strong>Text</strong> und <strong>Datei</strong>. Für Dateien: Drag & Drop oder Klick zum Durchsuchen.',
+      e3_t:'PIN-Code festlegen',e3_d:'Gib deinen PIN ein und bestätige ihn. Der PIN wird nie gespeichert — er dient zur Schlüsselableitung via Argon2id + HKDF.',
+      e4_t:'Ausgabeformat wählen',e4_d:'Wähle <strong>PNG</strong> (verlustfrei), <strong>WebP</strong> (kleiner) oder <strong>AVIF</strong> (neuestes).',
+      e5_t:'Verschlüsseln & Herunterladen',e5_d:'Klicke <strong>"Verschlüsseln"</strong>. Das Programm: komprimiert → verschlüsselt → Fehlerkorrektur → bettet ein → prüft → lädt herunter.',
+      dec_h:'🔓 Datei extrahieren (Dekodierung)',
+      d1_t:'Stego-Bild hochladen',d1_d:'Klicke <strong>"Bild auswählen"</strong> und wähle das Bild mit versteckten Daten.',
+      d2_t:'PIN eingeben',d2_d:'Gib denselben PIN wie bei der Kodierung ein. Argon2id leitet den Entschlüsselungs-Key ab.',
+      d3_t:'Extrahieren & Herunterladen',d3_d:'Klicke <strong>"Extrahieren"</strong>. Das Programm liest die Daten, prüft Reed-Solomon, entschlüsselt und zeigt das Ergebnis.',
+      album_h:'📦 Album-Modus (große Dateien)',
+      a1_t:'Mehrere Trägerbilder wählen',a1_d:'Wechsle zum <strong>"Album"</strong>-Tab. Wähle 2+ Bilder. Die App berechnet automatisch, wie viele benötigt werden.',
+      a2_t:'Datei wird automatisch aufgeteilt',a2_d:'Die Datei wird in Blöcke aufgeteilt, jeder unabhängig mit eigenem Salt/Nonce verschlüsselt.',
+      a3_t:'Aus Album extrahieren',a3_d:'Wechsle zum <strong>"Album extrahieren"</strong>-Tab, gib den PIN ein, wähle alle Bilder auf einmal.',
       tech_title:'Technische Details',tech_sub:'Die volle kryptografische Pipeline von Cryptoimg.',
       th_comp:'Komponente',th_algo:'Algorithmus',th_purpose:'Zweck',
-      t1_c:'Schl├╝sselableitung',t1_p:'PIN тЖТ 256-Bit stego key + 256-Bit enc key. GPU/ASIC-resistent.',
-      t2_c:'Schl├╝sselerweiterung',t2_p:'Leitet separate Schl├╝ssel f├╝r Stego und Verschl├╝sselung aus Argon2-Ausgabe ab.',
-      t3_c:'Verschl├╝sselung',t3_p:'Authentifizierte Verschl├╝sselung. 12-Byte Nonce, 16-Byte Auth Tag.',
-      t4_c:'Komprimierung',t4_p:'Reduziert die Payload-Gr├╢├Яe vor der Verschl├╝sselung. ~50-70% bei Text.',
+      t1_c:'Schlüsselableitung',t1_p:'PIN → 256-Bit stego key + 256-Bit enc key. GPU/ASIC-resistent.',
+      t2_c:'Schlüsselerweiterung',t2_p:'Leitet separate Schlüssel für Stego und Verschlüsselung aus Argon2-Ausgabe ab.',
+      t3_c:'Verschlüsselung',t3_p:'Authentifizierte Verschlüsselung. 12-Byte Nonce, 16-Byte Auth Tag.',
+      t4_c:'Komprimierung',t4_p:'Reduziert die Payload-Größe vor der Verschlüsselung. ~50-70% bei Text.',
       t5_c:'Fehlerkorrektur',t5_p:'Schutz vor Bildmodifikationen. 25% Overhead.',
       t6_c:'Steganographie',t6_p:'Daten in niederwertigen Bits versteckt. Statistisch unerkennbar.',
-      t7_c:'Self-Test',t7_p:'├Ьpr├╝ft nach Kodierung sofort die Korrektheit der Extraktion.',
-      t8_c:'Album-Modus',t8_p:'Teilt gro├Яe Dateien auf mehrere Bilder auf. Jeder Block unabh├дngig verschl├╝sselt.',
-      faq_title:'H├дufig gestellte Fragen',
-      faq1_q:'Sind die Daten wirklich versteckt?',faq1_a:'Cryptoimg nutzt LSB-Steganographie in varianzgefilterten Pixeln. Die ├Дnderungen sind statistisch unerkennbar.',
-      faq2_q:'Was passiert, wenn ich den PIN vergesse?',faq2_a:'Die Daten sind weg. Der PIN ist der einzige Weg zum Entschl├╝sselungsschl├╝ssel. Kein Backdoor, keine Wiederherstellung.',
-      faq3_q:'Kann ich das Bild in sozialen Medien teilen?',faq3_a:'Soziale Medien komprimieren Bilder neu, was versteckte Daten zerst├╢ren kann. Nutze verlustfreie ├Ьbertragung.',
-      faq4_q:'Wie unterscheidet sich das von normaler Verschl├╝sselung?',faq4_a:'Verschl├╝sselung macht Daten unlesbar. Steganographie macht Daten unsichtbar. Cryptoimg macht beides.',
-      faq5_q:'Welche Bildformate funktionieren?',faq5_a:'Eingabe: beliebig (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-Konvertierung. Ausgabe: PNG, WebP oder AVIF тАФ alles verlustfrei.',
+      t7_c:'Self-Test',t7_p:'Üprüft nach Kodierung sofort die Korrektheit der Extraktion.',
+      t8_c:'Album-Modus',t8_p:'Teilt große Dateien auf mehrere Bilder auf. Jeder Block unabhängig verschlüsselt.',
+      faq_title:'Häufig gestellte Fragen',
+      faq1_q:'Sind die Daten wirklich versteckt?',faq1_a:'Cryptoimg nutzt LSB-Steganographie in varianzgefilterten Pixeln. Die Änderungen sind statistisch unerkennbar.',
+      faq2_q:'Was passiert, wenn ich den PIN vergesse?',faq2_a:'Die Daten sind weg. Der PIN ist der einzige Weg zum Entschlüsselungsschlüssel. Kein Backdoor, keine Wiederherstellung.',
+      faq3_q:'Kann ich das Bild in sozialen Medien teilen?',faq3_a:'Soziale Medien komprimieren Bilder neu, was versteckte Daten zerstören kann. Nutze verlustfreie Übertragung.',
+      faq4_q:'Wie unterscheidet sich das von normaler Verschlüsselung?',faq4_a:'Verschlüsselung macht Daten unlesbar. Steganographie macht Daten unsichtbar. Cryptoimg macht beides.',
+      faq5_q:'Welche Bildformate funktionieren?',faq5_a:'Eingabe: beliebig (JPEG, PNG, WebP, AVIF, BMP, TIFF). Auto-Konvertierung. Ausgabe: PNG, WebP oder AVIF — alles verlustfrei.',
       faq6_q:'Wird etwas an einen Server gesendet?',faq6_a:'Nein. Alles passiert im Browser via Web Crypto API, WebAssembly und Canvas API. Keine Netzwerk-Anfragen.',
-      don_title:'тЭдя╕П Cryptoimg unterst├╝tzen',don_sub:'Wenn das Tool n├╝tzlich ist, unterst├╝tze die Entwicklung.',
-      don_warn:'├Ьberpr├╝fe immer die Adresse nach dem Kopieren. Sende nur BTC an die Bitcoin-Adresse, ETH an die Ethereum-Adresse und USDT (TRC-20) an die TRON-Adresse.',
-      copy:'ЁЯУЛ Kopieren',app_title:'Cryptoimg starten',app_sub:'Die voll funktionsf├дhige Steganographie-App l├дuft direkt hier in deinem Browser.',
-      footer_note:'Alle Verarbeitung erfolgt lokal. Keine Daten verlassen dein Ger├дt.',
-      nav_download:'Herunterladen',dl_title:'тмЗя╕П Cryptoimg herunterladen',dl_sub:'Hole die native App f├╝r deine Plattform oder nutze die Web-Version oben.',
-      dl_android:'Android',dl_android_desc:'Installiere das APK auf jedem Android-Ger├дt (ben├╢tigt Android 7.0+).',dl_apk:'APK herunterladen',
-      dl_windows:'Windows',dl_windows_desc:'Voll funktionsf├дhige Desktop-App f├╝r Windows 10/11.',dl_installer:'Installationsprogramm',dl_portable:'Portabel'
+      don_title:'❤️ Cryptoimg unterstützen',don_sub:'Wenn das Tool nützlich ist, unterstütze die Entwicklung.',
+      don_warn:'Überprüfe immer die Adresse nach dem Kopieren. Sende nur BTC an die Bitcoin-Adresse, ETH an die Ethereum-Adresse und USDT (TRC-20) an die TRON-Adresse.',
+      copy:'📋 Kopieren',app_title:'Cryptoimg starten',app_sub:'Die voll funktionsfähige Steganographie-App läuft direkt hier in deinem Browser.',
+      footer_note:'Alle Verarbeitung erfolgt lokal. Keine Daten verlassen dein Gerät.',
+      nav_download:'Herunterladen',dl_title:'⬇️ Cryptoimg herunterladen',dl_sub:'Hole die native App für deine Plattform oder nutze die Web-Version oben.',
+      dl_android:'Android',dl_android_desc:'Installiere das APK auf jedem Android-Gerät (benötigt Android 7.0+).',dl_apk:'APK herunterladen',
+      dl_windows:'Windows',dl_windows_desc:'Voll funktionsfähige Desktop-App für Windows 10/11.',dl_installer:'Installationsprogramm',dl_portable:'Portabel'
     },
     fr:{
-      nav_how:'Comment ├зa marche',nav_guide:'Guide',nav_tech:'Technologie',nav_faq:'FAQ',nav_launch:'Lancer',
-      hero_badge:'ЁЯФТ 100% c├┤t├й client ┬╖ Z├йro serveur',
-      hero_title:'Cachez nтАЩimporte quel secret<br><em>dans nтАЩimporte quelle image</em>',
-      hero_sub:'St├йganographie + AES-256-GCM + Argon2id + Reed-Solomon. Vos donn├йes ne quittent jamais votre navigateur.',
-      hero_app:'ЁЯФР Ouvrir lтАЩapp',hero_guide:'ЁЯУЦ Lire le guide',
-      how_title:'St├йganographie cryptographique expliqu├йe',how_sub:'Protection multi-couche : le chiffrement rend les donn├йes illisibles, la st├йganographie les rend invisibles.',
-      pipe_file:'Votre fichier',pipe_deflate:'Deflate',pipe_stego:'Insertion st├йgo',pipe_output:'Image de sortie',
-      c1_t:'Compression Deflate',c1_d:'Votre fichier est compress├й avec DEFLATE avant le chiffrement, maximisant la quantit├й de donn├йes dans lтАЩimage.',
-      c2_t:'AES-256-GCM',c2_d:'Chiffrement authentifi├й. Sans le PIN, les donn├йes sont inaccessibles. Toute alt├йration est d├йtect├йe via le tag dтАЩauthentification.',
-      c3_t:'Argon2id KDF',c3_d:'Le PIN est transform├й en cl├й cryptographique via Argon2id тАФ r├йsistant aux attaques GPU et ASIC.',
-      c4_t:'Reed-Solomon ECC',c4_d:'Les codes correcteurs dтАЩerreurs prot├иgent contre les modifications mineures de lтАЩimage (re-sauvegarde, conversion).',
-      guide_title:'Guide pas ├а pas',guide_sub:'Instructions compl├иtes pour cacher et extraire des fichiers.',
-      enc_h:'ЁЯФР Comment cacher un fichier (Encodage)',
-      e1_t:'Choisir lтАЩimage conteneur',e1_d:'Cliquez <strong>"S├йlectionner"</strong> et choisissez PNG, WebP ou AVIF. Les JPEG sont automatiquement convertis en sans perte.',
-      e2_t:'Entrez vos donn├йes secr├иtes',e2_d:'Basculez entre <strong>Texte</strong> et <strong>Fichier</strong>. Glissez-d├йposez ou cliquez pour parcourir.',
-      e3_t:'D├йfinir le code PIN',e3_d:'Entrez et confirmez votre PIN. CтАЩest la <strong>seule</strong> chose ├а retenir. Le PIN nтАЩest jamais stock├й.',
-      e4_t:'Choisir le format',e4_d:'<strong>PNG</strong> (sans perte, meilleur), <strong>WebP</strong> (plus petit) ou <strong>AVIF</strong> (le plus r├йcent).',
-      e5_t:'Chiffrer & T├йl├йcharger',e5_d:'Cliquez <strong>"Chiffrer"</strong>. LтАЩappli : compresse тЖТ chiffre тЖТ ajoute correction dтАЩerreurs тЖТ ins├иre тЖТ v├йrifie тЖТ t├йl├йcharge.',
-      dec_h:'ЁЯФУ Comment extraire un fichier (D├йcodage)',
-      d1_t:'T├йl├йcharger lтАЩimage st├йgo',d1_d:'Cliquez <strong>"S├йlectionner"</strong> et choisissez lтАЩimage contenant les donn├йes cach├йes.',
-      d2_t:'Entrez le PIN',d2_d:'Saisissez le m├кme PIN que lors de lтАЩencodage. Argon2id d├йrive la cl├й de d├йchiffrement.',
-      d3_t:'Extraire & T├йl├йcharger',d3_d:'Cliquez <strong>"Extraire"</strong>. LтАЩappli lit, v├йrifie Reed-Solomon, d├йchiffre et affiche le r├йsultat.',
-      album_h:'ЁЯУж Mode album (gros fichiers)',
-      a1_t:'S├йlectionner plusieurs images',a1_d:'Passez ├а lтАЩonglet <strong>"Album"</strong>. S├йlectionnez 2+ images. LтАЩappli calcule combien sont n├йcessaires.',
-      a2_t:'Fichier divis├й automatiquement',a2_d:'Le fichier est d├йcoup├й en blocs, chacun chiffr├й ind├йpendamment avec son propre salt/nonce.',
-      a3_t:'Extraire de lтАЩalbum',a3_d:'Passez ├а <strong>"Extraction album"</strong>, entrez le PIN, s├йlectionnez toutes les images. D├йcodage parall├иle et reassemblage.',
-      tech_title:'D├йtails techniques',tech_sub:'Le pipeline cryptographique complet de Cryptoimg.',
+      nav_how:'Comment ça marche',nav_guide:'Guide',nav_tech:'Technologie',nav_faq:'FAQ',nav_launch:'Lancer',
+      hero_badge:'🔒 100% côté client · Zéro serveur',
+      hero_title:'Cachez n’importe quel secret<br><em>dans n’importe quelle image</em>',
+      hero_sub:'Stéganographie + AES-256-GCM + Argon2id + Reed-Solomon. Vos données ne quittent jamais votre navigateur.',
+      hero_app:'🔐 Ouvrir l’app',hero_guide:'📖 Lire le guide',
+      how_title:'Stéganographie cryptographique expliquée',how_sub:'Protection multi-couche : le chiffrement rend les données illisibles, la stéganographie les rend invisibles.',
+      pipe_file:'Votre fichier',pipe_deflate:'Deflate',pipe_stego:'Insertion stégo',pipe_output:'Image de sortie',
+      c1_t:'Compression Deflate',c1_d:'Votre fichier est compressé avec DEFLATE avant le chiffrement, maximisant la quantité de données dans l’image.',
+      c2_t:'AES-256-GCM',c2_d:'Chiffrement authentifié. Sans le PIN, les données sont inaccessibles. Toute altération est détectée via le tag d’authentification.',
+      c3_t:'Argon2id KDF',c3_d:'Le PIN est transformé en clé cryptographique via Argon2id — résistant aux attaques GPU et ASIC.',
+      c4_t:'Reed-Solomon ECC',c4_d:'Les codes correcteurs d’erreurs protègent contre les modifications mineures de l’image (re-sauvegarde, conversion).',
+      guide_title:'Guide pas à pas',guide_sub:'Instructions complètes pour cacher et extraire des fichiers.',
+      enc_h:'🔐 Comment cacher un fichier (Encodage)',
+      e1_t:'Choisir l’image conteneur',e1_d:'Cliquez <strong>"Sélectionner"</strong> et choisissez PNG, WebP ou AVIF. Les JPEG sont automatiquement convertis en sans perte.',
+      e2_t:'Entrez vos données secrètes',e2_d:'Basculez entre <strong>Texte</strong> et <strong>Fichier</strong>. Glissez-déposez ou cliquez pour parcourir.',
+      e3_t:'Définir le code PIN',e3_d:'Entrez et confirmez votre PIN. C’est la <strong>seule</strong> chose à retenir. Le PIN n’est jamais stocké.',
+      e4_t:'Choisir le format',e4_d:'<strong>PNG</strong> (sans perte, meilleur), <strong>WebP</strong> (plus petit) ou <strong>AVIF</strong> (le plus récent).',
+      e5_t:'Chiffrer & Télécharger',e5_d:'Cliquez <strong>"Chiffrer"</strong>. L’appli : compresse → chiffre → ajoute correction d’erreurs → insère → vérifie → télécharge.',
+      dec_h:'🔓 Comment extraire un fichier (Décodage)',
+      d1_t:'Télécharger l’image stégo',d1_d:'Cliquez <strong>"Sélectionner"</strong> et choisissez l’image contenant les données cachées.',
+      d2_t:'Entrez le PIN',d2_d:'Saisissez le même PIN que lors de l’encodage. Argon2id dérive la clé de déchiffrement.',
+      d3_t:'Extraire & Télécharger',d3_d:'Cliquez <strong>"Extraire"</strong>. L’appli lit, vérifie Reed-Solomon, déchiffre et affiche le résultat.',
+      album_h:'📦 Mode album (gros fichiers)',
+      a1_t:'Sélectionner plusieurs images',a1_d:'Passez à l’onglet <strong>"Album"</strong>. Sélectionnez 2+ images. L’appli calcule combien sont nécessaires.',
+      a2_t:'Fichier divisé automatiquement',a2_d:'Le fichier est découpé en blocs, chacun chiffré indépendamment avec son propre salt/nonce.',
+      a3_t:'Extraire de l’album',a3_d:'Passez à <strong>"Extraction album"</strong>, entrez le PIN, sélectionnez toutes les images. Décodage parallèle et reassemblage.',
+      tech_title:'Détails techniques',tech_sub:'Le pipeline cryptographique complet de Cryptoimg.',
       th_comp:'Composant',th_algo:'Algorithme',th_purpose:'Objectif',
-      t1_c:'D├йrivation de cl├й',t1_p:'PIN тЖТ stego key 256-bit + enc key 256-bit. R├йsistant GPU/ASIC.',
-      t2_c:'Extension de cl├й',t2_p:'D├йrive des cl├йs s├йpar├йes pour st├йgo et chiffrement depuis Argon2.',
-      t3_c:'Chiffrement',t3_p:'Chiffrement authentifi├й. Nonce 12 octets, auth tag 16 octets.',
-      t4_c:'Compression',t4_p:'R├йduit la taille du payload. ~50-70% pour le texte.',
-      t5_c:'Correction dтАЩerreurs',t5_p:'Protection contre les modifications. 25% de surcharge.',
-      t6_c:'St├йganographie',t6_p:'Donn├йes cach├йes dans les bits de poids faible. Minimisation des artefacts statistiques via s├йlection adaptative des pixels.',
-      t7_c:'Self-Test',t7_p:'V├йrifie imm├йdiatement apr├иs encodage que lтАЩextraction est correcte.',
-      t8_c:'Mode album',t8_p:'Divise les gros fichiers en plusieurs images. Chaque bloc chiffr├й ind├йpendamment.',
-      faq_title:'Questions fr├йquentes',
-      faq1_q:'Les donn├йes sont vraiment cach├йes ?',faq1_a:'Cryptoimg utilise la st├йganographie LSB dans les pixels filtr├йs par variance avec permutation ├а cl├й. Les modifications minimisent les artefacts statistiques тАФ les pixels modifi├йs sont visuellement identiques ├а l\'original. Remarque : aucune st├йganographie n\'est v├йritablement ind├йtectable face ├а un adversaire d├йtermin├й avec l\'image originale.',
-      faq2_q:'Que se passe-t-il si je perds le PIN ?',faq2_a:'Les donn├йes sont perdues. Le PIN est le seul moyen de d├йriver la cl├й. Aucun backdoor ni r├йcup├йration. CтАЩest volontaire.',
-      faq3_q:'Puis-je partager sur les r├йseaux sociaux ?',faq3_a:'Les r├йseaux sociaux recompriment les images, d├йtruisant les donn├йes cach├йes. Utilisez le partage sans perte.',
-      faq4_q:'Comment est-ce diff├йrent du chiffrement ?',faq4_a:'Le chiffrement rend les donn├йes illisibles. La st├йganographie les rend invisibles. Cryptoimg fait les deux.',
-      faq5_q:'Quels formats fonctionnent ?',faq5_a:'Entr├йe : nтАЩimporte quel (JPEG, PNG, WebP, AVIF, BMP, TIFF). Conversion auto. Sortie : PNG, WebP ou AVIF тАФ sans perte.',
-      faq6_q:'Quelque chose est envoy├й ├а un serveur ?',faq6_a:'Non. Tout se passe dans le navigateur via Web Crypto API, WebAssembly et Canvas API. Z├йro requ├кte r├йseau.',
-      don_title:'тЭдя╕П Soutenir Cryptoimg',don_sub:'Si lтАЩoutil vous est utile, soutenez le d├йveloppement.',
-      don_warn:'V├йrifiez toujours lтАЩadresse apr├иs la copie. NтАЩenvoyez que BTC ├а lтАЩadresse Bitcoin, ETH ├а lтАЩadresse Ethereum et USDT (TRC-20) ├а lтАЩadresse TRON.',
-      copy:'ЁЯУЛ Copier',app_title:'Lancer Cryptoimg',app_sub:'LтАЩappli compl├иte de st├йganographie fonctionne directement dans votre navigateur.',
-      footer_note:'Tout traitement se fait localement. Aucune donn├йe ne quitte votre appareil.',
-      nav_download:'T├йl├йcharger',dl_title:'тмЗя╕П T├йl├йcharger Cryptoimg',dl_sub:'Obtenez l\u2019application native pour votre plateforme ou utilisez la version web ci-dessus.',
-      dl_android:'Android',dl_android_desc:'Installez l\u2019APK sur n\u2019importe quel appareil Android (Android 7.0+ requis).',dl_apk:'T├йl├йcharger APK',
-      dl_windows:'Windows',dl_windows_desc:'Application de bureau compl├иte pour Windows 10/11.',dl_installer:'Installateur',dl_portable:'Portable'
+      t1_c:'Dérivation de clé',t1_p:'PIN → stego key 256-bit + enc key 256-bit. Résistant GPU/ASIC.',
+      t2_c:'Extension de clé',t2_p:'Dérive des clés séparées pour stégo et chiffrement depuis Argon2.',
+      t3_c:'Chiffrement',t3_p:'Chiffrement authentifié. Nonce 12 octets, auth tag 16 octets.',
+      t4_c:'Compression',t4_p:'Réduit la taille du payload. ~50-70% pour le texte.',
+      t5_c:'Correction d’erreurs',t5_p:'Protection contre les modifications. 25% de surcharge.',
+      t6_c:'Stéganographie',t6_p:'Données cachées dans les bits de poids faible. Minimisation des artefacts statistiques via sélection adaptative des pixels.',
+      t7_c:'Self-Test',t7_p:'Vérifie immédiatement après encodage que l’extraction est correcte.',
+      t8_c:'Mode album',t8_p:'Divise les gros fichiers en plusieurs images. Chaque bloc chiffré indépendamment.',
+      faq_title:'Questions fréquentes',
+      faq1_q:'Les données sont vraiment cachées ?',faq1_a:'Cryptoimg utilise la stéganographie LSB dans les pixels filtrés par variance avec permutation à clé. Les modifications minimisent les artefacts statistiques — les pixels modifiés sont visuellement identiques à l\'original. Remarque : aucune stéganographie n\'est véritablement indétectable face à un adversaire déterminé avec l\'image originale.',
+      faq2_q:'Que se passe-t-il si je perds le PIN ?',faq2_a:'Les données sont perdues. Le PIN est le seul moyen de dériver la clé. Aucun backdoor ni récupération. C’est volontaire.',
+      faq3_q:'Puis-je partager sur les réseaux sociaux ?',faq3_a:'Les réseaux sociaux recompriment les images, détruisant les données cachées. Utilisez le partage sans perte.',
+      faq4_q:'Comment est-ce différent du chiffrement ?',faq4_a:'Le chiffrement rend les données illisibles. La stéganographie les rend invisibles. Cryptoimg fait les deux.',
+      faq5_q:'Quels formats fonctionnent ?',faq5_a:'Entrée : n’importe quel (JPEG, PNG, WebP, AVIF, BMP, TIFF). Conversion auto. Sortie : PNG, WebP ou AVIF — sans perte.',
+      faq6_q:'Quelque chose est envoyé à un serveur ?',faq6_a:'Non. Tout se passe dans le navigateur via Web Crypto API, WebAssembly et Canvas API. Zéro requête réseau.',
+      don_title:'❤️ Soutenir Cryptoimg',don_sub:'Si l’outil vous est utile, soutenez le développement.',
+      don_warn:'Vérifiez toujours l’adresse après la copie. N’envoyez que BTC à l’adresse Bitcoin, ETH à l’adresse Ethereum et USDT (TRC-20) à l’adresse TRON.',
+      copy:'📋 Copier',app_title:'Lancer Cryptoimg',app_sub:'L’appli complète de stéganographie fonctionne directement dans votre navigateur.',
+      footer_note:'Tout traitement se fait localement. Aucune donnée ne quitte votre appareil.',
+      nav_download:'Télécharger',dl_title:'⬇️ Télécharger Cryptoimg',dl_sub:'Obtenez l\u2019application native pour votre plateforme ou utilisez la version web ci-dessus.',
+      dl_android:'Android',dl_android_desc:'Installez l\u2019APK sur n\u2019importe quel appareil Android (Android 7.0+ requis).',dl_apk:'Télécharger APK',
+      dl_windows:'Windows',dl_windows_desc:'Application de bureau complète pour Windows 10/11.',dl_installer:'Installateur',dl_portable:'Portable'
     },
     es:{
-      nav_how:'C├│mo funciona',nav_guide:'Gu├нa',nav_tech:'Tecnolog├нa',nav_faq:'FAQ',nav_launch:'Iniciar',
-      hero_badge:'ЁЯФТ 100% del lado del cliente ┬╖ Sin servidor',
+      nav_how:'Cómo funciona',nav_guide:'Guía',nav_tech:'Tecnología',nav_faq:'FAQ',nav_launch:'Iniciar',
+      hero_badge:'🔒 100% del lado del cliente · Sin servidor',
       hero_title:'Oculta cualquier secreto<br><em>en cualquier imagen</em>',
-      hero_sub:'Esteganograf├нa + AES-256-GCM + Argon2id + Reed-Solomon. Tus datos nunca salen de tu navegador.',
-      hero_app:'ЁЯФР Abrir app',hero_guide:'ЁЯУЦ Leer gu├нa',
-      how_title:'Cripto-esteganograf├нa explicada',how_sub:'Protecci├│n multicapa: el cifrado hace los datos ilegibles, la esteganograf├нa los hace invisibles.',
-      pipe_file:'Tu archivo',pipe_deflate:'Deflate',pipe_stego:'Incrustaci├│n stego',pipe_output:'Imagen de salida',
-      c1_t:'Compresi├│n Deflate',c1_d:'Tu archivo se comprime con DEFLATE antes del cifrado, maximizando la cantidad de datos que caben en la imagen.',
-      c2_t:'AES-256-GCM',c2_d:'Cifrado autenticado. Sin el PIN, los datos son inaccesibles. Cualquier manipulaci├│n se detecta via auth tag.',
-      c3_t:'Argon2id KDF',c3_d:'El PIN se transforma en clave criptogr├бfica via Argon2id тАФ resistente a ataques GPU y ASIC.',
-      c4_t:'Reed-Solomon ECC',c4_d:'Los c├│digos correctores de errores protegen contra modificaciones menores de la imagen.',
-      guide_title:'Gu├нa paso a paso',guide_sub:'Instrucciones completas para ocultar y extraer archivos.',
-      enc_h:'ЁЯФР C├│mo ocultar un archivo (Cifrado)',
-      e1_t:'Elegir imagen contenedor',e1_d:'Haz clic <strong>"Seleccionar imagen"</strong> y elige PNG, WebP o AVIF. JPEG se convierte autom├бticamente a sin p├йrdida.',
+      hero_sub:'Esteganografía + AES-256-GCM + Argon2id + Reed-Solomon. Tus datos nunca salen de tu navegador.',
+      hero_app:'🔐 Abrir app',hero_guide:'📖 Leer guía',
+      how_title:'Cripto-esteganografía explicada',how_sub:'Protección multicapa: el cifrado hace los datos ilegibles, la esteganografía los hace invisibles.',
+      pipe_file:'Tu archivo',pipe_deflate:'Deflate',pipe_stego:'Incrustación stego',pipe_output:'Imagen de salida',
+      c1_t:'Compresión Deflate',c1_d:'Tu archivo se comprime con DEFLATE antes del cifrado, maximizando la cantidad de datos que caben en la imagen.',
+      c2_t:'AES-256-GCM',c2_d:'Cifrado autenticado. Sin el PIN, los datos son inaccesibles. Cualquier manipulación se detecta via auth tag.',
+      c3_t:'Argon2id KDF',c3_d:'El PIN se transforma en clave criptográfica via Argon2id — resistente a ataques GPU y ASIC.',
+      c4_t:'Reed-Solomon ECC',c4_d:'Los códigos correctores de errores protegen contra modificaciones menores de la imagen.',
+      guide_title:'Guía paso a paso',guide_sub:'Instrucciones completas para ocultar y extraer archivos.',
+      enc_h:'🔐 Cómo ocultar un archivo (Cifrado)',
+      e1_t:'Elegir imagen contenedor',e1_d:'Haz clic <strong>"Seleccionar imagen"</strong> y elige PNG, WebP o AVIF. JPEG se convierte automáticamente a sin pérdida.',
       e2_t:'Ingresa tus datos secretos',e2_d:'Alterna entre <strong>Texto</strong> y <strong>Archivo</strong>. Arrastra y suelta o haz clic para buscar.',
-      e3_t:'Establecer c├│digo PIN',e3_d:'Ingresa y confirma tu PIN. Es lo <strong>├║nico</strong> que necesitas recordar. El PIN nunca se almacena.',
-      e4_t:'Elegir formato',e4_d:'<strong>PNG</strong> (sin p├йrdida, mejor), <strong>WebP</strong> (m├бs peque├▒o) o <strong>AVIF</strong> (m├бs reciente).',
-      e5_t:'Cifrar y descargar',e5_d:'Haz clic <strong>"Cifrar"</strong>. La app: comprime тЖТ cifra тЖТ a├▒ade correcci├│n тЖТ incrusta тЖТ verifica тЖТ descarga.',
-      dec_h:'ЁЯФУ C├│mo extraer un archivo (Descifrado)',
+      e3_t:'Establecer código PIN',e3_d:'Ingresa y confirma tu PIN. Es lo <strong>único</strong> que necesitas recordar. El PIN nunca se almacena.',
+      e4_t:'Elegir formato',e4_d:'<strong>PNG</strong> (sin pérdida, mejor), <strong>WebP</strong> (más pequeño) o <strong>AVIF</strong> (más reciente).',
+      e5_t:'Cifrar y descargar',e5_d:'Haz clic <strong>"Cifrar"</strong>. La app: comprime → cifra → añade corrección → incrusta → verifica → descarga.',
+      dec_h:'🔓 Cómo extraer un archivo (Descifrado)',
       d1_t:'Subir imagen stego',d1_d:'Haz clic <strong>"Seleccionar imagen"</strong> y elige la imagen con datos ocultos.',
       d2_t:'Ingresar PIN',d2_d:'Escribe el mismo PIN usado al cifrar. Argon2id deriva la clave de descifrado.',
       d3_t:'Extraer y descargar',d3_d:'Haz clic <strong>"Extraer"</strong>. La app lee, verifica Reed-Solomon, descifra y muestra el resultado.',
-      album_h:'ЁЯУж Modo ├бlbum (archivos grandes)',
-      a1_t:'Seleccionar m├║ltiples im├бgenes',a1_d:'Ve a la pesta├▒a <strong>"├Бlbum"</strong>. Selecciona 2+ im├бgenes. La app calcula cu├бntas necesitas.',
-      a2_t:'Archivo dividido autom├бticamente',a2_d:'El archivo se divide en bloques, cada uno cifrado independientemente con su propio salt/nonce.',
-      a3_t:'Extraer del ├бlbum',a3_d:'Ve a <strong>"Extraer ├бlbum"</strong>, ingresa el PIN, selecciona todas las im├бgenes a la vez.',
-      tech_title:'Detalles t├йcnicos',tech_sub:'El pipeline criptogr├бfico completo de Cryptoimg.',
-      th_comp:'Componente',th_algo:'Algoritmo',th_purpose:'Prop├│sito',
-      t1_c:'Derivaci├│n de clave',t1_p:'PIN тЖТ stego key 256-bit + enc key 256-bit. Resistente GPU/ASIC.',
-      t2_c:'Extensi├│n de clave',t2_p:'Deriva claves separadas para stego y cifrado desde Argon2.',
+      album_h:'📦 Modo álbum (archivos grandes)',
+      a1_t:'Seleccionar múltiples imágenes',a1_d:'Ve a la pestaña <strong>"Álbum"</strong>. Selecciona 2+ imágenes. La app calcula cuántas necesitas.',
+      a2_t:'Archivo dividido automáticamente',a2_d:'El archivo se divide en bloques, cada uno cifrado independientemente con su propio salt/nonce.',
+      a3_t:'Extraer del álbum',a3_d:'Ve a <strong>"Extraer álbum"</strong>, ingresa el PIN, selecciona todas las imágenes a la vez.',
+      tech_title:'Detalles técnicos',tech_sub:'El pipeline criptográfico completo de Cryptoimg.',
+      th_comp:'Componente',th_algo:'Algoritmo',th_purpose:'Propósito',
+      t1_c:'Derivación de clave',t1_p:'PIN → stego key 256-bit + enc key 256-bit. Resistente GPU/ASIC.',
+      t2_c:'Extensión de clave',t2_p:'Deriva claves separadas para stego y cifrado desde Argon2.',
       t3_c:'Cifrado',t3_p:'Cifrado autenticado. Nonce de 12 bytes, auth tag de 16 bytes.',
-      t4_c:'Compresi├│n',t4_p:'Reduce el tama├▒o del payload. ~50-70% en texto.',
-      t5_c:'Correcci├│n de errores',t5_p:'Protecci├│n contra modificaciones. 25% de sobrecarga.',
-      t6_c:'Esteganograf├нa',t6_p:'Datos ocultos en bits menos significativos. Minimizaci├│n de artefactos estad├нsticos mediante selecci├│n adaptativa de p├нxeles.',
-      t7_c:'Self-Test',t7_p:'Verifica inmediatamente despu├йs del cifrado que la extracci├│n es correcta.',
-      t8_c:'Modo ├бlbum',t8_p:'Divide archivos grandes en m├║ltiples im├бgenes. Cada bloque cifrado independientemente.',
+      t4_c:'Compresión',t4_p:'Reduce el tamaño del payload. ~50-70% en texto.',
+      t5_c:'Corrección de errores',t5_p:'Protección contra modificaciones. 25% de sobrecarga.',
+      t6_c:'Esteganografía',t6_p:'Datos ocultos en bits menos significativos. Minimización de artefactos estadísticos mediante selección adaptativa de píxeles.',
+      t7_c:'Self-Test',t7_p:'Verifica inmediatamente después del cifrado que la extracción es correcta.',
+      t8_c:'Modo álbum',t8_p:'Divide archivos grandes en múltiples imágenes. Cada bloque cifrado independientemente.',
       faq_title:'Preguntas frecuentes',
-      faq1_q:'┬┐Los datos realmente est├бn ocultos?',faq1_a:'Cryptoimg usa esteganograf├нa LSB en p├нxeles filtrados por varianza con permutaci├│n con clave. Los cambios minimizan los artefactos estad├нsticos тАФ los p├нxeles modificados son visualmente id├йnticos al original. Nota: ninguna esteganograf├нa es verdaderamente indetectable contra un adversario determinado con la imagen original.',
-      faq2_q:'┬┐Qu├й pasa si pierdo el PIN?',faq2_a:'Los datos se pierden. El PIN es la ├║nica forma de derivar la clave. No hay backdoor ni recuperaci├│n.',
-      faq3_q:'┬┐Puedo compartir en redes sociales?',faq3_a:'Las redes sociales recomprimen las im├бgenes, destruyendo los datos ocultos. Usa transferencia sin p├йrdida.',
-      faq4_q:'┬┐C├│mo es diferente del cifrado normal?',faq4_a:'El cifrado hace datos ilegibles. La esteganograf├нa los hace invisibles. Cryptoimg hace ambas cosas.',
-      faq5_q:'┬┐Qu├й formatos de imagen funcionan?',faq5_a:'Entrada: cualquiera (JPEG, PNG, WebP, AVIF, BMP, TIFF). Conversi├│n autom├бtica. Salida: PNG, WebP o AVIF тАФ sin p├йrdida.',
-      faq6_q:'┬┐Se env├нa algo a un servidor?',faq6_a:'No. Todo ocurre en el navegador via Web Crypto API, WebAssembly y Canvas API. Cero peticiones de red.',
-      don_title:'тЭдя╕П Apoyar Cryptoimg',don_sub:'Si la herramienta te es ├║til, considera apoyar el desarrollo.',
-      don_warn:'Siempre verifica la direcci├│n despu├йs de copiar. Env├нa solo BTC a la direcci├│n Bitcoin, ETH a la direcci├│n Ethereum y USDT (TRC-20) a la direcci├│n TRON.',
-      copy:'ЁЯУЛ Copiar',app_title:'Iniciar Cryptoimg',app_sub:'La aplicaci├│n completa de esteganograf├нa funciona directamente en tu navegador.',
-      footer_note:'Todo el procesamiento ocurre localmente. Ning├║n dato sale de tu dispositivo.',
-      nav_download:'Descargar',dl_title:'тмЗя╕П Descargar Cryptoimg',dl_sub:'Obt├йn la aplicaci├│n nativa para tu plataforma o usa la versi├│n web arriba.',
+      faq1_q:'¿Los datos realmente están ocultos?',faq1_a:'Cryptoimg usa esteganografía LSB en píxeles filtrados por varianza con permutación con clave. Los cambios minimizan los artefactos estadísticos — los píxeles modificados son visualmente idénticos al original. Nota: ninguna esteganografía es verdaderamente indetectable contra un adversario determinado con la imagen original.',
+      faq2_q:'¿Qué pasa si pierdo el PIN?',faq2_a:'Los datos se pierden. El PIN es la única forma de derivar la clave. No hay backdoor ni recuperación.',
+      faq3_q:'¿Puedo compartir en redes sociales?',faq3_a:'Las redes sociales recomprimen las imágenes, destruyendo los datos ocultos. Usa transferencia sin pérdida.',
+      faq4_q:'¿Cómo es diferente del cifrado normal?',faq4_a:'El cifrado hace datos ilegibles. La esteganografía los hace invisibles. Cryptoimg hace ambas cosas.',
+      faq5_q:'¿Qué formatos de imagen funcionan?',faq5_a:'Entrada: cualquiera (JPEG, PNG, WebP, AVIF, BMP, TIFF). Conversión automática. Salida: PNG, WebP o AVIF — sin pérdida.',
+      faq6_q:'¿Se envía algo a un servidor?',faq6_a:'No. Todo ocurre en el navegador via Web Crypto API, WebAssembly y Canvas API. Cero peticiones de red.',
+      don_title:'❤️ Apoyar Cryptoimg',don_sub:'Si la herramienta te es útil, considera apoyar el desarrollo.',
+      don_warn:'Siempre verifica la dirección después de copiar. Envía solo BTC a la dirección Bitcoin, ETH a la dirección Ethereum y USDT (TRC-20) a la dirección TRON.',
+      copy:'📋 Copiar',app_title:'Iniciar Cryptoimg',app_sub:'La aplicación completa de esteganografía funciona directamente en tu navegador.',
+      footer_note:'Todo el procesamiento ocurre localmente. Ningún dato sale de tu dispositivo.',
+      nav_download:'Descargar',dl_title:'⬇️ Descargar Cryptoimg',dl_sub:'Obtén la aplicación nativa para tu plataforma o usa la versión web arriba.',
       dl_android:'Android',dl_android_desc:'Instala el APK en cualquier dispositivo Android (requiere Android 7.0+).',dl_apk:'Descargar APK',
-      dl_windows:'Windows',dl_windows_desc:'Aplicaci├│n de escritorio completa para Windows 10/11.',dl_installer:'Instalador',dl_portable:'Portable'
+      dl_windows:'Windows',dl_windows_desc:'Aplicación de escritorio completa para Windows 10/11.',dl_installer:'Instalador',dl_portable:'Portable'
     },
     zh:{
-      nav_how:'х╖еф╜ЬхОЯчРЖ',nav_guide:'ф╜┐чФицМЗхНЧ',nav_tech:'цКАцЬпшпжцГЕ',nav_faq:'х╕╕шзБщЧощвШ',nav_launch:'хРпхКих║ФчФи',
-      hero_badge:'ЁЯФТ 100% ховцИ╖члп ┬╖ щЫ╢цЬНхКбхЩи',
-      hero_title:'щЪРшЧПф╗╗ф╜ХчзШхпЖ<br><em>хЬиф╗╗ф╜ХхЫ╛чЙЗф╕н</em>',
-      hero_sub:'щЪРхЖЩцЬп + AES-256-GCM хКахпЖ + Argon2id хпЖщТец┤╛чФЯ + Reed-Solomon ч║ащФЩуАВцВичЪДцХ░цНоц░╕ш┐Ьф╕Нф╝Ъчж╗х╝Ац╡ПшзИхЩиуАВ',
-      hero_app:'ЁЯФР цЙУх╝Ах║ФчФи',hero_guide:'ЁЯУЦ щШЕшп╗цМЗхНЧ',
-      how_title:'хКахпЖщЪРхЖЩцЬпхОЯчРЖ',how_sub:'хдЪх▒Вф┐ЭцКдя╝ЪхКахпЖф╜┐цХ░цНоф╕НхПпшп╗я╝МщЪРхЖЩцЬпф╜┐цХ░цНоф╕НхПпшзБуАВ',
-      pipe_file:'цВичЪДцЦЗф╗╢',pipe_deflate:'Deflate',pipe_stego:'щЪРхЖЩх╡МхЕе',pipe_output:'ш╛УхЗ║хЫ╛хГП',
-      c1_t:'Deflate хОЛч╝й',c1_d:'цЦЗф╗╢хЬихКахпЖхЙНф╜┐чФи DEFLATE хОЛч╝йя╝МцЬАхдзхМЦхЫ╛хГПф╕нхПпхо╣ч║│чЪДцХ░цНощЗПуАВ',
-      c2_t:'AES-256-GCM',c2_d:'шодшпБхКахпЖуАВц▓бцЬЙ PIN цЧац│Хшп╗хПЦцХ░цНоуАВф╗╗ф╜ХчпбцФ╣щГ╜ф╝ЪщАЪш┐ЗшодшпБцаЗчн╛цгАц╡ЛхИ░уАВ',
-      c3_t:'Argon2id KDF',c3_d:'PIN щАЪш┐З Argon2id ш╜мцНвф╕║хКахпЖхпЖщТе тАФ цК╡цКЧ GPU хТМ ASIC цФ╗хЗ╗уАВ',
-      c4_t:'Reed-Solomon ECC',c4_d:'ч║ащФЩчаБф┐ЭцКдхЕНхПЧхЫ╛хГПш╜╗х╛оф┐оцФ╣я╝ИщЗНцЦ░ф┐ЭхнШуАБца╝х╝Пш╜мцНвя╝ЙчЪДх╜▒хУНуАВ',
-      guide_title:'хИЖцнеф╜┐чФицМЗхНЧ',guide_sub:'ф╗ОхЫ╛чЙЗф╕нщЪРшЧПхТМцПРхПЦцЦЗф╗╢чЪДхоМцХ┤цУНф╜Ьц╡БчиЛуАВ',
-      enc_h:'ЁЯФР хжВф╜ХщЪРшЧПцЦЗф╗╢я╝Ич╝ЦчаБя╝Й',
-      e1_t:'щАЙцЛйш╜╜ф╜УхЫ╛хГП',e1_d:'чВ╣хЗ╗<strong>"щАЙцЛйхЫ╛хГП"</strong>я╝МщАЙцЛй PNGуАБWebP цИЦ AVIF цЦЗф╗╢уАВJPEG ф╝ЪшЗкхКиш╜мцНвф╕║цЧацНЯца╝х╝ПуАВ',
-      e2_t:'ш╛УхЕечзШхпЖцХ░цНо',e2_d:'хЬи<strong>цЦЗцЬм</strong>хТМ<strong>цЦЗф╗╢</strong>щАЙщб╣хНбф╣ЛщЧ┤хИЗцНвуАВцЦЗф╗╢цФпцМБцЛЦцФ╛цИЦчВ╣хЗ╗ц╡ПшзИуАВ',
-      e3_t:'шо╛ч╜о PIN чаБ',e3_d:'ш╛УхЕех╣╢чбошод PINуАВш┐ЩцШпцВихФпф╕АщЬАшжБшо░ф╜ПчЪДф╕Ьше┐уАВPIN ц░╕ш┐Ьф╕Нф╝ЪхнШхВи тАФ чФиф║ОщАЪш┐З Argon2id + HKDF ц┤╛чФЯхКахпЖхпЖщТеуАВ',
-      e4_t:'щАЙцЛйш╛УхЗ║ца╝х╝П',e4_d:'щАЙцЛй <strong>PNG</strong>я╝ИцЧацНЯя╝МцЬАф╜│я╝ЙуАБ<strong>WebP</strong>я╝ИцЫ┤х░Пя╝ЙцИЦ <strong>AVIF</strong>я╝ИцЬАцЦ░я╝ЙуАВ',
-      e5_t:'хКахпЖх╣╢ф╕Лш╜╜',e5_d:'чВ╣хЗ╗<strong>"хКахпЖ"</strong>уАВх║ФчФих░Жя╝ЪхОЛч╝й тЖТ хКахпЖ тЖТ ц╖╗хКач║ащФЩ тЖТ х╡МхЕехГПч┤а тЖТ шЗкцгАщкМшпБ тЖТ ф╕Лш╜╜уАВ',
-      dec_h:'ЁЯФУ хжВф╜ХцПРхПЦцЦЗф╗╢я╝ИшзгчаБя╝Й',
-      d1_t:'ф╕Кф╝ащЪРхЖЩхЫ╛хГП',d1_d:'чВ╣хЗ╗<strong>"щАЙцЛйхЫ╛хГП"</strong>я╝МщАЙцЛйхМЕхРлщЪРшЧПцХ░цНочЪДхЫ╛хГПуАВ',
-      d2_t:'ш╛УхЕе PIN',d2_d:'ш╛УхЕеч╝ЦчаБцЧ╢ф╜┐чФичЪДчЫ╕хРМ PINуАВArgon2id х░Жц┤╛чФЯшзгхпЖхпЖщТеуАВ',
-      d3_t:'цПРхПЦх╣╢ф╕Лш╜╜',d3_d:'чВ╣хЗ╗<strong>"цПРхПЦ"</strong>уАВх║ФчФишп╗хПЦцХ░цНоя╝МщкМшпБ Reed-Solomonя╝МшзгхпЖх╣╢цШ╛чд║ч╗УцЮЬуАВ',
-      album_h:'ЁЯУж ф╕Уш╛Сцибх╝Пя╝ИхдзцЦЗф╗╢я╝Й',
-      a1_t:'щАЙцЛйхдЪф╕кш╜╜ф╜УхЫ╛хГП',a1_d:'хИЗцНвхИ░<strong>"ф╕Уш╛Сч╝ЦчаБ"</strong>щАЙщб╣хНбуАВщАЙцЛй 2+ х╝ахЫ╛хГПуАВх║ФчФишЗкхКишобчоЧщЬАшжБхдЪх░Сх╝ауАВ',
-      a2_t:'цЦЗф╗╢шЗкхКихИЖхЙ▓',a2_d:'цЦЗф╗╢швлхИЖцИРхдЪф╕кхЭЧя╝МцпПф╕кхЭЧчЛмчлЛф╜┐чФишЗкх╖▒чЪД salt/nonce хКахпЖуАВчй║чЩ╜хЫ╛хГПшвлш╖│ш┐ЗуАВ',
-      a3_t:'ф╗Оф╕Уш╛СцПРхПЦ',a3_d:'хИЗцНвхИ░<strong>"ф╕Уш╛СцПРхПЦ"</strong>щАЙщб╣хНбя╝Мш╛УхЕе PINя╝Мф╕АцмбщАЙцЛйцЙАцЬЙхЫ╛хГПуАВцЙАцЬЙхЭЧх╣╢шбМшзгчаБх╣╢щЗНцЦ░ч╗ДшгЕуАВ',
-      tech_title:'цКАцЬпшпжцГЕ',tech_sub:'Cryptoimg чЪДхоМцХ┤хКахпЖц╡Бц░┤ч║┐уАВ',
-      th_comp:'ч╗Дф╗╢',th_algo:'чоЧц│Х',th_purpose:'чФищАФ',
-      t1_c:'хпЖщТец┤╛чФЯ',t1_p:'PIN тЖТ 256ф╜Н stego key + 256ф╜Н enc keyуАВцКЧ GPU/ASICуАВ',
-      t2_c:'хпЖщТецЙйх▒Х',t2_p:'ф╗О Argon2 ш╛УхЗ║ц┤╛чФЯчЛмчлЛчЪДщЪРхЖЩхпЖщТехТМхКахпЖхпЖщТеуАВ',
-      t3_c:'хКахпЖ',t3_p:'шодшпБхКахпЖуАВ12хнЧшКВ nonceя╝М16хнЧшКВшодшпБцаЗчн╛уАВ',
-      t4_c:'хОЛч╝й',t4_p:'хЬихКахпЖхЙНхЗПх░ПцХ░цНохдзх░ПуАВцЦЗцЬмч║ж 50-70% хОЛч╝йчОЗуАВ',
-      t5_c:'ч║ащФЩ',t5_p:'ф┐ЭцКдхЕНхПЧхЫ╛хГПф┐оцФ╣уАВ25% х╝АщФАуАВ',
-      t6_c:'щЪРхЖЩцЬп',t6_p:'цХ░цНощЪРшЧПхЬицЬАф╜ОцЬЙцХИф╜Нф╕нуАВщАЪш┐ЗшЗкщАВх║ФхГПч┤ащАЙцЛйцЬАх░ПхМЦч╗Яшобф╝кх╜▒уАВ',
-      t7_c:'шЗкцгА',t7_p:'ч╝ЦчаБхРОчлЛхН│щкМшпБцПРхПЦцШпхРжцнгчбоуАВ',
-      t8_c:'ф╕Уш╛Сцибх╝П',t8_p:'х░ЖхдзцЦЗф╗╢хИЖхЙ▓ф╕║хдЪф╕кхЫ╛хГПуАВцпПф╕кхЭЧчЛмчлЛхКахпЖуАВ',
-      faq_title:'х╕╕шзБщЧощвШ',
-      faq1_q:'цХ░цНочЬЯчЪДшвлщЪРшЧПф║ЖхРЧя╝Я',faq1_a:'Cryptoimg ф╜┐чФицЦ╣х╖ош┐Зц╗дхГПч┤аф╕нчЪД LSB щЪРхЖЩцЬпя╝МщЕНхРИхпЖщТеч╜оцНвуАВф┐оцФ╣шо╛шобф╕║цЬАх░ПхМЦч╗Яшобф╝кх╜▒ тАФ швлф┐оцФ╣чЪДхГПч┤ахЬишзЖшзЙф╕Кф╕ОхОЯхзЛхЫ╛хГПчЫ╕хРМуАВц│ицДПя╝Ъц▓бцЬЙф╗╗ф╜ХщЪРхЖЩцЬпшГ╜хЬицЛецЬЙхОЯхзЛхЫ╛хГПчЪДхЭЪхоЪхп╣цЙЛщЭвхЙНхоМхЕиф╕НхПпцгАц╡ЛуАВ',
-      faq2_q:'хжВцЮЬх┐Шшо░ PIN цАОф╣ИхКЮя╝Я',faq2_a:'цХ░цНох░Жф╕вхд▒уАВPIN цШпц┤╛чФЯшзгхпЖхпЖщТечЪДхФпф╕АцЦ╣х╝ПуАВц▓бцЬЙхРОщЧицИЦцБвхдНцЬ║хИ╢уАВш┐ЩцШпцЬЙцДПшо╛шобчЪДуАВ',
-      faq3_q:'хПпф╗ехЬичд╛ф║дхкТф╜Уф╕КхИЖф║лхРЧя╝Я',faq3_a:'чд╛ф║дхкТф╜Уф╝ЪщЗНцЦ░хОЛч╝йхЫ╛хГПя╝МхПпшГ╜ча┤хЭПщЪРшЧПцХ░цНоуАВшп╖ф╜┐чФицЧацНЯцЦ╣х╝ПхИЖф║ля╝ЪчФ╡хнРщВоф╗╢уАБф║СхнШхВицИЦчЫ┤цОеф╝аш╛УуАВ',
-      faq4_q:'ф╕ОцЩощАЪхКахпЖцЬЙф╗Аф╣Иф╕НхРМя╝Я',faq4_a:'хКахпЖф╜┐цХ░цНоф╕НхПпшп╗уАВщЪРхЖЩцЬпф╜┐цХ░цНоф╕НхПпшзБуАВCryptoimg ф╕дшАЕхЕ╝хдЗуАВ',
-      faq5_q:'цФпцМБхУкф║ЫхЫ╛хГПца╝х╝Пя╝Я',faq5_a:'ш╛УхЕея╝Ъф╗╗цДПца╝х╝Пя╝ИJPEGуАБPNGуАБWebPуАБAVIFуАБBMPуАБTIFFя╝ЙуАВшЗкхКиш╜мцНвуАВш╛УхЗ║я╝ЪPNGуАБWebP цИЦ AVIF тАФ хЭЗф╕║цЧацНЯуАВ',
-      faq6_q:'ф╝ЪхРСцЬНхКбхЩихПСщАБцХ░цНохРЧя╝Я',faq6_a:'ф╕Нф╝ЪуАВф╕АхИЗщГ╜хЬиц╡ПшзИхЩиф╕нщАЪш┐З Web Crypto APIуАБWebAssembly хТМ Canvas API хоМцИРуАВщЫ╢ч╜Сч╗Ьшп╖ц▒ВуАВ',
-      don_title:'тЭдя╕П цФпцМБ Cryptoimg',don_sub:'хжВцЮЬш┐Щф╕кх╖ехЕ╖хп╣цВицЬЙчФия╝Мшп╖шАГшЩСцФпцМБх╝АхПСуАВ',
-      don_warn:'хдНхИ╢хРОшп╖хзЛч╗ИщкМшпБхЬ░хЭАуАВф╗ЕхРСцпФчЙ╣х╕БхЬ░хЭАхПСщАБ BTCя╝МхРСф╗ехдкхЭКхЬ░хЭАхПСщАБ ETHя╝МхРС TRON хЬ░хЭАхПСщАБ USDT (TRC-20)уАВ',
-      copy:'ЁЯУЛ хдНхИ╢',app_title:'хРпхКи Cryptoimg',app_sub:'хЕихКЯшГ╜щЪРхЖЩх║ФчФичЫ┤цОехЬицВичЪДц╡ПшзИхЩиф╕нш┐РшбМуАВ',
-      footer_note:'цЙАцЬЙхдДчРЖхЭЗхЬицЬмхЬ░ш┐ЫшбМуАВцХ░цНоф╕Нф╝Ъчж╗х╝АцВичЪДшо╛хдЗуАВ',
-      nav_download:'ф╕Лш╜╜',dl_title:'тмЗя╕П ф╕Лш╜╜ Cryptoimg',dl_sub:'шО╖хПЦцВих╣│хП░чЪДхОЯчФЯх║ФчФицИЦф╜┐чФиф╕КцЦ╣чЪДч╜Сщб╡чЙИуАВ',
-      dl_android:'Android',dl_android_desc:'хЬиф╗╗ф╜Х Android шо╛хдЗф╕КхоЙшгЕ APKя╝ИщЬАшжБ Android 7.0+я╝ЙуАВ',dl_apk:'ф╕Лш╜╜ APK',
-      dl_windows:'Windows',dl_windows_desc:'щАВчФиф║О Windows 10/11 чЪДхЕихКЯшГ╜цбМщЭвх║ФчФиуАВ',dl_installer:'хоЙшгЕчиЛх║П',dl_portable:'ф╛┐цР║чЙИ'
+      nav_how:'工作原理',nav_guide:'使用指南',nav_tech:'技术详情',nav_faq:'常见问题',nav_launch:'启动应用',
+      hero_badge:'🔒 100% 客户端 · 零服务器',
+      hero_title:'隐藏任何秘密<br><em>在任何图片中</em>',
+      hero_sub:'隐写术 + AES-256-GCM 加密 + Argon2id 密钥派生 + Reed-Solomon 纠错。您的数据永远不会离开浏览器。',
+      hero_app:'🔐 打开应用',hero_guide:'📖 阅读指南',
+      how_title:'加密隐写术原理',how_sub:'多层保护：加密使数据不可读，隐写术使数据不可见。',
+      pipe_file:'您的文件',pipe_deflate:'Deflate',pipe_stego:'隐写嵌入',pipe_output:'输出图像',
+      c1_t:'Deflate 压缩',c1_d:'文件在加密前使用 DEFLATE 压缩，最大化图像中可容纳的数据量。',
+      c2_t:'AES-256-GCM',c2_d:'认证加密。没有 PIN 无法读取数据。任何篡改都会通过认证标签检测到。',
+      c3_t:'Argon2id KDF',c3_d:'PIN 通过 Argon2id 转换为加密密钥 — 抵抗 GPU 和 ASIC 攻击。',
+      c4_t:'Reed-Solomon ECC',c4_d:'纠错码保护免受图像轻微修改（重新保存、格式转换）的影响。',
+      guide_title:'分步使用指南',guide_sub:'从图片中隐藏和提取文件的完整操作流程。',
+      enc_h:'🔐 如何隐藏文件（编码）',
+      e1_t:'选择载体图像',e1_d:'点击<strong>"选择图像"</strong>，选择 PNG、WebP 或 AVIF 文件。JPEG 会自动转换为无损格式。',
+      e2_t:'输入秘密数据',e2_d:'在<strong>文本</strong>和<strong>文件</strong>选项卡之间切换。文件支持拖放或点击浏览。',
+      e3_t:'设置 PIN 码',e3_d:'输入并确认 PIN。这是您唯一需要记住的东西。PIN 永远不会存储 — 用于通过 Argon2id + HKDF 派生加密密钥。',
+      e4_t:'选择输出格式',e4_d:'选择 <strong>PNG</strong>（无损，最佳）、<strong>WebP</strong>（更小）或 <strong>AVIF</strong>（最新）。',
+      e5_t:'加密并下载',e5_d:'点击<strong>"加密"</strong>。应用将：压缩 → 加密 → 添加纠错 → 嵌入像素 → 自检验证 → 下载。',
+      dec_h:'🔓 如何提取文件（解码）',
+      d1_t:'上传隐写图像',d1_d:'点击<strong>"选择图像"</strong>，选择包含隐藏数据的图像。',
+      d2_t:'输入 PIN',d2_d:'输入编码时使用的相同 PIN。Argon2id 将派生解密密钥。',
+      d3_t:'提取并下载',d3_d:'点击<strong>"提取"</strong>。应用读取数据，验证 Reed-Solomon，解密并显示结果。',
+      album_h:'📦 专辑模式（大文件）',
+      a1_t:'选择多个载体图像',a1_d:'切换到<strong>"专辑编码"</strong>选项卡。选择 2+ 张图像。应用自动计算需要多少张。',
+      a2_t:'文件自动分割',a2_d:'文件被分成多个块，每个块独立使用自己的 salt/nonce 加密。空白图像被跳过。',
+      a3_t:'从专辑提取',a3_d:'切换到<strong>"专辑提取"</strong>选项卡，输入 PIN，一次选择所有图像。所有块并行解码并重新组装。',
+      tech_title:'技术详情',tech_sub:'Cryptoimg 的完整加密流水线。',
+      th_comp:'组件',th_algo:'算法',th_purpose:'用途',
+      t1_c:'密钥派生',t1_p:'PIN → 256位 stego key + 256位 enc key。抗 GPU/ASIC。',
+      t2_c:'密钥扩展',t2_p:'从 Argon2 输出派生独立的隐写密钥和加密密钥。',
+      t3_c:'加密',t3_p:'认证加密。12字节 nonce，16字节认证标签。',
+      t4_c:'压缩',t4_p:'在加密前减小数据大小。文本约 50-70% 压缩率。',
+      t5_c:'纠错',t5_p:'保护免受图像修改。25% 开销。',
+      t6_c:'隐写术',t6_p:'数据隐藏在最低有效位中。通过自适应像素选择最小化统计伪影。',
+      t7_c:'自检',t7_p:'编码后立即验证提取是否正确。',
+      t8_c:'专辑模式',t8_p:'将大文件分割为多个图像。每个块独立加密。',
+      faq_title:'常见问题',
+      faq1_q:'数据真的被隐藏了吗？',faq1_a:'Cryptoimg 使用方差过滤像素中的 LSB 隐写术，配合密钥置换。修改设计为最小化统计伪影 — 被修改的像素在视觉上与原始图像相同。注意：没有任何隐写术能在拥有原始图像的坚定对手面前完全不可检测。',
+      faq2_q:'如果忘记 PIN 怎么办？',faq2_a:'数据将丢失。PIN 是派生解密密钥的唯一方式。没有后门或恢复机制。这是有意设计的。',
+      faq3_q:'可以在社交媒体上分享吗？',faq3_a:'社交媒体会重新压缩图像，可能破坏隐藏数据。请使用无损方式分享：电子邮件、云存储或直接传输。',
+      faq4_q:'与普通加密有什么不同？',faq4_a:'加密使数据不可读。隐写术使数据不可见。Cryptoimg 两者兼备。',
+      faq5_q:'支持哪些图像格式？',faq5_a:'输入：任意格式（JPEG、PNG、WebP、AVIF、BMP、TIFF）。自动转换。输出：PNG、WebP 或 AVIF — 均为无损。',
+      faq6_q:'会向服务器发送数据吗？',faq6_a:'不会。一切都在浏览器中通过 Web Crypto API、WebAssembly 和 Canvas API 完成。零网络请求。',
+      don_title:'❤️ 支持 Cryptoimg',don_sub:'如果这个工具对您有用，请考虑支持开发。',
+      don_warn:'复制后请始终验证地址。仅向比特币地址发送 BTC，向以太坊地址发送 ETH，向 TRON 地址发送 USDT (TRC-20)。',
+      copy:'📋 复制',app_title:'启动 Cryptoimg',app_sub:'全功能隐写应用直接在您的浏览器中运行。',
+      footer_note:'所有处理均在本地进行。数据不会离开您的设备。',
+      nav_download:'下载',dl_title:'⬇️ 下载 Cryptoimg',dl_sub:'获取您平台的原生应用或使用上方的网页版。',
+      dl_android:'Android',dl_android_desc:'在任何 Android 设备上安装 APK（需要 Android 7.0+）。',dl_apk:'下载 APK',
+      dl_windows:'Windows',dl_windows_desc:'适用于 Windows 10/11 的全功能桌面应用。',dl_installer:'安装程序',dl_portable:'便携版'
     }
   };
 
