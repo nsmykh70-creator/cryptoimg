@@ -32,6 +32,32 @@ All cryptographic operations run entirely in your browser via WebAssembly and th
 | **Multi-language** | EN, RU, DE, FR, ES, ZH |
 | **Cross-platform** | Web, Windows (NSIS + portable), Android (APK) |
 
+## Screenshots
+
+### Hide Secret (Encode)
+![Encode View](screenshots/screenshot-1.png)
+
+### Extract Secret (Decode)
+![Decode View](screenshots/screenshot-2.png)
+
+### Stego Inspector — RGB Analysis
+![Inspector RGB](screenshots/screenshot-3.png)
+
+### Stego Inspector — Red Channel
+![Inspector Red](screenshots/screenshot-4.png)
+
+### Album Encode — Split Large Files
+![Album Encode](screenshots/screenshot-5.png)
+
+### Album Extract — Reassemble Chunks
+![Album Extract](screenshots/screenshot-6.png)
+
+### Argon2id Benchmark & Diagnostics
+![Argon2 Benchmark](screenshots/screenshot-7.png)
+
+### Donations & Support
+![Donations](screenshots/screenshot-8.png)
+
 ## How It Works
 
 ```
