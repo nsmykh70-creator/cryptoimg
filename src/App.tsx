@@ -86,7 +86,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 font-sans select-none antialiased" style={{overflow:'clip'}}>
+    <div className="flex flex-col h-full w-full bg-slate-950 text-slate-100 font-sans select-none antialiased" style={{overflow:'clip'}}>
       {isMobile ? (
         /* ===== MOBILE LAYOUT ===== */
         <>

@@ -13,8 +13,7 @@ import {
   X,
   FileCheck,
   ShieldCheck,
-  RefreshCw,
-  Info
+  RefreshCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 
@@ -447,9 +446,9 @@ export const EncodeView: React.FC<EncodeViewProps> = ({ lang, argon2Params }) =>
   };
 
   return (
-    <div className="h-full flex flex-col md:flex-row overflow-hidden bg-slate-900/40 select-none">
-      {/* Left Column: Inputs & Controls */}
-      <div className="w-full md:w-[480px] lg:w-[520px] flex-shrink-0 border-r border-slate-800/80 flex flex-col h-full overflow-y-auto p-4 space-y-4">
+    <div className="h-full flex flex-col overflow-hidden bg-slate-900/40 select-none">
+      {/* Inputs & Controls */}
+      <div className="w-full flex flex-col h-full overflow-y-auto p-4 space-y-4">
         <div>
           <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
             <Lock className="w-4 h-4 text-emerald-400" />
@@ -781,7 +780,51 @@ export const EncodeView: React.FC<EncodeViewProps> = ({ lang, argon2Params }) =>
             </div>
           )}
 
-          {/* Mobile Download Button — visible in left column after encoding */}
+          {/* Self-Test Audit Panel */}
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                {t.st_title}
+              </h3>
+              <span className="text-[10px] text-slate-500 font-mono">5-STAGE INTEGRITY AUDIT</span>
+            </div>
+
+            <div className="space-y-1.5">
+              {selfTestSteps.map((step) => (
+                <div
+                  key={step.id}
+                  className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/60"
+                >
+                  <span className="text-slate-300">{t[step.titleKey] || step.titleKey}</span>
+                  <span className="font-mono text-[10px]">
+                    {step.status === 'idle' && <span className="text-slate-600">IDLE</span>}
+                    {step.status === 'running' && (
+                      <span className="text-amber-400 flex items-center gap-1">
+                        <RefreshCw className="w-3 h-3 animate-spin" /> RUNNING
+                      </span>
+                    )}
+                    {step.status === 'success' && <span className="text-emerald-400 font-bold">PASS ✓</span>}
+                    {step.status === 'failed' && <span className="text-rose-400 font-bold">FAIL ✗</span>}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {selfTestSummary && (
+              <div
+                className={`p-2.5 rounded-lg text-xs font-semibold border ${
+                  selfTestSummary.pass
+                    ? 'bg-emerald-950/50 border-emerald-800/60 text-emerald-300'
+                    : 'bg-rose-950/50 border-rose-800/60 text-rose-300'
+                }`}
+              >
+                {selfTestSummary.text}
+              </div>
+            )}
+          </div>
+
+          {/* Output Photo Key */}
           {outputDataUrl && (
             <div ref={downloadRef} className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-800/40 space-y-3">
               <div className="text-center">
@@ -805,85 +848,8 @@ export const EncodeView: React.FC<EncodeViewProps> = ({ lang, argon2Params }) =>
         </div>
       </div>
 
-      {/* Right Column: Self-Test Checklist & Output Preview — hidden on mobile */}
-      <div className="hidden md:flex flex-1 flex-col h-full overflow-y-auto p-4 space-y-3">
-        {/* Self-Test Panel */}
-        <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-slate-200 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              {t.st_title}
-            </h3>
-            <span className="text-[10px] text-slate-500 font-mono">5-STAGE INTEGRITY AUDIT</span>
-          </div>
 
-          <div className="space-y-1.5">
-            {selfTestSteps.map((step) => (
-              <div
-                key={step.id}
-                className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/60"
-              >
-                <span className="text-slate-300">{t[step.titleKey] || step.titleKey}</span>
-                <span className="font-mono text-[10px]">
-                  {step.status === 'idle' && <span className="text-slate-600">IDLE</span>}
-                  {step.status === 'running' && (
-                    <span className="text-amber-400 flex items-center gap-1">
-                      <RefreshCw className="w-3 h-3 animate-spin" /> RUNNING
-                    </span>
-                  )}
-                  {step.status === 'success' && <span className="text-emerald-400 font-bold">PASS ✓</span>}
-                  {step.status === 'failed' && <span className="text-rose-400 font-bold">FAIL ✗</span>}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {selfTestSummary && (
-            <div
-              className={`p-2.5 rounded-lg text-xs font-semibold border ${
-                selfTestSummary.pass
-                  ? 'bg-emerald-950/50 border-emerald-800/60 text-emerald-300'
-                  : 'bg-rose-950/50 border-rose-800/60 text-rose-300'
-              }`}
-            >
-              {selfTestSummary.text}
-            </div>
-          )}
-        </div>
-
-        {/* Output Photo-Key Preview Canvas */}
-        <div className="flex-1 min-h-[200px] flex flex-col items-center justify-center p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 relative">
-          <canvas ref={canvasRef} className="max-w-full max-h-[300px] object-contain rounded-lg shadow-xl border border-slate-800" />
-
-          {outputDataUrl && (
-            <div className="mt-4 flex flex-col items-center space-y-3 w-full max-w-sm">
-              <div className="text-center">
-                <p className="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
-                  <Sparkles className="w-4 h-4" />
-                  {t.key_ready_title}
-                </p>
-                <p className="text-[11px] text-slate-400 mt-0.5">{t.key_ready_desc}</p>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleDownload}
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-950 flex items-center justify-center gap-2 transition-all cursor-pointer"
-              >
-                <Download className="w-4 h-4" />
-                <span>{t.btn_download_img} ({outputFormat.toUpperCase()})</span>
-              </button>
-            </div>
-          )}
-
-          {!outputDataUrl && !coverImage && (
-            <div className="text-center text-slate-600 space-y-1">
-              <Info className="w-6 h-6 mx-auto text-slate-700" />
-              <p className="text-xs">Photo-key preview and verification canvas will appear here</p>
-            </div>
-          )}
-        </div>
-      </div>
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 };

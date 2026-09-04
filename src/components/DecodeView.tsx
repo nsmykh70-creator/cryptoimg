@@ -436,9 +436,9 @@ export const DecodeView: React.FC<DecodeViewProps> = ({ lang }) => {
   };
 
   return (
-    <div className="h-full flex flex-col md:flex-row overflow-hidden bg-slate-900/40 select-none">
+    <div className="h-full flex flex-col overflow-hidden bg-slate-900/40 select-none">
       {/* Left Input Form */}
-      <div className="w-full md:w-[480px] lg:w-[500px] flex-shrink-0 border-r border-slate-800/80 flex flex-col h-full overflow-y-auto p-4 space-y-4">
+      <div className="w-full flex flex-col h-full overflow-y-auto p-4 space-y-4">
         <div>
           <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
             <Unlock className="w-4 h-4 text-emerald-400" />
@@ -558,10 +558,9 @@ export const DecodeView: React.FC<DecodeViewProps> = ({ lang }) => {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Right Output Area */}
-      <div className="flex-1 flex flex-col h-full overflow-y-auto p-4 space-y-4">
+        {/* Results Section */}
+        <div className="flex flex-col space-y-4">
         {/* Album Mode UI */}
         {isAlbumMode && (
           <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-800/50 space-y-3">
@@ -745,6 +744,7 @@ export const DecodeView: React.FC<DecodeViewProps> = ({ lang }) => {
             </p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

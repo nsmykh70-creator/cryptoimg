@@ -23,7 +23,7 @@ const COMPRESS_EXT = new Set(['.html', '.js', '.css', '.json', '.svg', '.ico', '
 
 // Security: allowlist of static files to serve
 const ALLOWED_FILES = new Set([
-  'index.html', 'bundle.js', 'qrcode.min.js', 'favicon.svg',
+  'index.html', 'bundle.js', 'bundle.v2.js', 'qrcode.min.js', 'favicon.svg',
   'robots.txt', 'llms.txt', 'server.js', 'package.json',
   'cryptoimg-v5.2.wasm', 'assets/'
 ]);
