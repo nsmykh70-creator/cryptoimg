@@ -1,0 +1,2884 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptoimg v5 — Authenticated Crypto-Steganography</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Argon2id (hash-wasm) — единственная внешняя крипто-библиотека.
+       AES-256-GCM, HKDF, SHA-256 — реализованы через нативный Web Crypto API. -->
+  <script defer src="./argon2.umd.min.js"></script>
+
+  <!-- BIP39 словарь -->
+  <script defer src="./bip39.js"></script>
+
+  <!-- QR Code для модуля донатов -->
+  <script defer src="./qrcode.min.js"></script>
+
+  <!-- Reed-Solomon Codec -->
+  <script type="module">
+    import { RS_Encoder, RS_Decoder, GF_QR_CODE_256 } from "./rs-codec.js";
+    window.__RS = { RS_Encoder, RS_Decoder, GF_QR_CODE_256 };
+    window.dispatchEvent(new Event('rs-ready'));
+  </script>
+
+  <style>
+    :root {
+      --primary: #21a038; --primary-hover: #187a29; --primary-light: #e6f5e9;
+      --text-dark: #1a2b1e; --text-gray: #5c7061; --bg-color: #f5f9f6;
+      --border-color: #d1e8d6; --font-main: 'Inter', -apple-system, sans-serif;
+      --warn: #b25a00; --warn-bg: #fff7e6; --warn-border: #ffe2a8;
+      --danger: #d32f2f; --success: #1e8e3e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-main); background: var(--bg-color); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+    /* НАВИГАЦИЯ */
+    .site-nav { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); }
+    .nav-inner { max-width: 1200px; margin: auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--primary-hover); font-weight: 800; line-height: 1; }
+    .brand-mark { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #28b843, #187a29); display: grid; place-items: center; color: #fff; font-size: 1.05rem; box-shadow: 0 6px 12px rgba(33,160,56,0.25); }
+    .brand-text { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: lowercase; color: var(--text-dark); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a, .nav-links select { color: var(--text-gray); text-decoration: none; font-weight: 500; transition: color 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta { background: var(--primary); color: #fff !important; padding: 8px 16px; border-radius: 10px; font-size: 0.92rem; transition: transform 0.2s, box-shadow 0.2s; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(33,160,56,0.2); }
+    .lang-switcher { padding: 7px 10px; border-radius: 10px; border: 1px solid var(--border-color); background: #fff; font-family: inherit; font-weight: 700; font-size: 0.85rem; color: var(--text-dark); cursor: pointer; outline: none; transition: 0.2s; min-width: 52px; width: auto; text-align: center; }
+    .lang-switcher:hover { border-color: var(--primary); }
+
+    /* ГЕРОЙ */
+    .hero { padding: 100px 24px; background: radial-gradient(circle at 85% 10%, #e0f2e3 0, transparent 40%), linear-gradient(180deg, #fff, #f5f9f6); }
+    .hero-grid { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--primary-light); color: var(--primary); border-radius: 100px; font-weight: 700; font-size: 0.85rem; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
+    .hero h1 em { font-style: normal; color: var(--primary); }
+    .hero p { font-size: 1.15rem; color: var(--text-gray); margin-bottom: 32px; max-width: 500px; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-large { padding: 11px 20px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 25px rgba(33,160,56,0.25); }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-3px); }
+    .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--border-color); }
+    .btn-outline:hover { border-color: var(--primary); }
+    .hero-visual { position: relative; perspective: 1000px; }
+    .image-card { background: rgba(255,255,255,0.8); padding: 16px; border-radius: 28px; box-shadow: 0 30px 60px rgba(0,0,0,0.05); transform: rotateY(-5deg) rotateX(2deg); border: 1px solid var(--border-color); backdrop-filter: blur(10px); }
+    .css-art-placeholder { width: 100%; height: 350px; border-radius: 18px; position: relative; overflow: hidden; background: radial-gradient(circle at top left, #28b843, #187a29); display: flex; align-items: center; justify-content: center; }
+    .glow-orb { position: absolute; border-radius: 50%; filter: blur(40px); opacity: 0.6; }
+    .orb-1 { width: 250px; height: 250px; background: #fff; top: -50px; left: -50px; animation: drift 6s infinite alternate; }
+    .orb-2 { width: 200px; height: 200px; background: #9effad; bottom: -20px; right: -20px; animation: drift 8s infinite alternate-reverse; }
+    .glass-panel { position: relative; z-index: 2; width: 120px; height: 120px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+    @keyframes drift { from { transform: translate(0, 0); } to { transform: translate(30px, 30px); } }
+    .floating-badge { position: absolute; background: #fff; padding: 12px 20px; border-radius: 16px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-color); z-index: 10; }
+    .badge-1 { bottom: -20px; left: -30px; animation: float 4s ease-in-out infinite; }
+    .badge-2 { top: 40px; right: -20px; animation: float 4s ease-in-out infinite reverse; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    /* СЕКЦИИ */
+    .section { padding: 100px 24px; }
+    .section.bg-alt { background: #fff; }
+    .section-inner { max-width: 1200px; margin: auto; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+    .section-header p { color: var(--text-gray); font-size: 1.1rem; max-width: 600px; margin: auto; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .card-info { background: #fff; border: 1px solid var(--border-color); border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: transform 0.3s; }
+    .card-info:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(33,160,56,0.08); }
+    .icon-box { width: 50px; height: 50px; border-radius: 14px; background: var(--primary-light); display: grid; place-items: center; font-size: 1.5rem; margin-bottom: 20px; color: var(--primary); }
+    .card-info h3 { font-size: 1.25rem; margin-bottom: 12px; }
+    .card-info p { color: var(--text-gray); font-size: 0.95rem; }
+
+    /* ПРИЛОЖЕНИЕ */
+    .app-section { padding: 80px 24px; background: linear-gradient(180deg, #f5f9f6, #e6f5e9); }
+    .app-container { max-width: 720px; width: 100%; margin: auto; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-radius: 32px; padding: 40px; box-shadow: 0 25px 70px rgba(33,160,56,0.12), inset 0 0 0 1px rgba(255,255,255,0.5); position: relative; }
+    #loadingOverlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); border-radius: 32px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; font-weight: 600; color: var(--primary); backdrop-filter: blur(5px); }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--primary-light); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .app-header { text-align: center; margin-bottom: 30px; }
+    .app-header h2 { font-size: 2rem; font-weight: 800; color: var(--primary-hover); display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .version-tag { background: var(--primary); color: #fff; font-size: 0.75rem; padding: 4px 10px; border-radius: 100px; vertical-align: middle; }
+    .app-header p { color: var(--text-gray); margin-top: 8px; font-size: 0.95rem; }
+
+    .tabs { display: flex; gap: 10px; background: var(--primary-light); border-radius: 20px; padding: 8px; margin-bottom: 30px; }
+    .tab-btn { flex: 1; padding: 14px; border: none; border-radius: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; background: transparent; color: var(--primary); transition: 0.3s; font-family: inherit; }
+    .tab-btn.active { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); color: var(--text-dark); }
+    .tab-content { display: none; animation: fadeIn 0.4s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+    input[type="text"], input[type="password"], textarea, select { width: 100%; padding: 16px; background: #fdfdfd; border: 1px solid var(--border-color); border-radius: 16px; font-size: 1rem; color: var(--text-dark); transition: 0.3s; font-family: inherit; }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px var(--primary-light); background: #fff; }
+    .file-box { border: 2px dashed var(--border-color); border-radius: 16px; padding: 20px; text-align: center; background: #fdfdfd; transition: 0.3s; position: relative; }
+    .file-box:hover { border-color: var(--primary); background: var(--primary-light); }
+    input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .file-box-content { pointer-events: none; }
+    .file-box-content i { font-size: 2rem; color: var(--primary); margin-bottom: 10px; display: block; }
+
+    .pin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pin-wrapper { position: relative; }
+    .pin-wrapper input { padding-right: 50px; }
+    .pin-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-gray); }
+
+    .data-type-toggle { display: flex; gap: 8px; margin-bottom: 20px; background: #fdfdfd; padding: 6px; border-radius: 16px; border: 1px solid var(--border-color); }
+    .data-type-toggle button { flex: 1; padding: 10px; border: none; border-radius: 12px; background: transparent; cursor: pointer; font-weight: 600; color: var(--text-gray); transition: 0.3s; font-family: inherit; }
+    .data-type-toggle button.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+    .input-with-action { position: relative; }
+    .input-action-btn { position: absolute; right: 12px; top: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 6px 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .input-action-btn:hover { background: var(--primary-hover); }
+
+    .status-msg { display: block; font-size: 0.85rem; margin-top: 8px; font-weight: 500; }
+    .status-valid { color: var(--success); }
+    .status-invalid { color: var(--danger); }
+    .status-warn { color: var(--warn); }
+    .format-hint { font-size: 0.85rem; color: var(--text-gray); margin-top: 8px; padding: 10px; background: #fff; border-radius: 10px; border: 1px solid var(--border-color); display: none; }
+
+    .btn-action { width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s; font-family: inherit; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .btn-encode { background: var(--text-dark); color: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.15); margin-top: 10px; }
+    .btn-encode:hover { background: #000; transform: translateY(-2px); }
+    .btn-encode:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-decode { background: var(--primary); color: #fff; box-shadow: 0 10px 20px rgba(33,160,56,0.2); margin-top: 10px; }
+    .btn-decode:hover { background: var(--primary-hover); transform: translateY(-2px); }
+    .btn-decode:disabled { background: #7ab385; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* PROGRESS BAR — для encode/decode операций */
+    .progress-wrap { display: none; margin-top: 12px; background: #fdfdfd; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; }
+    .progress-wrap.active { display: block; }
+    .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.88rem; font-weight: 600; color: var(--text-dark); }
+    .progress-label .progress-pct { color: var(--primary); font-variant-numeric: tabular-nums; }
+    .progress-track { height: 8px; background: var(--primary-light); border-radius: 100px; overflow: hidden; position: relative; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #28b843, #187a29); border-radius: 100px; width: 0%; transition: width 0.4s ease; position: relative; }
+    .progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: progressShimmer 1.5s infinite; }
+    @keyframes progressShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    .progress-stage { font-size: 0.82rem; color: var(--text-gray); margin-top: 6px; font-weight: 500; }
+
+    .output-box { background: var(--bg-color); padding: 24px; border-radius: 16px; border-left: 4px solid var(--primary); margin-top: 24px; display: none; }
+    .output-text { font-family: 'Courier New', monospace; word-break: break-all; white-space: pre-wrap; margin: 16px 0; font-size: 0.95rem; }
+    .canvas-container { display: none; flex-direction: column; align-items: center; margin-top: 24px; }
+    canvas { max-width: 100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 16px; border: 1px solid var(--border-color); }
+
+    .file-info { display: none; background: #fdfdfd; padding: 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+    .file-clear { color: var(--danger); cursor: pointer; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-top: 10px; }
+
+    /* SELF-TEST PANEL — новое в v5 */
+    .selftest-panel { display: none; margin-top: 16px; padding: 16px; background: #fff; border-radius: 14px; border: 1px solid var(--border-color); font-size: 0.85rem; }
+    .selftest-panel.active { display: block; }
+    .selftest-step { display: flex; align-items: center; gap: 10px; padding: 6px 0; color: var(--text-gray); }
+    .selftest-step .step-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--border-color); display: grid; place-items: center; color: #fff; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+    .selftest-step.done .step-icon { background: var(--success); }
+    .selftest-step.fail .step-icon { background: var(--danger); }
+    .selftest-step.active .step-icon { background: var(--primary); animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .selftest-summary { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); font-weight: 700; }
+    .selftest-summary.pass { color: var(--success); }
+    .selftest-summary.fail { color: var(--danger); }
+
+    /* INFO BANNER — новое в v5 */
+    .crypto-banner { background: linear-gradient(135deg, #e6f5e9, #fff); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; margin-bottom: 24px; font-size: 0.85rem; color: var(--text-gray); display: flex; gap: 10px; align-items: flex-start; }
+    .crypto-banner .banner-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .crypto-banner b { color: var(--text-dark); }
+    .crypto-banner code { font-family: 'Courier New', monospace; background: var(--primary-light); padding: 1px 6px; border-radius: 4px; font-size: 0.85em; color: var(--primary-hover); }
+
+    /* FAQ */
+    .faq-item { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+    .faq-item h4 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text-dark); }
+    .faq-item p { color: var(--text-gray); font-size: 0.95rem; margin-bottom: 10px; }
+    .faq-item p:last-child { margin-bottom: 0; }
+    .highlight-box { background: var(--primary-light); padding: 16px; border-radius: 12px; border-left: 4px solid var(--primary); font-size: 0.9rem; margin-top: 10px; }
+
+    /* ДОНАТЫ */
+    .donate-section { padding: 80px 24px; background: linear-gradient(180deg, #fff 0%, #f5f9f6 100%); }
+    .donate-inner { max-width: 720px; margin: auto; }
+    .donate-header { text-align: center; margin-bottom: 40px; }
+    .donate-header h2 { font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight: 800; color: var(--text-dark); margin-bottom: 12px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .donate-header p { color: var(--text-gray); font-size: 1rem; max-width: 540px; margin: 0 auto; }
+    .donate-card { background: #fff; border: 1px solid var(--border-color); border-radius: 28px; padding: 32px; box-shadow: 0 20px 50px rgba(33,160,56,0.08); }
+    .donate-tabs { display: flex; gap: 8px; background: var(--primary-light); border-radius: 18px; padding: 6px; margin-bottom: 28px; flex-wrap: wrap; }
+    .donate-tab { flex: 1; min-width: 90px; padding: 12px 14px; border: none; border-radius: 14px; font-weight: 700; font-size: 0.95rem; cursor: pointer; background: transparent; color: var(--primary); transition: all 0.3s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .donate-tab:hover:not(.active) { background: rgba(33,160,56,0.08); }
+    .donate-tab.active { background: #fff; color: var(--text-dark); box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+    .donate-tab .coin-icon { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #fff; font-weight: 800; }
+    .coin-btc { background: #f7931a; }
+    .coin-eth { background: #627eea; }
+    .coin-usdt { background: #26a17b; }
+    .donate-pane { display: none; animation: fadeIn 0.4s ease; }
+    .donate-pane.active { display: block; }
+    .donate-pane-grid { display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: center; }
+    .donate-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .donate-qr-box { width: 200px; height: 200px; background: #fff; border: 1px solid var(--border-color); border-radius: 18px; padding: 12px; display: grid; place-items: center; box-shadow: 0 8px 22px rgba(0,0,0,0.05); }
+    .donate-qr-box img, .donate-qr-box canvas { max-width: 100%; max-height: 100%; border-radius: 8px; display: block; }
+    .donate-qr-label { font-size: 0.8rem; color: var(--text-gray); text-align: center; }
+    .donate-info { display: flex; flex-direction: column; gap: 14px; }
+    .donate-coin-name { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .donate-coin-name h3 { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); margin: 0; }
+    .donate-network-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 100px; font-size: 0.78rem; font-weight: 700; }
+    .donate-address-label { font-size: 0.82rem; font-weight: 600; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.04em; }
+    .donate-address-row { display: flex; gap: 10px; align-items: stretch; }
+    .donate-address { flex: 1; min-width: 0; padding: 14px 16px; background: #f7faf8; border: 1px solid var(--border-color); border-radius: 14px; font-family: 'Courier New', monospace; font-size: 0.88rem; color: var(--text-dark); word-break: break-all; overflow-wrap: anywhere; line-height: 1.5; }
+    .donate-copy-btn { flex-shrink: 0; padding: 0 12px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.25s; font-family: inherit; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .donate-copy-btn:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 12px rgba(33,160,56,0.25); }
+    .donate-copy-btn.copied { background: #187a29; }
+    .donate-copy-btn .copy-icon { font-size: 0.85rem; line-height: 1; }
+    .donate-warning { font-size: 0.82rem; color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-border); padding: 10px 14px; border-radius: 10px; margin-top: 4px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.45; }
+    .donate-warning .warn-icon { flex-shrink: 0; font-size: 0.95rem; }
+
+    footer { background: var(--text-dark); color: #b1c7b7; padding: 40px 24px; text-align: center; }
+    footer strong { color: #fff; font-size: 1.2rem; display: block; margin-bottom: 8px; }
+
+    @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; } .hero p { margin: 0 auto 32px; } .hero-actions { justify-content: center; } .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; } .badge-1 { left: 0; bottom: -10px; } }
+    @media (max-width: 600px) { .grid-4, .grid-3 { grid-template-columns: 1fr; } .app-container { padding: 24px; } .pin-row { grid-template-columns: 1fr; gap: 0; } .nav-links a:not(.nav-cta) { display: none; } .hero h1 { font-size: 2.2rem; } .donate-pane-grid { grid-template-columns: 1fr; gap: 20px; } .donate-qr-wrap { order: 2; } .donate-info { order: 1; } .donate-qr-box { width: 180px; height: 180px; margin: 0 auto; } .donate-card { padding: 22px; } .donate-tab { font-size: 0.85rem; padding: 10px 8px; min-width: 70px; } .donate-address-row { flex-direction: column; } .donate-copy-btn { padding: 12px; justify-content: center; } }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top"><div class="brand-mark">🛡️</div><span class="brand-text">cryptoimg</span></a>
+      <div class="nav-links">
+        <a href="#how" data-i18n="nav_how" style="white-space: nowrap;">Как это работает?</a>
+        <a href="#use-cases" data-i18n="nav_usecases">Применение</a>
+        <a href="#faq" data-i18n="nav_faq">FAQ</a>
+        <a class="nav-cta" href="#app" data-i18n="nav_start">Запустить</a>
+        <select id="langSwitcher" class="lang-switcher" aria-label="Language">
+          <option value="en">En</option>
+          <option value="ru">Ru</option>
+          <option value="es">Es</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow" data-i18n="hero_eyebrow">🔒 Локальная обработка в браузере</span>
+        <h1 data-i18n="hero_title">Спрячьте секрет<br>в <em>любом фото.</em></h1>
+        <p data-i18n="hero_subtitle">Загрузите JPEG, PNG или HEIC. Сервис зашифровывает данные AES-256-GCM (аутентифицированное шифрование) и встраивает их в фото с помощью keyed-стеганографии.</p>
+        <div class="hero-actions">
+          <a class="btn-large btn-primary" href="#app" data-i18n="hero_btn_start">🔐 Начать сейчас</a>
+          <a class="btn-large btn-outline" href="#how" data-i18n="hero_btn_more">Узнать больше</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="image-card">
+          <div class="css-art-placeholder">
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+            <div class="glass-panel"><span class="lock-icon">🔒</span></div>
+          </div>
+        </div>
+        <div class="floating-badge badge-1" data-i18n="badge_aes">🛡️ AES-256-GCM + Argon2id</div>
+        <div class="floating-badge badge-2" data-i18n="badge_lossless">🖼️ Lossless Convert</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section bg-alt" id="how">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 data-i18n="how_title">Как это работает?</h2>
+        <p data-i18n="how_subtitle">Многоуровневая архитектура защиты данных с AEAD-шифрованием и keyed-стеганографией.</p>
+      </div>
+      <div class="grid-4">
+        <div class="card-info">
+          <div class="icon-box">🔄</div>
+          <h3 data-i18n="how_card1_title">Авто-конвертация</h3>
+          <p data-i18n="how_card1_text">Любой исходный формат пере-сохраняется в lossless-контейнер (PNG/WebP/AVIF).</p>
+        </div>
+        <div class="card-info">
+          <div class="icon-box">🛡️</div>
+          <h3 data-i18n="how_card2_title">AEAD: AES-256-GCM</h3>
+          <p data-i18n="how_card2_text">PIN → Argon2id → HKDF → AES-256-GCM. Любое изменение ciphertext или header детектируется через auth tag.</p>
+        </div>
+        <div class="card-info">
+          <div class="icon-box">🧩</div>
+          <h3 data-i18n="how_card3_title">Reed-Solomon ECC</h3>
+          <p data-i18n="how_card3_text">Повреждённые пиксели при передаче восстанавливаются. ECC дополняет (не заменяет) аутентификацию.</p>
+        </div>
+        <div class="card-info">
+          <div class="icon-box">🌐</div>
+          <h3 data-i18n="how_card4_title">Оффлайн</h3>
+          <p data-i18n="how_card4_text">Все вычисления локально в браузере через Web Crypto API. Сервер не видит ваши данные.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="use-cases">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2 data-i18n="use_title">Для чего используют Cryptoimg?</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card-info">
+          <div class="icon-box">🌱</div>
+          <h3 data-i18n="use_card1_title">Идеальная маскировка</h3>
+          <p data-i18n="use_card1_text">Фото-ключ не вызывает подозрений. Поставьте на обои, сохраните в галерее, закиньте на Google Drive.</p>
+        </div>
+        <div class="card-info">
+          <div class="icon-box">🥷</div>
+          <h3 data-i18n="use_card2_title">Обход цензуры</h3>
+          <p data-i18n="use_card2_text">Передавайте текстовые манифесты или документы через файлообменники под видом безобидных картинок.</p>
+        </div>
+        <div class="card-info">
+          <div class="icon-box">📁</div>
+          <h3 data-i18n="use_card3_title">Скрытые архивы</h3>
+          <p data-i18n="use_card3_text">Зашейте важный PDF-файл в PNG-картинку и отправьте по почте без привлечения внимания.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="app-section" id="app">
+    <div class="app-container">
+
+      <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p data-i18n="loading_engine">Загрузка крипто-движка...</p>
+      </div>
+
+      <div class="app-header">
+        <h2>Cryptoimg <span class="version-tag">v5.1</span></h2>
+        <p data-i18n="app_subtitle">AEAD-шифрование + keyed-стеганография</p>
+      </div>
+
+      <div class="crypto-banner">
+        <span class="banner-icon">🔐</span>
+        <div>
+          <b data-i18n="banner_title">Архитектура v5:</b>
+          <span data-i18n="banner_text">PIN → Argon2id → HKDF-SHA256 → AES-256-GCM. Header входит в AAD. Stego-seed получен из master key — без PIN атакующий не знает, где искать данные.</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-encode" data-i18n="tab_encode">📸 Спрятать данные</button>
+        <button class="tab-btn" data-tab="tab-decode" data-i18n="tab_decode">🔓 Извлечь данные</button>
+      </div>
+
+      <!-- ===== ВКЛАДКА КОДИРОВАНИЯ ===== -->
+      <div id="tab-encode" class="tab-content active">
+
+        <div class="form-group">
+          <label data-i18n="enc_lbl_img">1. Картинка-исходник (JPG, BMP, PNG и др.)</label>
+          <div class="file-box">
+            <input type="file" id="userImageSource" accept="image/*" />
+            <div class="file-box-content">
+              <i>📥</i>
+              <p><span data-i18n="drop_photo">Нажмите или перетащите фото сюда</span><br><small data-i18n="drop_photo_sub">Мы автоматически переформатируем его для защиты данных</small></p>
+            </div>
+            <p id="imageSourceMeta" style="margin-top: 10px; font-weight: 600; color: var(--primary); display:none;"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="enc_lbl_data">2. Что прячем?</label>
+          <div class="data-type-toggle">
+            <button type="button" class="active" data-mode="text" data-i18n="btn_type_text">📝 Текст / Seed</button>
+            <button type="button" data-mode="file" data-i18n="btn_type_file">📎 Файл</button>
+          </div>
+
+          <div id="textModeBlock">
+            <div class="input-with-action">
+              <textarea id="dataInput" data-i18n="enc_text_placeholder" placeholder="Введите секретный текст или вставьте seed-фразу..." rows="4"></textarea>
+              <button type="button" class="input-action-btn" id="btnPaste" data-i18n="btn_paste">Вставить</button>
+            </div>
+            <span id="validationStatus" class="status-msg"></span>
+          </div>
+
+          <div id="fileModeBlock" style="display:none;">
+            <div class="file-box" style="padding: 15px;">
+              <input type="file" id="dataFileInput" />
+              <div class="file-box-content" style="pointer-events: none;">
+                <i>📎</i>
+                <p data-i18n="drop_file">Выберите файл для сокрытия (до 50 МБ)</p>
+              </div>
+            </div>
+            <div id="dataFileInfo" class="file-info">
+              <div id="dataFileName" style="font-weight: 600;"></div>
+              <div id="dataFileMeta" style="font-size: 0.85rem; color: var(--text-gray);"></div>
+              <span class="file-clear" id="dataFileClear" data-i18n="btn_clear_file">✕ Отменить выбор файла</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group pin-row">
+          <div>
+            <label data-i18n="enc_lbl_pin1">3. Придумайте ПИН-код</label>
+            <div class="pin-wrapper">
+              <input type="password" id="pinInput" data-i18n="enc_pin1_placeholder" placeholder="8-11 цифр" maxlength="11" inputmode="numeric" autocomplete="new-password" />
+              <button tabindex="-1" type="button" class="pin-toggle" data-target="pinInput">👁</button>
+            </div>
+          </div>
+          <div>
+            <label data-i18n="enc_lbl_pin2">Повторите ПИН-код</label>
+            <div class="pin-wrapper">
+              <input type="password" id="pinInputConfirm" data-i18n="enc_pin2_placeholder" placeholder="Подтверждение" maxlength="11" inputmode="numeric" autocomplete="new-password" />
+              <button tabindex="-1" type="button" class="pin-toggle" data-target="pinInputConfirm">👁</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="enc_lbl_format">Формат фото-ключа</label>
+          <select id="outputFormat">
+            <option value="png" selected data-i18n="opt_png">PNG (Рекомендуется, 100% надежность)</option>
+            <option value="webp" data-i18n="opt_webp">WebP (Компактный, без потерь)</option>
+            <option value="avif" data-i18n="opt_avif">AVIF (Современный, экспериментально)</option>
+          </select>
+          <div id="formatHintMsg" class="format-hint" style="display: block;"></div>
+        </div>
+
+        <button class="btn-action btn-encode" id="btnEncode" data-i18n="btn_do_encode">Зашифровать и создать фото</button>
+
+        <!-- PROGRESS BAR -->
+        <div id="encodeProgress" class="progress-wrap">
+          <div class="progress-label">
+            <span id="encodeProgressLabel">Подготовка...</span>
+            <span class="progress-pct" id="encodeProgressPct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="encodeProgressFill"></div></div>
+          <div class="progress-stage" id="encodeProgressStage"></div>
+        </div>
+
+        <!-- SELF-TEST PANEL — новое в v5 -->
+        <div id="selftestPanel" class="selftest-panel">
+          <div style="font-weight: 700; margin-bottom: 8px; color: var(--text-dark);" data-i18n="selftest_title">🔧 Self-Test (внутренняя проверка Photo Key)</div>
+          <div class="selftest-step" id="st-step-1"><span class="step-icon">1</span><span data-i18n="selftest_step1">Embed payload в изображение</span></div>
+          <div class="selftest-step" id="st-step-2"><span class="step-icon">2</span><span data-i18n="selftest_step2">Extract payload из изображения</span></div>
+          <div class="selftest-step" id="st-step-3"><span class="step-icon">3</span><span data-i18n="selftest_step3">RS-decode → реконструкция envelope</span></div>
+          <div class="selftest-step" id="st-step-4"><span class="step-icon">4</span><span data-i18n="selftest_step4">AES-256-GCM verify (auth tag)</span></div>
+          <div class="selftest-step" id="st-step-5"><span class="step-icon">5</span><span data-i18n="selftest_step5">SHA-256 compare с оригиналом</span></div>
+          <div class="selftest-summary" id="selftestSummary"></div>
+        </div>
+
+        <div id="encodeOutput" class="canvas-container">
+          <h3 style="margin-bottom: 15px; color: var(--primary);" data-i18n="out_key_ready">Ваш фото-ключ готов!</h3>
+          <canvas id="cryptoCanvas"></canvas>
+          <button class="btn-action btn-outline" id="btnDownload" style="margin-top: 10px;" data-i18n="btn_dl_image">💾 Скачать изображение</button>
+        </div>
+      </div>
+
+      <!-- ===== ВКЛАДКА ДЕКОДИРОВАНИЯ ===== -->
+      <div id="tab-decode" class="tab-content">
+
+        <div class="form-group">
+          <label data-i18n="dec_lbl_img">1. Загрузите фото-ключ (с секретом)</label>
+          <div class="file-box">
+            <input type="file" id="fileLoader" accept="image/png, image/webp, image/avif" />
+            <div class="file-box-content">
+              <i>🔍</i>
+              <p data-i18n="drop_key">Загрузите PNG, WebP или AVIF изображение</p>
+            </div>
+            <p id="imageDecodeMeta" style="margin-top: 10px; font-weight: 600; color: var(--primary); display:none;"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="dec_lbl_pin">2. ПИН-код для расшифровки</label>
+          <div class="pin-wrapper">
+            <input type="password" id="pinInputDecode" data-i18n="dec_pin_placeholder" placeholder="Введите ПИН-код" maxlength="11" inputmode="numeric" autocomplete="current-password" />
+            <button tabindex="-1" type="button" class="pin-toggle" data-target="pinInputDecode">👁</button>
+          </div>
+        </div>
+
+        <button class="btn-action btn-decode" id="btnDecode" data-i18n="btn_do_decode">Извлечь данные</button>
+
+        <!-- PROGRESS BAR -->
+        <div id="decodeProgress" class="progress-wrap">
+          <div class="progress-label">
+            <span id="decodeProgressLabel">Подготовка...</span>
+            <span class="progress-pct" id="decodeProgressPct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="decodeProgressFill"></div></div>
+          <div class="progress-stage" id="decodeProgressStage"></div>
+        </div>
+
+        <div id="decodeOutput" class="output-box">
+          <h4 id="resultTitle" style="color: var(--primary); font-size: 1.1rem; margin-bottom: 10px;" data-i18n="out_result">Результат:</h4>
+          <div id="resultText" class="output-text"></div>
+          <button type="button" class="btn-action btn-outline" id="btnCopyResult" style="padding: 10px; font-size: 1rem; display: none;" data-i18n="btn_copy">📋 Скопировать текст</button>
+          <button class="btn-action btn-primary" id="btnDownloadExtracted" style="padding: 10px; font-size: 1rem; display: none;" data-i18n="btn_dl_file">💾 Скачать извлечённый файл</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section bg-alt" id="faq">
+    <div class="section-inner" style="max-width: 800px;">
+      <div class="section-header">
+        <h2 data-i18n="faq_title">Частые вопросы</h2>
+      </div>
+
+      <div class="faq-item">
+        <h4 data-i18n="faq_q_pin">Почему используется ПИН-код (8-11 цифр), а не пароль?</h4>
+        <p data-i18n="faq_a_pin1">Запомнить 8–11 цифр проще, чем 24 английских слова Seed-фразы. Без ПИН-кода извлечь данные невозможно — даже зная, что в фото есть стеганография.</p>
+        <div class="highlight-box">
+          <strong data-i18n="faq_bruteforce_title">Argon2id (RFC 9106, m=64MiB, t=3, p=4):</strong>
+          <p data-i18n="faq_bruteforce_text" style="font-size: 0.95rem; margin-top: 8px;">Каждая попытка ПИН-кода требует 64 МБ RAM и 3 итерации. Это делает GPU/ASIC-брутфорс экономически невыгодным. v5 также использует HKDF для разделения ключей шифрования и стеганографии.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <h4 data-i18n="faq_q_aead">Что изменилось в v5 по сравнению с v4?</h4>
+        <p data-i18n="faq_a_aead">Полная переработка крипто-ядра: AES-CBC заменён на <b>AES-256-GCM</b> (аутентифицированное шифрование), добавлен HKDF для <b>domain separation</b> (отдельные ключи для шифрования и стеганографии), стеганография стала <b>keyed</b> (позиции пикселей псевдослучайны, зависят от PIN), добавлен <b>self-test</b> перед выдачей фото-ключа, проверка BIP39 checksum, и расширенный authenticated header.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 data-i18n="faq_q1">У меня фото в формате JPEG/HEIC. Оно подойдёт?</h4>
+        <p data-i18n="faq_a1"><b>Да!</b> Загрузите любой формат — браузер распакует. При сохранении сервис принудительно использует lossless-контейнер (PNG/WebP/AVIF), чтобы скрытые данные не потерялись.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 data-i18n="faq_q2">Что не так с AVIF?</h4>
+        <p data-i18n="faq_a2">AVIF даёт отличное сжатие, но не все старые браузеры умеют кодировать его lossless. Если кодирование не удастся — Cryptoimg безопасно сохранит PNG, уведомив вас.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4 data-i18n="faq_q3">Можно ли отправить фото-ключ через Telegram?</h4>
+        <p data-i18n="faq_a3">Только как <b>«Файл» (Скрепка → Отправить как файл)</b>. Обычная отправка применит сжатие и уничтожит данные. Reed-Solomon восстанавливает мелкие повреждения, но не сильное сжатие.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДОНАТЫ -->
+  <section class="donate-section" id="donate">
+    <div class="donate-inner">
+      <div class="donate-header">
+        <h2><span data-i18n="donate_title">Поддержать проект</span> <span style="font-size:1.6rem;">💛</span></h2>
+        <p data-i18n="donate_subtitle">Если Cryptoimg оказался полезен — спасибо за донат.</p>
+      </div>
+
+      <div class="donate-card">
+        <div class="donate-tabs" role="tablist">
+          <button class="donate-tab active" data-coin="btc" role="tab" aria-selected="true">
+            <span class="coin-icon coin-btc">₿</span><span>BTC</span>
+          </button>
+          <button class="donate-tab" data-coin="eth" role="tab" aria-selected="false">
+            <span class="coin-icon coin-eth">Ξ</span><span>ETH</span>
+          </button>
+          <button class="donate-tab" data-coin="usdt" role="tab" aria-selected="false">
+            <span class="coin-icon coin-usdt">₮</span><span>USDT</span>
+          </button>
+        </div>
+
+        <div class="donate-pane active" data-coin-pane="btc" role="tabpanel">
+          <div class="donate-pane-grid">
+            <div class="donate-qr-wrap">
+              <div class="donate-qr-box" id="qr-btc"></div>
+              <span class="donate-qr-label" data-i18n="donate_scan_qr">Отсканируйте QR в кошельке</span>
+            </div>
+            <div class="donate-info">
+              <div class="donate-coin-name">
+                <h3>Bitcoin (BTC)</h3>
+                <span class="donate-network-badge" data-i18n="donate_net_btc">Сеть: Bitcoin (BTC)</span>
+              </div>
+              <div>
+                <div class="donate-address-label" data-i18n="donate_addr_label">Адрес кошелька</div>
+                <div class="donate-address-row">
+                  <code class="donate-address" id="addr-btc">bc1q8f6sxqsmrt5l57at3vqmuhg4saa3p822n7klca</code>
+                  <button class="donate-copy-btn" data-copy-target="addr-btc" type="button">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text" data-i18n="donate_copy">Копировать</span>
+                  </button>
+                </div>
+              </div>
+              <div class="donate-warning">
+                <span class="warn-icon">⚠️</span>
+                <span data-i18n="donate_warn_btc">Отправляйте только BTC на этот адрес.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="donate-pane" data-coin-pane="eth" role="tabpanel">
+          <div class="donate-pane-grid">
+            <div class="donate-qr-wrap">
+              <div class="donate-qr-box" id="qr-eth"></div>
+              <span class="donate-qr-label" data-i18n="donate_scan_qr">Отсканируйте QR в кошельке</span>
+            </div>
+            <div class="donate-info">
+              <div class="donate-coin-name">
+                <h3>Ethereum (ETH)</h3>
+                <span class="donate-network-badge" data-i18n="donate_net_eth">Сеть: ERC-20 (Ethereum)</span>
+              </div>
+              <div>
+                <div class="donate-address-label" data-i18n="donate_addr_label">Адрес кошелька</div>
+                <div class="donate-address-row">
+                  <code class="donate-address" id="addr-eth">0xD8F2cFE3B7D0864DC4db3Afda52C7a30978Df703</code>
+                  <button class="donate-copy-btn" data-copy-target="addr-eth" type="button">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text" data-i18n="donate_copy">Копировать</span>
+                  </button>
+                </div>
+              </div>
+              <div class="donate-warning">
+                <span class="warn-icon">⚠️</span>
+                <span data-i18n="donate_warn_eth">Подходит для ETH и токенов ERC-20.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="donate-pane" data-coin-pane="usdt" role="tabpanel">
+          <div class="donate-pane-grid">
+            <div class="donate-qr-wrap">
+              <div class="donate-qr-box" id="qr-usdt"></div>
+              <span class="donate-qr-label" data-i18n="donate_scan_qr">Отсканируйте QR в кошельке</span>
+            </div>
+            <div class="donate-info">
+              <div class="donate-coin-name">
+                <h3>Tether (USDT)</h3>
+                <span class="donate-network-badge" data-i18n="donate_net_usdt">Сеть: TRC-20 (Tron)</span>
+              </div>
+              <div>
+                <div class="donate-address-label" data-i18n="donate_addr_label">Адрес кошелька</div>
+                <div class="donate-address-row">
+                  <code class="donate-address" id="addr-usdt">TFRHPnSJMa4pm7WPxKYH5UuYZeHM9cLAuP</code>
+                  <button class="donate-copy-btn" data-copy-target="addr-usdt" type="button">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text" data-i18n="donate_copy">Копировать</span>
+                  </button>
+                </div>
+              </div>
+              <div class="donate-warning">
+                <span class="warn-icon">⚠️</span>
+                <span data-i18n="donate_warn_usdt">Отправляйте USDT только через сеть TRC-20 (Tron).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <strong>🛡️ Cryptoimg</strong>
+    <p data-i18n="footer_text">AEAD + Adaptive Steganography в браузере.<br>v5.1 (AES-256-GCM + Argon2id + v4 compat)</p>
+  </footer>
+
+  <script>
+
+    // ============================================================================
+    // i18n — переводы (с новыми ключами v5)
+    // ============================================================================
+    const translations = {
+      "en": {
+        "nav_how": "How it works", "nav_usecases": "Use Cases", "nav_faq": "FAQ", "nav_start": "Start App",
+        "hero_eyebrow": "🔒 Local processing in browser",
+        "hero_title": "Hide a secret<br>in <em>any photo.</em>",
+        "hero_subtitle": "Upload JPEG, PNG or HEIC. Data is encrypted with AES-256-GCM (authenticated) and embedded via keyed steganography.",
+        "hero_btn_start": "🔐 Start Now", "hero_btn_more": "Learn More",
+        "badge_aes": "🛡️ AES-256-GCM + Argon2id", "badge_lossless": "🖼️ Lossless Convert",
+        "how_title": "How does it work?", "how_subtitle": "Multi-layered AEAD protection with keyed steganography.",
+        "how_card1_title": "Auto-conversion", "how_card1_text": "Any format is re-saved as a lossless container (PNG/WebP/AVIF).",
+        "how_card2_title": "AEAD: AES-256-GCM", "how_card2_text": "PIN → Argon2id → HKDF → AES-256-GCM. Any change to ciphertext or header is detected via auth tag.",
+        "how_card3_title": "Reed-Solomon ECC", "how_card3_text": "Corrupted pixels during transfer are recovered. ECC complements (does not replace) authentication.",
+        "how_card4_title": "Offline", "how_card4_text": "All computation is local via Web Crypto API. We never see your data.",
+        "use_title": "What is Cryptoimg for?",
+        "use_card1_title": "Perfect Camouflage", "use_card1_text": "A photo-key raises no suspicion. Set as wallpaper, keep in gallery, upload to Google Drive.",
+        "use_card2_title": "Bypass Censorship", "use_card2_text": "Transfer text manifestos or documents via file sharing disguised as harmless images.",
+        "use_card3_title": "Hidden Archives", "use_card3_text": "Embed a private PDF inside a PNG and email it without drawing attention.",
+        "loading_engine": "Loading crypto engine...", "app_subtitle": "AEAD encryption + keyed steganography",
+        "banner_title": "v5 Architecture:",
+        "banner_text": "PIN → Argon2id → HKDF-SHA256 → AES-256-GCM. Header is part of AAD. Stego seed is derived from master key — without PIN, attacker cannot locate payload.",
+        "tab_encode": "📸 Hide Data", "tab_decode": "🔓 Extract Data",
+        "enc_lbl_img": "1. Source Image (JPG, BMP, PNG, etc.)",
+        "drop_photo": "Click or drop a photo here", "drop_photo_sub": "We'll format it automatically",
+        "enc_lbl_data": "2. What to hide?",
+        "btn_type_text": "📝 Text / Seed", "btn_type_file": "📎 File",
+        "enc_text_placeholder": "Enter secret text or paste your seed phrase...",
+        "btn_paste": "Paste", "drop_file": "Select a file to hide (up to 50 MB)", "btn_clear_file": "✕ Remove file",
+        "enc_lbl_pin1": "3. Create a PIN", "enc_pin1_placeholder": "8-11 digits",
+        "enc_lbl_pin2": "Repeat PIN", "enc_pin2_placeholder": "Confirm PIN",
+        "enc_lbl_format": "Output format",
+        "opt_png": "PNG (Recommended, 100% reliable)", "opt_webp": "WebP (Compact, lossless)", "opt_avif": "AVIF (Modern, experimental)",
+        "hint_png": "<b>PNG</b>: Classic. Bit-perfect. Ideal for safe storage.",
+        "hint_webp": "<b>WebP</b>: Lighter than PNG. Lossless in browser.",
+        "hint_avif": "<b>AVIF</b>: Best compression. <i>Note: only newest browsers support lossless encoding.</i>",
+        "btn_do_encode": "Encrypt and Create Photo", "out_key_ready": "Your photo-key is ready!", "btn_dl_image": "💾 Download Image",
+        "dec_lbl_img": "1. Upload Photo-key", "drop_key": "Upload PNG, WebP or AVIF image",
+        "dec_lbl_pin": "2. PIN for decryption", "dec_pin_placeholder": "Enter PIN",
+        "btn_do_decode": "Extract Data", "out_result": "Result:", "btn_copy": "📋 Copy Text", "btn_dl_file": "💾 Download extracted file",
+
+        "selftest_title": "🔧 Self-Test (internal Photo Key verification)",
+        "selftest_step1": "Embed payload into image",
+        "selftest_step2": "Extract payload from image",
+        "selftest_step3": "RS-decode → reconstruct envelope",
+        "selftest_step4": "AES-256-GCM verify (auth tag)",
+        "selftest_step5": "SHA-256 compare with original",
+        "selftest_pass": "✅ PASS — Photo Key verified, download enabled",
+        "selftest_fail": "❌ FAIL — Photo Key is broken. Do NOT use it.",
+        "selftest_pass_summary": "✅ Photo Key verified successfully. You can safely download and use it.",
+        "selftest_fail_summary": "❌ Self-test failed. The Photo Key may be corrupted — please try a different source image or report the issue.",
+
+        "faq_title": "Frequently Asked Questions",
+        "faq_q_pin": "Why use an 8-11 digit PIN instead of a password?",
+        "faq_a_pin1": "8-11 digits are easier to remember than 24 seed words. Without PIN, data extraction is impossible — even if attacker knows the photo contains steganography.",
+        "faq_bruteforce_title": "Argon2id (RFC 9106, m=64MiB, t=3, p=4):",
+        "faq_bruteforce_text": "Each PIN attempt requires 64 MB RAM and 3 iterations. GPU/ASIC brute-force becomes economically unviable. v5 also uses HKDF to separate encryption and steganography keys.",
+        "faq_q_aead": "What changed in v5 vs v4?",
+        "faq_a_aead": "Full crypto core rewrite: AES-CBC replaced with <b>AES-256-GCM</b> (AEAD), HKDF added for <b>domain separation</b>, steganography became <b>keyed</b> (pixel positions depend on PIN), <b>self-test</b> added before delivering photo-key, BIP39 checksum validation, and authenticated extended header.",
+
+        "faq_q1": "I have a JPEG/HEIC photo. Will it work?", "faq_a1": "<b>Yes!</b> Upload any format. Browser unpacks it. We force lossless output (PNG/WebP/AVIF).",
+        "faq_q2": "What's wrong with AVIF?", "faq_a2": "Older browsers can't encode AVIF losslessly. If encoding fails — Cryptoimg safely falls back to PNG.",
+        "faq_q3": "Can I send the photo-key via Telegram?", "faq_a3": "Only as <b>'Document/File' (uncompressed)</b>. Standard sending applies compression and destroys data. Reed-Solomon recovers small damage, not heavy compression.",
+        "footer_text": "AEAD + Adaptive Steganography in browser.<br>v5.1 (AES-256-GCM + Argon2id + v4 compat)",
+        "donate_title": "Support the project", "donate_subtitle": "If Cryptoimg has been useful — thank you for your donation.",
+        "donate_scan_qr": "Scan the QR with your wallet", "donate_addr_label": "Wallet address", "donate_copy": "Copy", "donate_copied": "Copied!",
+        "donate_net_btc": "Network: Bitcoin (BTC)", "donate_net_eth": "Network: ERC-20 (Ethereum)", "donate_net_usdt": "Network: TRC-20 (Tron)",
+        "donate_warn_btc": "Send only BTC to this address. Other coins will be lost.",
+        "donate_warn_eth": "Suitable for ETH and ERC-20 tokens.",
+        "donate_warn_usdt": "Send USDT only via TRC-20 (Tron).",
+
+        "status_bip_ok": "✓ Valid BIP-39 mnemonic ({n} words, checksum OK)",
+        "status_bip_warn": "⚠️ Words [ {w} ] not in BIP39 dictionary. (Treated as text)",
+        "status_bip_bad_checksum": "⚠️ Words are valid BIP-39 but checksum FAILED. (Treated as text)",
+        "status_bip_bad_length": "ℹ️ BIP-39 words detected, but count must be 12/15/18/21/24. (Treated as text)",
+        "status_text": "ℹ️ Standard text detected",
+        "err_no_img": "Select a source image!", "err_pin_len": "PIN must contain 8-11 digits!", "err_pin_match": "PINs do not match!",
+        "err_no_text": "Enter text to encrypt!", "err_no_file": "Select a file to encrypt!", "err_file_long": "Filename is too long!",
+        "err_capacity": "Too much data for this photo.\nRequired payload bytes: {req}\nAvailable (after RS-ECC): {avail}",
+        "err_no_key": "Upload a photo-key!", "err_img_small": "Image is too small to contain data!",
+        "err_not_crypto": "No Cryptoimg v5 data found in this photo.",
+        "err_decrypt": "Wrong PIN or photo is corrupted.\n(GCM authentication failed)",
+        "err_decode_fail": "Decryption error: ",
+        "err_unsupported": "Browser too old — Web Crypto API not available. Use a modern browser.",
+        "alert_avif_fallback": "Your browser can't save AVIF. Image will be saved as PNG.",
+        "alert_webp_fallback": "Your browser can't save WebP. Image will be saved as PNG.",
+        "msg_file_selected": "✓ Selected: {name} ({size})", "msg_key_loaded": "✓ Key loaded: {name}",
+        "msg_extracted_file": "📎 File extracted: {name}\n📦 Size: {size}\n🔒 SHA-256 verified ✓",
+        "msg_copied": "✓ Copied (clipboard auto-clears in 30s)",
+        "msg_paste_hint": "Press Ctrl+V to paste", "msg_copy_hint": "Use Ctrl+C to copy",
+        "err_file_large": "File is too large (max 50MB).",
+        "msg_processing": "Computing Argon2id...",
+        "msg_benchmark_running": "Benchmarking Argon2id for this device...",
+        "progress_encode_title": "Encrypting & embedding",
+        "progress_decode_title": "Extracting & decrypting",
+        "progress_stage_benchmark": "Benchmarking Argon2id...",
+        "progress_stage_kdf": "Deriving key (Argon2id)...",
+        "progress_stage_compress": "Compressing data...",
+        "progress_stage_encrypt": "Encrypting (AES-256-GCM)...",
+        "progress_stage_rs": "Applying Reed-Solomon ECC...",
+        "progress_stage_embed": "Embedding into image (adaptive stego)...",
+        "progress_stage_loadimg": "Loading source image...",
+        "progress_stage_extract": "Extracting from image (adaptive stego)...",
+        "progress_stage_rs_decode": "Decoding Reed-Solomon...",
+        "progress_stage_decrypt": "Decrypting (AES-256-GCM)...",
+        "progress_stage_decompress": "Decompressing data...",
+        "progress_stage_verify": "Verifying SHA-256...",
+        "progress_stage_done": "Done ✓",
+        "msg_argon2_tuned": "Argon2id tuned: {mem}MB, t={iter}, p={par} ({ms}ms benchmark)",
+        "warn_v4_deprecated": "⚠️ This photo-key was created with Cryptoimg v4.0.\n\nv4 format is DEPRECATED — it uses AES-CBC without authentication (less secure than v5.1).\n\nYour data has been decrypted successfully. Please re-encrypt it with v5.1 to benefit from authenticated encryption (AES-256-GCM), adaptive steganography, and tuned Argon2id params.",
+        "msg_selftest_running": "Running self-test..."
+      },
+      "ru": {
+        "nav_how": "Как это работает?", "nav_usecases": "Применение", "nav_faq": "FAQ", "nav_start": "Запустить",
+        "hero_eyebrow": "🔒 Локальная обработка в браузере",
+        "hero_title": "Спрячьте секрет<br>в <em>любом фото.</em>",
+        "hero_subtitle": "Загрузите JPEG, PNG или HEIC. Данные шифруются AES-256-GCM (аутентифицированное шифрование) и встраиваются через keyed-стеганографию.",
+        "hero_btn_start": "🔐 Начать сейчас", "hero_btn_more": "Узнать больше",
+        "badge_aes": "🛡️ AES-256-GCM + Argon2id", "badge_lossless": "🖼️ Конвертация в Lossless",
+        "how_title": "Как это работает?", "how_subtitle": "Многоуровневая AEAD-защита с keyed-стеганографией.",
+        "how_card1_title": "Авто-конвертация", "how_card1_text": "Любой исходный формат сохраняется в lossless-контейнер (PNG/WebP/AVIF).",
+        "how_card2_title": "AEAD: AES-256-GCM", "how_card2_text": "PIN → Argon2id → HKDF → AES-256-GCM. Любое изменение ciphertext или header детектируется через auth tag.",
+        "how_card3_title": "Reed-Solomon ECC", "how_card3_text": "Повреждённые пиксели при передаче восстанавливаются. ECC дополняет (не заменяет) аутентификацию.",
+        "how_card4_title": "Оффлайн", "how_card4_text": "Все вычисления локально через Web Crypto API.",
+        "use_title": "Для чего используют Cryptoimg?",
+        "use_card1_title": "Идеальная маскировка", "use_card1_text": "Фото-ключ не вызывает подозрений. Поставьте на обои, сохраните в галерее, закиньте на Google Drive.",
+        "use_card2_title": "Обход цензуры", "use_card2_text": "Передавайте текстовые манифесты или документы через файлообменники под видом безобидных картинок.",
+        "use_card3_title": "Скрытые архивы", "use_card3_text": "Зашейте важный PDF-файл в PNG-картинку и отправьте по почте без привлечения внимания.",
+        "loading_engine": "Загрузка крипто-движка...", "app_subtitle": "AEAD-шифрование + keyed-стеганография",
+        "banner_title": "Архитектура v5:",
+        "banner_text": "PIN → Argon2id → HKDF-SHA256 → AES-256-GCM. Header входит в AAD. Stego-seed получен из master key — без PIN атакующий не знает, где искать данные.",
+        "tab_encode": "📸 Спрятать данные", "tab_decode": "🔓 Извлечь данные",
+        "enc_lbl_img": "1. Картинка-исходник (JPG, BMP, PNG и др.)",
+        "drop_photo": "Нажмите или перетащите фото сюда", "drop_photo_sub": "Мы автоматически переформатируем его для защиты данных",
+        "enc_lbl_data": "2. Что прячем?",
+        "btn_type_text": "📝 Текст / Seed", "btn_type_file": "📎 Файл",
+        "enc_text_placeholder": "Введите секретный текст или вставьте seed-фразу...",
+        "btn_paste": "Вставить", "drop_file": "Выберите файл для сокрытия (до 50 МБ)", "btn_clear_file": "✕ Отменить выбор файла",
+        "enc_lbl_pin1": "3. Придумайте ПИН-код", "enc_pin1_placeholder": "8-11 цифр",
+        "enc_lbl_pin2": "Повторите ПИН-код", "enc_pin2_placeholder": "Подтверждение",
+        "enc_lbl_format": "Формат фото-ключа",
+        "opt_png": "PNG (Рекомендуется, 100% надёжность)", "opt_webp": "WebP (Компактный, без потерь)", "opt_avif": "AVIF (Современный, экспериментально)",
+        "hint_png": "<b>PNG</b>: Классический формат. Бит-в-бит. Идеально для безопасного хранения.",
+        "hint_webp": "<b>WebP</b>: Меньше PNG. Сохраняется без потерь.",
+        "hint_avif": "<b>AVIF</b>: Лучшее сжатие. <i>Внимание: только новейшие браузеры.</i>",
+        "btn_do_encode": "Зашифровать и создать фото", "out_key_ready": "Ваш фото-ключ готов!", "btn_dl_image": "💾 Скачать изображение",
+        "dec_lbl_img": "1. Загрузите фото-ключ", "drop_key": "Загрузите PNG, WebP или AVIF изображение",
+        "dec_lbl_pin": "2. ПИН-код для расшифровки", "dec_pin_placeholder": "Введите ПИН-код",
+        "btn_do_decode": "Извлечь данные", "out_result": "Результат:", "btn_copy": "📋 Скопировать текст", "btn_dl_file": "💾 Скачать извлечённый файл",
+
+        "selftest_title": "🔧 Self-Test (внутренняя проверка Photo Key)",
+        "selftest_step1": "Embed payload в изображение",
+        "selftest_step2": "Extract payload из изображения",
+        "selftest_step3": "RS-decode → реконструкция envelope",
+        "selftest_step4": "AES-256-GCM verify (auth tag)",
+        "selftest_step5": "SHA-256 compare с оригиналом",
+        "selftest_pass": "✅ PASS — Photo Key проверен, загрузка разрешена",
+        "selftest_fail": "❌ FAIL — Photo Key повреждён. НЕ используйте его.",
+        "selftest_pass_summary": "✅ Photo Key успешно проверен. Можно безопасно скачать и использовать.",
+        "selftest_fail_summary": "❌ Self-test провален. Photo Key может быть повреждён — попробуйте другое изображение или сообщите об ошибке.",
+
+        "faq_title": "Частые вопросы",
+        "faq_q_pin": "Почему используется ПИН-код (8-11 цифр), а не пароль?",
+        "faq_a_pin1": "Запомнить 8–11 цифр проще, чем 24 английских слова Seed-фразы. Без ПИН-кода извлечь данные невозможно — даже если атакующий знает, что в фото есть стеганография.",
+        "faq_bruteforce_title": "Argon2id (RFC 9106, m=64MiB, t=3, p=4):",
+        "faq_bruteforce_text": "Каждая попытка ПИН-кода требует 64 МБ RAM и 3 итерации. GPU/ASIC-брутфорс экономически невыгоден. v5 также использует HKDF для разделения ключей шифрования и стеганографии.",
+        "faq_q_aead": "Что изменилось в v5 по сравнению с v4?",
+        "faq_a_aead": "Полная переработка крипто-ядра: AES-CBC заменён на <b>AES-256-GCM</b> (AEAD), добавлен HKDF для <b>domain separation</b>, стеганография стала <b>keyed</b> (позиции пикселей зависят от PIN), добавлен <b>self-test</b> перед выдачей фото-ключа, проверка BIP39 checksum, и расширенный authenticated header.",
+
+        "faq_q1": "У меня фото в формате JPEG/HEIC. Подойдёт?", "faq_a1": "<b>Да!</b> Загрузите любой формат — браузер распакует. Сохраняем в lossless-контейнер (PNG/WebP/AVIF).",
+        "faq_q2": "Что не так с AVIF?", "faq_a2": "Старые браузеры не умеют кодировать AVIF lossless. Если не получится — сохранится PNG.",
+        "faq_q3": "Можно ли отправить фото-ключ через Telegram?", "faq_a3": "Только как <b>«Файл»</b>. Обычная отправка сжимает и уничтожает данные. Reed-Solomon восстанавливает мелкие повреждения, не сильное сжатие.",
+        "footer_text": "AEAD + Adaptive Steganography в браузере.<br>v5.1 (AES-256-GCM + Argon2id + v4 compat)",
+        "donate_title": "Поддержать проект", "donate_subtitle": "Если Cryptoimg оказался полезен — спасибо за донат.",
+        "donate_scan_qr": "Отсканируйте QR в кошельке", "donate_addr_label": "Адрес кошелька", "donate_copy": "Копировать", "donate_copied": "Скопировано!",
+        "donate_net_btc": "Сеть: Bitcoin (BTC)", "donate_net_eth": "Сеть: ERC-20 (Ethereum)", "donate_net_usdt": "Сеть: TRC-20 (Tron)",
+        "donate_warn_btc": "Отправляйте только BTC на этот адрес.",
+        "donate_warn_eth": "Подходит для ETH и токенов ERC-20.",
+        "donate_warn_usdt": "Отправляйте USDT только через TRC-20 (Tron).",
+
+        "status_bip_ok": "✓ Валидная BIP-39 мнемоника ({n} слов, checksum OK)",
+        "status_bip_warn": "⚠️ Слова [ {w} ] не из словаря BIP39. (Просто текст)",
+        "status_bip_bad_checksum": "⚠️ Слова есть в BIP39, но checksum НЕ прошёл. (Просто текст)",
+        "status_bip_bad_length": "ℹ️ BIP-39 слова найдены, но нужно 12/15/18/21/24. (Просто текст)",
+        "status_text": "ℹ️ Распознан обычный текст",
+        "err_no_img": "Выберите исходное изображение!", "err_pin_len": "ПИН-код должен содержать 8-11 цифр!", "err_pin_match": "ПИН-коды не совпадают!",
+        "err_no_text": "Введите текст для шифрования!", "err_no_file": "Выберите файл для шифрования!", "err_file_long": "Имя файла слишком длинное!",
+        "err_capacity": "Слишком много данных для фото.\nТребуется байт: {req}\nДоступно (после RS-ECC): {avail}",
+        "err_no_key": "Загрузите фото-ключ!", "err_img_small": "Изображение слишком маленькое!",
+        "err_not_crypto": "В фото нет данных Cryptoimg v5.",
+        "err_decrypt": "Неверный ПИН-код или фото повреждено.\n(GCM authentication failed)",
+        "err_decode_fail": "Ошибка декодирования: ",
+        "err_unsupported": "Браузер слишком старый — Web Crypto API недоступен. Используйте современный браузер.",
+        "alert_avif_fallback": "Браузер не умеет сохранять AVIF. Сохранено как PNG.",
+        "alert_webp_fallback": "Браузер не умеет сохранять WebP. Сохранено как PNG.",
+        "msg_file_selected": "✓ Выбрано: {name} ({size})", "msg_key_loaded": "✓ Ключ загружен: {name}",
+        "msg_extracted_file": "📎 Извлечён файл: {name}\n📦 Размер: {size}\n🔒 SHA-256 проверен ✓",
+        "msg_copied": "✓ Скопировано (буфер очистится через 30с)",
+        "msg_paste_hint": "Нажмите Ctrl+V для вставки", "msg_copy_hint": "Используйте Ctrl+C для копирования",
+        "err_file_large": "Файл слишком большой (макс 50МБ).",
+        "msg_processing": "Вычисление Argon2id...",
+        "msg_benchmark_running": "Бенчмарк Argon2id для этого устройства...",
+        "progress_encode_title": "Шифрование и встраивание",
+        "progress_decode_title": "Извлечение и расшифровка",
+        "progress_stage_benchmark": "Бенчмарк Argon2id...",
+        "progress_stage_kdf": "Вывод ключа (Argon2id)...",
+        "progress_stage_compress": "Сжатие данных...",
+        "progress_stage_encrypt": "Шифрование (AES-256-GCM)...",
+        "progress_stage_rs": "Кодирование Рида-Соломона...",
+        "progress_stage_embed": "Встраивание в изображение (адаптивная стего)...",
+        "progress_stage_loadimg": "Загрузка исходного изображения...",
+        "progress_stage_extract": "Извлечение из изображения (адаптивная стего)...",
+        "progress_stage_rs_decode": "Декодирование Рида-Соломона...",
+        "progress_stage_decrypt": "Расшифровка (AES-256-GCM)...",
+        "progress_stage_decompress": "Распаковка данных...",
+        "progress_stage_verify": "Проверка SHA-256...",
+        "progress_stage_done": "Готово ✓",
+        "msg_argon2_tuned": "Argon2id настроен: {mem}МБ, t={iter}, p={par} (бенчмарк {ms}мс)",
+        "warn_v4_deprecated": "⚠️ Этот фото-ключ создан в Cryptoimg v4.0.\n\nФормат v4 УСТАРЕЛ — использует AES-CBC без аутентификации (менее безопасно, чем v5.1).\n\nВаши данные успешно расшифрованы. Пожалуйста, перешифруйте их в v5.1, чтобы получить аутентифицированное шифрование (AES-256-GCM), адаптивную стеганографию и подобранные параметры Argon2id.",
+        "msg_selftest_running": "Запуск self-test..."
+      },
+      "es": {
+        "nav_how": "Cómo funciona", "nav_usecases": "Casos de uso", "nav_faq": "FAQ", "nav_start": "Iniciar",
+        "hero_eyebrow": "🔒 Procesamiento local en navegador",
+        "hero_title": "Oculta un secreto<br>en <em>cualquier foto.</em>",
+        "hero_subtitle": "Sube JPEG, PNG o HEIC. Los datos se cifran con AES-256-GCM (autenticado) y se incrustan vía esteganografía keyed.",
+        "hero_btn_start": "🔐 Empezar ahora", "hero_btn_more": "Saber más",
+        "badge_aes": "🛡️ AES-256-GCM + Argon2id", "badge_lossless": "🖼️ Conversión sin pérdidas",
+        "how_title": "¿Cómo funciona?", "how_subtitle": "Protección AEAD multicapa con esteganografía keyed.",
+        "how_card1_title": "Auto-conversión", "how_card1_text": "Cualquier formato se guarda como contenedor sin pérdidas (PNG/WebP/AVIF).",
+        "how_card2_title": "AEAD: AES-256-GCM", "how_card2_text": "PIN → Argon2id → HKDF → AES-256-GCM. Cualquier cambio se detecta vía auth tag.",
+        "how_card3_title": "Reed-Solomon ECC", "how_card3_text": "Píxeles dañados se recuperan. ECC complementa (no reemplaza) la autenticación.",
+        "how_card4_title": "Offline", "how_card4_text": "Todo local vía Web Crypto API.",
+        "use_title": "¿Para qué sirve Cryptoimg?",
+        "use_card1_title": "Camuflaje Perfecto", "use_card1_text": "Una foto-llave no levanta sospechas.",
+        "use_card2_title": "Evitar Censura", "use_card2_text": "Transfiere documentos disfrazados de imágenes.",
+        "use_card3_title": "Archivos Ocultos", "use_card3_text": "Incrusta un PDF en un PNG y envíalo por correo.",
+        "loading_engine": "Cargando motor criptográfico...", "app_subtitle": "Cifrado AEAD + esteganografía keyed",
+        "banner_title": "Arquitectura v5:",
+        "banner_text": "PIN → Argon2id → HKDF-SHA256 → AES-256-GCM. El header es parte del AAD. Sin PIN, el atacante no puede localizar el payload.",
+        "tab_encode": "📸 Ocultar Datos", "tab_decode": "🔓 Extraer Datos",
+        "enc_lbl_img": "1. Imagen original (JPG, BMP, PNG, etc.)",
+        "drop_photo": "Haz clic o suelta una foto aquí", "drop_photo_sub": "La formatearemos automáticamente",
+        "enc_lbl_data": "2. ¿Qué ocultar?",
+        "btn_type_text": "📝 Texto / Seed", "btn_type_file": "📎 Archivo",
+        "enc_text_placeholder": "Introduce texto secreto o pega tu frase semilla...",
+        "btn_paste": "Pegar", "drop_file": "Selecciona un archivo (hasta 50 MB)", "btn_clear_file": "✕ Quitar archivo",
+        "enc_lbl_pin1": "3. Crea un PIN", "enc_pin1_placeholder": "8-11 dígitos",
+        "enc_lbl_pin2": "Repite el PIN", "enc_pin2_placeholder": "Confirmar PIN",
+        "enc_lbl_format": "Formato de salida",
+        "opt_png": "PNG (Recomendado, 100% fiable)", "opt_webp": "WebP (Compacto, sin pérdidas)", "opt_avif": "AVIF (Moderno, experimental)",
+        "hint_png": "<b>PNG</b>: Clásico. Bit a bit. Ideal.",
+        "hint_webp": "<b>WebP</b>: Más ligero que PNG. Sin pérdidas.",
+        "hint_avif": "<b>AVIF</b>: Mejor compresión. <i>Solo navegadores recientes.</i>",
+        "btn_do_encode": "Cifrar y Crear Foto", "out_key_ready": "¡Tu foto-llave está lista!", "btn_dl_image": "💾 Descargar Imagen",
+        "dec_lbl_img": "1. Sube la foto-llave", "drop_key": "Sube imagen PNG, WebP o AVIF",
+        "dec_lbl_pin": "2. PIN de descifrado", "dec_pin_placeholder": "Introduce el PIN",
+        "btn_do_decode": "Extraer Datos", "out_result": "Resultado:", "btn_copy": "📋 Copiar Texto", "btn_dl_file": "💾 Descargar archivo",
+
+        "selftest_title": "🔧 Self-Test (verificación interna del Photo Key)",
+        "selftest_step1": "Incrustar payload en imagen",
+        "selftest_step2": "Extraer payload de imagen",
+        "selftest_step3": "RS-decode → reconstruir envelope",
+        "selftest_step4": "AES-256-GCM verify (auth tag)",
+        "selftest_step5": "SHA-256 comparar con original",
+        "selftest_pass": "✅ PASS — Photo Key verificado, descarga habilitada",
+        "selftest_fail": "❌ FAIL — Photo Key dañado. NO lo uses.",
+        "selftest_pass_summary": "✅ Photo Key verificado correctamente. Puedes descargarlo y usarlo con seguridad.",
+        "selftest_fail_summary": "❌ Self-test falló. El Photo Key puede estar dañado — prueba con otra imagen.",
+
+        "faq_title": "Preguntas Frecuentes",
+        "faq_q_pin": "¿Por qué un PIN (8-11 dígitos) y no una contraseña?",
+        "faq_a_pin1": "8-11 dígitos son más fáciles de recordar que 24 palabras. Sin PIN, la extracción es imposible.",
+        "faq_bruteforce_title": "Argon2id (RFC 9106, m=64MiB, t=3, p=4):",
+        "faq_bruteforce_text": "Cada intento requiere 64 MB RAM y 3 iteraciones. GPU/ASIC brute-force es inviable. v5 usa HKDF para separar claves.",
+        "faq_q_aead": "¿Qué cambió en v5 vs v4?",
+        "faq_a_aead": "Reescritura completa: AES-CBC → <b>AES-256-GCM</b>, HKDF para <b>domain separation</b>, esteganografía <b>keyed</b>, <b>self-test</b>, validación BIP39 checksum.",
+
+        "faq_q1": "¿Tengo un JPEG/HEIC?", "faq_a1": "<b>¡Sí!</b> Cualquier formato. Guardamos en lossless.",
+        "faq_q2": "¿Qué pasa con AVIF?", "faq_a2": "Navegadores antiguos no pueden codificar AVIF sin pérdidas. Si falla, usamos PNG.",
+        "faq_q3": "¿Puedo enviar por WhatsApp?", "faq_a3": "Solo como <b>'Archivo/Documento'</b>. Compresión destruye los datos.",
+        "footer_text": "AEAD + Adaptive Steganography en navegador.<br>v5.1 (AES-256-GCM + Argon2id + v4 compat)",
+        "donate_title": "Apoya el proyecto", "donate_subtitle": "Si Cryptoimg te ha sido útil — gracias.",
+        "donate_scan_qr": "Escanea el QR con tu billetera", "donate_addr_label": "Dirección de billetera", "donate_copy": "Copiar", "donate_copied": "¡Copiado!",
+        "donate_net_btc": "Red: Bitcoin (BTC)", "donate_net_eth": "Red: ERC-20 (Ethereum)", "donate_net_usdt": "Red: TRC-20 (Tron)",
+        "donate_warn_btc": "Envía solo BTC a esta dirección.",
+        "donate_warn_eth": "Adecuado para ETH y tokens ERC-20.",
+        "donate_warn_usdt": "Envía USDT solo por TRC-20 (Tron).",
+
+        "status_bip_ok": "✓ Mnemónico BIP-39 válido ({n} palabras, checksum OK)",
+        "status_bip_warn": "⚠️ Palabras [ {w} ] no están en BIP39. (Tratado como texto)",
+        "status_bip_bad_checksum": "⚠️ Las palabras están en BIP39, pero el checksum FALLÓ. (Tratado como texto)",
+        "status_bip_bad_length": "ℹ️ Palabras BIP-39 detectadas, pero deben ser 12/15/18/21/24. (Tratado como texto)",
+        "status_text": "ℹ️ Texto estándar detectado",
+        "err_no_img": "¡Selecciona una imagen!", "err_pin_len": "¡El PIN debe tener 8-11 dígitos!", "err_pin_match": "¡Los PINs no coinciden!",
+        "err_no_text": "¡Introduce texto!", "err_no_file": "¡Selecciona un archivo!", "err_file_long": "¡Nombre muy largo!",
+        "err_capacity": "Demasiados datos.\nRequerido: {req} bytes\nDisponible (tras RS-ECC): {avail}",
+        "err_no_key": "¡Sube una foto-llave!", "err_img_small": "¡Imagen muy pequeña!",
+        "err_not_crypto": "No hay datos Cryptoimg v5 en esta foto.",
+        "err_decrypt": "PIN incorrecto o foto dañada.\n(GCM authentication failed)",
+        "err_decode_fail": "Error: ",
+        "err_unsupported": "Navegador demasiado antiguo — Web Crypto API no disponible.",
+        "alert_avif_fallback": "Navegador no soporta AVIF. Guardado como PNG.",
+        "alert_webp_fallback": "Navegador no soporta WebP. Guardado como PNG.",
+        "msg_file_selected": "✓ Seleccionado: {name} ({size})", "msg_key_loaded": "✓ Llave cargada: {name}",
+        "msg_extracted_file": "📎 Archivo: {name}\n📦 Tamaño: {size}\n🔒 SHA-256 verificado ✓",
+        "msg_copied": "✓ Copiado (portapapeles se borra en 30s)",
+        "msg_paste_hint": "Presiona Ctrl+V", "msg_copy_hint": "Usa Ctrl+C",
+        "err_file_large": "Archivo demasiado grande (máx 50MB).",
+        "msg_processing": "Calculando Argon2id...",
+        "msg_benchmark_running": "Benchmarking Argon2id para este dispositivo...",
+        "progress_encode_title": "Cifrando e incrustando",
+        "progress_decode_title": "Extrayendo y descifrando",
+        "progress_stage_benchmark": "Benchmarking Argon2id...",
+        "progress_stage_kdf": "Derivando clave (Argon2id)...",
+        "progress_stage_compress": "Comprimiendo datos...",
+        "progress_stage_encrypt": "Cifrando (AES-256-GCM)...",
+        "progress_stage_rs": "Aplicando Reed-Solomon ECC...",
+        "progress_stage_embed": "Incrustando en imagen (stego adaptativo)...",
+        "progress_stage_loadimg": "Cargando imagen origen...",
+        "progress_stage_extract": "Extrayendo de imagen (stego adaptativo)...",
+        "progress_stage_rs_decode": "Decodificando Reed-Solomon...",
+        "progress_stage_decrypt": "Descifrando (AES-256-GCM)...",
+        "progress_stage_decompress": "Descomprimiendo datos...",
+        "progress_stage_verify": "Verificando SHA-256...",
+        "progress_stage_done": "Hecho ✓",
+        "msg_argon2_tuned": "Argon2id ajustado: {mem}MB, t={iter}, p={par} (benchmark {ms}ms)",
+        "warn_v4_deprecated": "⚠️ Esta foto-llave fue creada con Cryptoimg v4.0.\n\nEl formato v4 está OBSOLETO — usa AES-CBC sin autenticación (menos seguro que v5.1).\n\nTus datos han sido descifrados correctamente. Por favor, vuelve a cifrarlos con v5.1 para beneficiarte del cifrado autenticado (AES-256-GCM), esteganografía adaptativa y parámetros Argon2id ajustados.",
+        "msg_selftest_running": "Ejecutando self-test..."
+      }
+    };
+
+    let currentLang = 'en';
+
+    function initLanguage() {
+      const browserLang = navigator.language.slice(0, 2);
+      currentLang = translations[browserLang] ? browserLang : 'en';
+      const select = document.getElementById('langSwitcher');
+      if (select) { select.value = currentLang; }
+      applyTranslation();
+    }
+
+    function setLanguage(lang) {
+      if (!translations[lang]) return;
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      applyTranslation();
+    }
+
+    function applyTranslation() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang][key]) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = translations[currentLang][key];
+          } else {
+            el.innerHTML = translations[currentLang][key];
+          }
+        }
+      });
+      document.getElementById('outputFormat').dispatchEvent(new Event('change'));
+      checkBip39();
+    }
+
+    function t(key, params = {}) {
+      let text = translations[currentLang][key] || key;
+      for (const [k, v] of Object.entries(params)) {
+        text = text.replace(`{${k}}`, v);
+      }
+      return text;
+    }
+
+    // ============================================================================
+    // КОНСТАНТЫ v5 — новый формат контейнера
+    // ============================================================================
+    const VERSION = 0x51; // v5.1 — adaptive steganography + Argon2 benchmark + v4 backward compat
+    const MAGIC = [0x43, 0x52, 0x35, 0x31]; // "CR51" — v5.1 marker
+    const MAGIC_V4 = [0x43, 0x52, 0x50, 0x56]; // "CRPV" — v4 legacy marker
+    // Magic (4) + VER(1) + FLAGS(1) + KDF_ID(1) + CIPHER_ID(1) + ECC_ID(1) +
+    // DATA_TYPE(1) + COMPRESSION_ID(1) + SALT_LEN(1) + NONCE_LEN(1) + TAG_LEN(1) +
+    // ARGON2_MEMORY(4) + ARGON2_ITERATIONS(4) + ARGON2_PARALLELISM(1) +
+    // PAYLOAD_LEN(8) = 32 bytes
+    const HEADER_AAD_SIZE = 32;
+
+    const KDF_ID_ARGON2ID       = 0x02;
+    const CIPHER_ID_AES_256_GCM = 0x02;
+    const ECC_ID_RS_255_223     = 0x01;
+    const DATA_TYPE_TEXT = 0;
+    const DATA_TYPE_FILE = 1;
+    const COMPRESS_NONE   = 0;
+    const COMPRESS_DEFLATE = 1;
+
+    const SALT_BYTES   = 16;
+    const NONCE_BYTES  = 12;   // GCM standard
+    const TAG_BYTES    = 16;   // GCM standard
+    const MASTER_KEY_BYTES = 32;
+
+    // Argon2id — default params (RFC 9106 memory-constrained profile: m=64MiB, t=3, p=4)
+    // Actual params are determined by browser benchmark (see getArgon2Params)
+    const ARGON2_DEFAULT_MEMORY      = 65536;  // 64 MiB (KiB)
+    const ARGON2_DEFAULT_ITERATIONS  = 3;
+    const ARGON2_DEFAULT_PARALLELISM = 4;
+    const ARGON2_HASH_LENGTH = 32;
+    // Benchmark bounds
+    const ARGON2_MIN_MEMORY      = 16384;  // 16 MiB
+    const ARGON2_MAX_MEMORY      = 262144; // 256 MiB
+    const ARGON2_TARGET_MS       = 2000;   // 2.0 sec target
+    const ARGON2_BENCHMARK_TTL   = 7 * 24 * 60 * 60 * 1000; // 7 days
+    const ARGON2_BENCHMARK_KEY   = 'cryptoimg_v5_argon2_benchmark';
+    // Legacy v4 fixed params (cannot be tuned — stored in code, not header)
+    const ARGON2_V4_MEMORY      = 65536;
+    const ARGON2_V4_ITERATIONS  = 3;
+    const ARGON2_V4_PARALLELISM = 1;
+
+    // HKDF info labels для domain separation
+    const INFO_ENC_KEY   = new TextEncoder().encode("Cryptoimg-v5/encKey");
+    const INFO_STEGO_KEY = new TextEncoder().encode("Cryptoimg-v5/stegoKey");
+    const INFO_META_KEY  = new TextEncoder().encode("Cryptoimg-v5/metaKey");
+
+    // Reed-Solomon (как в v4)
+    const RS_ECC_BYTES   = 64;
+    const RS_CHUNK_DATA  = 191;
+    const RS_CHUNK_TOTAL = 255;
+    // Outer RS header (v5.1): MAGIC(4) + CHUNK_COUNT(4) + LAST_CHUNK_LEN(1) + DATA_TYPE(1) + COMPRESSION_ID(1) + RESERVED(1) + ARGON2_MEMORY(4) + ARGON2_ITERATIONS(4) + ARGON2_PARALLELISM(1) = 21 bytes
+    const RS_OUTER_HEADER_SIZE = 21;
+
+    // Stego: 2 LSB × 3 канала RGB = 6 bits/pixel (alpha не трогаем)
+    const STEGO_BITS_PER_PIXEL = 6;
+
+    let RS_FIELD = null;
+    let rsEncoderCache = null;
+    let rsDecoderCache = null;
+
+    let currentDataMode = 'text';
+    let pendingFileBuffer = null;
+    let pendingFileName = null;
+    let pendingFileMime = null;
+    let lastExtractedFileBlob = null;
+    let lastExtractedFileName = null;
+
+    // Хранилище для self-test артефактов (нужно для очищения)
+    let _secretBuffers = [];
+
+    // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+    function initWhenReady() {
+      initLanguage();
+
+      // Проверка Web Crypto API
+      if (!window.crypto || !window.crypto.subtle) {
+        document.getElementById('loadingOverlay').innerHTML = '⚠️ ' + t('err_unsupported');
+        return;
+      }
+      if (!window.__RS || !window.hashwasm) {
+        window.addEventListener('rs-ready', initWhenReady, { once: true });
+        setTimeout(() => {
+          if (!window.__RS || !window.hashwasm) {
+            document.getElementById('loadingOverlay').innerHTML = '⚠️ Engine load failed.';
+          }
+        }, 5000);
+        return;
+      }
+      RS_FIELD = window.__RS.GF_QR_CODE_256();
+      rsEncoderCache = new window.__RS.RS_Encoder(RS_FIELD);
+      rsDecoderCache = new window.__RS.RS_Decoder(RS_FIELD);
+      document.getElementById('loadingOverlay').style.display = 'none';
+      bindUI();
+    }
+
+    // ============================================================================
+    // ВСПОМОГАТЕЛЬНЫЕ — форматирование, BIP39
+    // ============================================================================
+    function formatBytes(n) {
+      if (n < 1024) return n + ' B';
+      if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+      if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(2) + ' MB';
+      return (n / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
+
+    function utf8ToBytes(str) { return new TextEncoder().encode(str); }
+    function bytesToUtf8(bytes) { return new TextDecoder("utf-8", { fatal: true }).decode(bytes); }
+
+    function wipe(buf) {
+      if (!buf) return;
+      if (buf instanceof Uint8Array) {
+        try { buf.fill(0); } catch (e) {}
+      } else if (buf && typeof buf.fill === 'function') {
+        try { buf.fill(0); } catch (e) {}
+      }
+    }
+
+    function wipeAll() {
+      for (const b of _secretBuffers) wipe(b);
+      _secretBuffers = [];
+    }
+
+    function track(buf) {
+      // Track a Uint8Array for later wipe. Returns the same buffer.
+      if (buf && buf instanceof Uint8Array) _secretBuffers.push(buf);
+      return buf;
+    }
+
+    // BIP39 checksum validation
+    const BIP39_VALID_LENGTHS = [12, 15, 18, 21, 24];
+    let _bip39Wordset = null;
+    function getBip39Wordset() {
+      if (_bip39Wordset === null && typeof BIP39_WORDS !== 'undefined') {
+        _bip39Wordset = new Set(BIP39_WORDS);
+      }
+      return _bip39Wordset;
+    }
+
+    async function checkBip39() {
+      const text = document.getElementById('dataInput').value.trim();
+      const statusEl = document.getElementById('validationStatus');
+      if (!text) { statusEl.textContent = ''; return; }
+      const wordset = getBip39Wordset();
+      if (!wordset) {
+        statusEl.textContent = t('status_text');
+        statusEl.className = 'status-msg';
+        return;
+      }
+      const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+      const invalid = words.filter(w => !wordset.has(w));
+
+      if (invalid.length > 0) {
+        statusEl.textContent = t('status_bip_warn', { w: invalid.slice(0,3).join(', ') + (invalid.length>3?'…':'') });
+        statusEl.className = 'status-msg status-warn';
+        return;
+      }
+      // Все слова валидны
+      if (!BIP39_VALID_LENGTHS.includes(words.length)) {
+        statusEl.textContent = t('status_bip_bad_length');
+        statusEl.className = 'status-msg status-warn';
+        return;
+      }
+      // Проверка checksum
+      try {
+        const ok = await validateBip39Checksum(words);
+        if (ok) {
+          statusEl.textContent = t('status_bip_ok', { n: words.length });
+          statusEl.className = 'status-msg status-valid';
+        } else {
+          statusEl.textContent = t('status_bip_bad_checksum');
+          statusEl.className = 'status-msg status-warn';
+        }
+      } catch (e) {
+        statusEl.textContent = t('status_bip_bad_checksum');
+        statusEl.className = 'status-msg status-warn';
+      }
+    }
+
+    function wordsToBits(words) {
+      const bits = [];
+      for (const w of words) {
+        const idx = BIP39_WORDS.indexOf(w);
+        for (let i = 10; i >= 0; i--) bits.push((idx >> i) & 1);
+      }
+      return bits;
+    }
+
+    function bitsToBytes(bits) {
+      const out = new Uint8Array(Math.floor(bits.length / 8));
+      for (let i = 0; i < out.length; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | (bits[i * 8 + j] || 0);
+        out[i] = b;
+      }
+      return out;
+    }
+
+    async function validateBip39Checksum(words) {
+      const bits = wordsToBits(words);
+      const totalBits = words.length * 11;
+      const ENT = (totalBits * 32) / 33; // entropy bits
+      const CS = ENT / 32;                // checksum bits
+      const entropyBits = bits.slice(0, ENT);
+      const providedChecksum = bits.slice(ENT, ENT + CS);
+      const entropyBytes = bitsToBytes(entropyBits);
+      const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', entropyBytes));
+      const hashBits = [];
+      for (const b of hash) {
+        for (let i = 7; i >= 0; i--) hashBits.push((b >> i) & 1);
+      }
+      for (let i = 0; i < CS; i++) {
+        if (hashBits[i] !== providedChecksum[i]) return false;
+      }
+      return true;
+    }
+
+    // ============================================================================
+    // КРИПТО-ЯДРО v5 — Web Crypto API + hash-wasm
+    // ============================================================================
+    function randomBytes(n) {
+      const buf = new Uint8Array(n);
+      crypto.getRandomValues(buf);
+      return buf;
+    }
+
+    // Argon2id — derives 32-byte master key.
+    // params: { memory, iterations, parallelism }. If undefined, uses defaults.
+    async function deriveMasterKey(pin, salt, params) {
+      const p = params || {
+        memory: ARGON2_DEFAULT_MEMORY,
+        iterations: ARGON2_DEFAULT_ITERATIONS,
+        parallelism: ARGON2_DEFAULT_PARALLELISM
+      };
+      const out = await hashwasm.argon2id({
+        password: pin,
+        salt: salt,
+        parallelism: p.parallelism,
+        iterations: p.iterations,
+        memorySize: p.memory,
+        hashLength: ARGON2_HASH_LENGTH,
+        outputType: 'binary'
+      });
+      return track(new Uint8Array(out)); // copy to wipeable buffer
+    }
+
+    // ============================================================================
+    // ARGON2 BENCHMARK — auto-tune memory/iterations for ~2.0s on this device
+    // ============================================================================
+    let _argon2ParamsCache = null;
+
+    async function getArgon2Params(onProgress) {
+      if (_argon2ParamsCache) return _argon2ParamsCache;
+
+      // Try localStorage cache (with TTL)
+      try {
+        const cached = JSON.parse(localStorage.getItem(ARGON2_BENCHMARK_KEY) || 'null');
+        if (cached && cached.params && (Date.now() - cached.timestamp < ARGON2_BENCHMARK_TTL)) {
+          _argon2ParamsCache = cached.params;
+          return cached.params;
+        }
+      } catch (e) {}
+
+      if (onProgress) onProgress('benchmarking');
+      const params = await benchmarkArgon2();
+      _argon2ParamsCache = params;
+
+      try {
+        localStorage.setItem(ARGON2_BENCHMARK_KEY, JSON.stringify({
+          params,
+          timestamp: Date.now()
+        }));
+      } catch (e) {}
+
+      return params;
+    }
+
+    async function benchmarkArgon2() {
+      const salt = randomBytes(16);
+      // Quick test: 8 MB, 1 iteration, 1 parallelism lane
+      const start = performance.now();
+      await hashwasm.argon2id({
+        password: 'benchmark',
+        salt: salt,
+        parallelism: 1,
+        iterations: 1,
+        memorySize: 8192, // 8 MB
+        hashLength: ARGON2_HASH_LENGTH,
+        outputType: 'binary'
+      });
+      const elapsed = performance.now() - start;
+
+      // Time scales linearly: time ≈ elapsed * (mem/8192) * (iter/1) / (par/1)
+      // For RFC profile (m=64MB, t=3, p=4): estimated = elapsed * 8 * 3 / 4 = elapsed * 6
+      const estDefault = elapsed * (ARGON2_DEFAULT_MEMORY / 8192) * ARGON2_DEFAULT_ITERATIONS / ARGON2_DEFAULT_PARALLELISM;
+
+      const PARALLELISM = ARGON2_DEFAULT_PARALLELISM;
+      let memory = ARGON2_DEFAULT_MEMORY;
+      let iterations = ARGON2_DEFAULT_ITERATIONS;
+
+      if (estDefault < ARGON2_TARGET_MS * 0.75) {
+        // Too fast — increase memory
+        const ratio = ARGON2_TARGET_MS / estDefault;
+        memory = Math.min(ARGON2_MAX_MEMORY, Math.floor(ARGON2_DEFAULT_MEMORY * ratio));
+      } else if (estDefault > ARGON2_TARGET_MS * 1.5) {
+        // Too slow — decrease memory
+        const ratio = ARGON2_TARGET_MS / estDefault;
+        memory = Math.max(ARGON2_MIN_MEMORY, Math.floor(ARGON2_DEFAULT_MEMORY * ratio));
+      }
+
+      // Round memory to multiple of 4*parallelism (Argon2 requirement)
+      const blockSize = 4 * PARALLELISM;
+      memory = Math.max(blockSize, Math.ceil(memory / blockSize) * blockSize);
+
+      return { memory, iterations, parallelism: PARALLELISM, benchmarkMs: elapsed };
+    }
+
+    // ============================================================================
+    // VARIANCE MAP — for adaptive steganography
+    // Uses upper 6 bits of each channel (mask 0xFC) so 2-LSB stego changes
+    // do NOT affect variance computation. This ensures encoder and decoder
+    // compute identical variance maps from the same image.
+    // CHUNKED: yields to event loop every CHUNK pixels to keep UI responsive.
+    // ============================================================================
+    const VARIANCE_CHUNK = 50000;
+    async function computeVarianceMap(pixelData, width, height) {
+      const pixelCount = width * height;
+      const variance = new Float32Array(pixelCount);
+      let totalVariance = 0;
+
+      let idx = 0;
+      while (idx < pixelCount) {
+        const end = Math.min(idx + VARIANCE_CHUNK, pixelCount);
+        for (; idx < end; idx++) {
+          const x = idx % width;
+          const y = Math.floor(idx / width);
+          let sum = 0, sumSq = 0, count = 0;
+
+          // 3x3 neighborhood
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const nx = Math.max(0, Math.min(width - 1, x + dx));
+              const ny = Math.max(0, Math.min(height - 1, y + dy));
+              const nIdx = (ny * width + nx) * 4;
+              // Upper 6 bits only — robust to 2-LSB stego modifications
+              const r = pixelData[nIdx] & 0xFC;
+              const g = pixelData[nIdx + 1] & 0xFC;
+              const b = pixelData[nIdx + 2] & 0xFC;
+              const lum = (r + g + b) / 3;
+              sum += lum;
+              sumSq += lum * lum;
+              count++;
+            }
+          }
+
+          const mean = sum / count;
+          const v = sumSq / count - mean * mean;
+          variance[idx] = v;
+          totalVariance += v;
+        }
+        // Yield to event loop so UI can update (progress bar, "page not responding" prevention)
+        await sleep(0);
+      }
+
+      const meanVariance = totalVariance / pixelCount;
+      return { variance, meanVariance };
+    }
+
+    // HKDF-SHA256 — split master key into 3 subkeys (32 bytes each)
+    async function hkdfExpand(masterKey, info, length) {
+      const baseKey = await crypto.subtle.importKey(
+        'raw', masterKey, 'HKDF', false, ['deriveBits']
+      );
+      const bits = await crypto.subtle.deriveBits(
+        { name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0), info: info },
+        baseKey, length * 8
+      );
+      return track(new Uint8Array(bits));
+    }
+
+    async function deriveSubkeys(masterKey) {
+      const [encKey, stegoKey, metaKey] = await Promise.all([
+        hkdfExpand(masterKey, INFO_ENC_KEY,   32),
+        hkdfExpand(masterKey, INFO_STEGO_KEY, 32),
+        hkdfExpand(masterKey, INFO_META_KEY,   32)
+      ]);
+      return { encKey, stegoKey, metaKey };
+    }
+
+    // AES-256-GCM encrypt — returns {ciphertext, tag}
+    async function aesGcmEncrypt(encKey, plaintext, nonce, aad) {
+      const key = await crypto.subtle.importKey(
+        'raw', encKey, { name: 'AES-GCM' }, false, ['encrypt']
+      );
+      const buf = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: nonce, additionalData: aad, tagLength: TAG_BYTES * 8 },
+        key, plaintext
+      );
+      const full = track(new Uint8Array(buf));
+      return {
+        ciphertext: full.subarray(0, full.length - TAG_BYTES),
+        tag: full.subarray(full.length - TAG_BYTES)
+      };
+    }
+
+    // AES-256-GCM decrypt — throws on auth failure
+    async function aesGcmDecrypt(encKey, ciphertext, tag, nonce, aad) {
+      const key = await crypto.subtle.importKey(
+        'raw', encKey, { name: 'AES-GCM' }, false, ['decrypt']
+      );
+      const combined = new Uint8Array(ciphertext.length + tag.length);
+      combined.set(ciphertext, 0);
+      combined.set(tag, ciphertext.length);
+      try {
+        const pt = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: nonce, additionalData: aad, tagLength: TAG_BYTES * 8 },
+          key, combined
+        );
+        return new Uint8Array(pt);
+      } catch (e) {
+        const err = new Error('GCM_AUTH_FAILED');
+        err.cause = e;
+        throw err;
+      }
+    }
+
+    // SHA-256
+    async function sha256(data) {
+      return new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+    }
+
+    // ============================================================================
+    // HMAC-DRBG — keyed PRNG для стеганографии.
+    // ВАЖНО: pre-generates все нужные байты оптом (через Promise.all),
+    // затем потребляет их синхронно. Это исключает 262143 последовательных
+    // await в Fisher-Yates shuffle, которые переполняют стек V8.
+    // ============================================================================
+    async function makeStegoPRNG(stegoKey, pregenerateBytes) {
+      const hmacKey = await crypto.subtle.importKey(
+        'raw', stegoKey,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false, ['sign']
+      );
+
+      // Сколько 32-байтных HMAC-блоков нужно
+      const numChunks = Math.max(1, Math.ceil(pregenerateBytes / 32));
+      const buffer = new Uint8Array(numChunks * 32);
+
+      // Генерируем все блоки параллельно через Promise.all (батчами по 512)
+      const BATCH = 512;
+      for (let batch = 0; batch < numChunks; batch += BATCH) {
+        const end = Math.min(batch + BATCH, numChunks);
+        const promises = [];
+        for (let i = batch; i < end; i++) {
+          const counterBytes = new Uint8Array(8);
+          new DataView(counterBytes.buffer).setUint32(0, i >>> 0, false);
+          new DataView(counterBytes.buffer).setUint32(4, 0, false);
+          promises.push(crypto.subtle.sign('HMAC', hmacKey, counterBytes));
+        }
+        const results = await Promise.all(promises);
+        for (let i = 0; i < results.length; i++) {
+          buffer.set(new Uint8Array(results[i]), (batch + i) * 32);
+        }
+      }
+
+      let bufferIdx = 0;
+
+      // Синхронные потребители
+      function nextBytesSync(n) {
+        if (bufferIdx + n > buffer.length) {
+          // Не должно происходить при правильном pregenerateBytes
+          // Возвращаем нули как fallback (лучше crash, но для устойчивости)
+          const out = new Uint8Array(n);
+          for (let i = 0; i < n; i++) out[i] = buffer[(bufferIdx + i) % buffer.length];
+          bufferIdx += n;
+          return out;
+        }
+        const out = new Uint8Array(n);
+        out.set(buffer.subarray(bufferIdx, bufferIdx + n), 0);
+        bufferIdx += n;
+        return out;
+      }
+
+      function nextUint32Sync() {
+        const b = nextBytesSync(4);
+        return ((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0;
+      }
+
+      // Fisher-Yates shuffle — CHUNKED ASYNC, yields to event loop every CHUNK
+      // iterations to keep UI responsive (prevents "page not responding" dialog).
+      const SHUFFLE_CHUNK = 100000;
+      async function shuffle(arr) {
+        let i = arr.length - 1;
+        while (i > 0) {
+          const end = Math.max(0, i - SHUFFLE_CHUNK);
+          for (; i > end; i--) {
+            const j = nextUint32Sync() % (i + 1);
+            const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+          }
+          if (i > 0) await sleep(0);
+        }
+        return arr;
+      }
+
+      return { nextBytesSync, nextUint32Sync, shuffle, buffer };
+    }
+
+    // ============================================================================
+    // COMPRESS — CompressionStream API (fallback: no compression)
+    // ============================================================================
+    async function compressData(data) {
+      if (typeof CompressionStream === 'undefined') {
+        return { data, compressed: false };
+      }
+      try {
+        const cs = new CompressionStream('deflate');
+        const writer = cs.writable.getWriter();
+        writer.write(data);
+        writer.close();
+        const chunks = [];
+        const reader = cs.readable.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+        const total = chunks.reduce((s, c) => s + c.length, 0);
+        const out = new Uint8Array(total);
+        let off = 0;
+        for (const c of chunks) { out.set(c, off); off += c.length; }
+        if (out.length < data.length) {
+          return { data: out, compressed: true };
+        }
+        return { data, compressed: false };
+      } catch (e) {
+        return { data, compressed: false };
+      }
+    }
+
+    async function decompressData(data) {
+      if (typeof DecompressionStream === 'undefined') throw new Error('NO_DECOMPRESS');
+      const ds = new DecompressionStream('deflate');
+      const writer = ds.writable.getWriter();
+      writer.write(data);
+      writer.close();
+      const chunks = [];
+      const reader = ds.readable.getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+      }
+      const total = chunks.reduce((s, c) => s + c.length, 0);
+      const out = new Uint8Array(total);
+      let off = 0;
+      for (const c of chunks) { out.set(c, off); off += c.length; }
+      return out;
+    }
+
+    // ============================================================================
+    // REED-SOLOMON — кодирование/декодирование чанков
+    // ============================================================================
+    function rsEncodeChunk(dataBytes) {
+      const msg = new Int32Array(RS_CHUNK_TOTAL);
+      for (let i = 0; i < dataBytes.length; i++) msg[i] = dataBytes[i];
+      rsEncoderCache.encode(msg, RS_ECC_BYTES);
+      return msg;
+    }
+
+    function rsDecodeChunk(receivedBytes) {
+      const msg = new Int32Array(RS_CHUNK_TOTAL);
+      for (let i = 0; i < receivedBytes.length; i++) msg[i] = receivedBytes[i];
+      rsDecoderCache.decode(msg, RS_ECC_BYTES);
+      return Array.prototype.slice.call(msg.subarray(0, RS_CHUNK_DATA));
+    }
+
+    // ============================================================================
+    // ENVELOPE v5 — сборка/разборка аутентифицированного контейнера
+    // ============================================================================
+    // Layout:
+    //   [AAD Header (32 bytes)]      ← входит в AES-GCM AAD
+    //     MAGIC[4]="CRP5"
+    //     VERSION[1]=0x05
+    //     FLAGS[1]=0
+    //     KDF_ID[1]=0x02
+    //     CIPHER_ID[1]=0x02
+    //     ECC_ID[1]=0x01
+    //     DATA_TYPE[1]
+    //     COMPRESSION_ID[1]
+    //     SALT_LEN[1]=16
+    //     NONCE_LEN[1]=12
+    //     TAG_LEN[1]=16
+    //     ARGON2_MEMORY[4]
+    //     ARGON2_ITERATIONS[4]
+    //     ARGON2_PARALLELISM[1]
+    //     PAYLOAD_LEN[8]   ← длина ciphertext
+    //   SALT[16]
+    //   NONCE[12]
+    //   CIPHERTEXT[PAYLOAD_LEN]
+    //   TAG[16]
+
+    function writeU32(buf, off, val) {
+      buf[off]   = (val >>> 24) & 0xFF;
+      buf[off+1] = (val >>> 16) & 0xFF;
+      buf[off+2] = (val >>> 8)  & 0xFF;
+      buf[off+3] = val & 0xFF;
+      return off + 4;
+    }
+    function readU32(buf, off) {
+      return ((buf[off] << 24) | (buf[off+1] << 16) | (buf[off+2] << 8) | buf[off+3]) >>> 0;
+    }
+    // 53-битный safe range для JS Number
+    function writeU64(buf, off, val) {
+      // val: number (max 2^53-1). Big-endian, but high 32 bits — обычно 0 для наших размеров.
+      const high = Math.floor(val / 0x100000000);
+      const low  = val >>> 0;
+      let p = off;
+      p = writeU32(buf, p, high);
+      p = writeU32(buf, p, low);
+      return p;
+    }
+    function readU64(buf, off) {
+      const high = readU32(buf, off);
+      const low  = readU32(buf, off + 4);
+      return high * 0x100000000 + low;
+    }
+
+    function buildAadHeader(dataType, compressionId, payloadLen, argon2Params) {
+      const buf = new Uint8Array(HEADER_AAD_SIZE);
+      let p = 0;
+      buf[p++] = MAGIC[0]; buf[p++] = MAGIC[1]; buf[p++] = MAGIC[2]; buf[p++] = MAGIC[3];
+      buf[p++] = VERSION;
+      buf[p++] = 0; // FLAGS
+      buf[p++] = KDF_ID_ARGON2ID;
+      buf[p++] = CIPHER_ID_AES_256_GCM;
+      buf[p++] = ECC_ID_RS_255_223;
+      buf[p++] = dataType & 0xFF;
+      buf[p++] = compressionId & 0xFF;
+      buf[p++] = SALT_BYTES;
+      buf[p++] = NONCE_BYTES;
+      buf[p++] = TAG_BYTES;
+      p = writeU32(buf, p, argon2Params.memory);
+      p = writeU32(buf, p, argon2Params.iterations);
+      buf[p++] = argon2Params.parallelism;
+      p = writeU64(buf, p, payloadLen);
+      return buf;
+    }
+
+    function parseAadHeader(buf) {
+      if (buf.length < HEADER_AAD_SIZE) throw new Error('HEADER_TOO_SHORT');
+      let p = 0;
+      for (let i = 0; i < 4; i++) {
+        if (buf[p++] !== MAGIC[i]) throw new Error('NOT_CRYPTOIMG_V5');
+      }
+      const version = buf[p++];
+      const flags = buf[p++];
+      const kdfId = buf[p++];
+      const cipherId = buf[p++];
+      const eccId = buf[p++];
+      const dataType = buf[p++];
+      const compressionId = buf[p++];
+      const saltLen = buf[p++];
+      const nonceLen = buf[p++];
+      const tagLen = buf[p++];
+      const mem = readU32(buf, p); p += 4;
+      const iter = readU32(buf, p); p += 4;
+      const par = buf[p++];
+      const payloadLen = readU64(buf, p); p += 8;
+      return {
+        version, flags, kdfId, cipherId, eccId, dataType, compressionId,
+        saltLen, nonceLen, tagLen,
+        argon2Memory: mem, argon2Iterations: iter, argon2Parallelism: par,
+        payloadLen
+      };
+    }
+
+    // Сборка полного envelope (header + salt + nonce + ciphertext + tag)
+    function assembleEnvelope(aadHeader, salt, nonce, ciphertext, tag) {
+      const total = aadHeader.length + salt.length + nonce.length + ciphertext.length + tag.length;
+      const out = new Uint8Array(total);
+      let p = 0;
+      out.set(aadHeader, p); p += aadHeader.length;
+      out.set(salt, p);     p += salt.length;
+      out.set(nonce, p);    p += nonce.length;
+      out.set(ciphertext, p); p += ciphertext.length;
+      out.set(tag, p);      p += tag.length;
+      return out;
+    }
+
+    function splitEnvelope(buf) {
+      const hdr = parseAadHeader(buf);
+      let p = HEADER_AAD_SIZE;
+      const salt = buf.subarray(p, p + hdr.saltLen); p += hdr.saltLen;
+      const nonce = buf.subarray(p, p + hdr.nonceLen); p += hdr.nonceLen;
+      const ciphertext = buf.subarray(p, p + hdr.payloadLen); p += hdr.payloadLen;
+      const tag = buf.subarray(p, p + hdr.tagLen); p += hdr.tagLen;
+      const aad = buf.subarray(0, HEADER_AAD_SIZE);
+      return { header: hdr, salt, nonce, ciphertext, tag, aad };
+    }
+
+    // ============================================================================
+    // RS ARMORING — оборачиваем envelope в RS-чанки + outer header
+    // ============================================================================
+    function buildRsArmored(envelopeBytes, dataType, compressionId, argon2Params) {
+      const numChunks = Math.ceil(envelopeBytes.length / RS_CHUNK_DATA);
+      if (numChunks > 0xFFFFFFFF) throw new Error('TOO_MANY_CHUNKS'); // 4-byte limit
+      const lastChunkDataLen = envelopeBytes.length - (numChunks - 1) * RS_CHUNK_DATA;
+      const armored = new Uint8Array(numChunks * RS_CHUNK_TOTAL);
+      for (let c = 0; c < numChunks; c++) {
+        const chunkData = new Uint8Array(RS_CHUNK_DATA);
+        const start = c * RS_CHUNK_DATA;
+        chunkData.set(envelopeBytes.subarray(start, Math.min(start + RS_CHUNK_DATA, envelopeBytes.length)), 0);
+        const encoded = rsEncodeChunk(Array.from(chunkData));
+        for (let i = 0; i < RS_CHUNK_TOTAL; i++) armored[c * RS_CHUNK_TOTAL + i] = encoded[i] & 0xFF;
+      }
+      const finalPayload = new Uint8Array(RS_OUTER_HEADER_SIZE + armored.length);
+      let p = 0;
+      finalPayload[p++] = MAGIC[0]; finalPayload[p++] = MAGIC[1]; finalPayload[p++] = MAGIC[2]; finalPayload[p++] = MAGIC[3];
+      p = writeU32(finalPayload, p, numChunks);
+      finalPayload[p++] = lastChunkDataLen & 0xFF;
+      finalPayload[p++] = dataType & 0xFF;
+      finalPayload[p++] = compressionId & 0xFF;
+      finalPayload[p++] = 0; // reserved
+      // Argon2 params (so decoder can use the same params without a second derivation)
+      p = writeU32(finalPayload, p, argon2Params.memory);
+      p = writeU32(finalPayload, p, argon2Params.iterations);
+      finalPayload[p++] = argon2Params.parallelism & 0xFF;
+      finalPayload.set(armored, p);
+      return finalPayload;
+    }
+
+    function parseRsArmored(extractedBytes) {
+      if (extractedBytes.length < RS_OUTER_HEADER_SIZE) throw new Error('TOO_SHORT');
+      let p = 0;
+      for (let i = 0; i < 4; i++) {
+        if (extractedBytes[p++] !== MAGIC[i]) throw new Error('NOT_CRYPTOIMG_V5');
+      }
+      const numChunks = readU32(extractedBytes, p); p += 4;
+      const lastChunkDataLen = extractedBytes[p++];
+      const dataType = extractedBytes[p++];
+      const compressionId = extractedBytes[p++];
+      const reserved = extractedBytes[p++];
+      const argon2Memory = readU32(extractedBytes, p); p += 4;
+      const argon2Iterations = readU32(extractedBytes, p); p += 4;
+      const argon2Parallelism = extractedBytes[p++];
+      if (numChunks === 0 || numChunks > 0xFFFFFFFF) throw new Error('INVALID_CHUNK_COUNT');
+      if (lastChunkDataLen === 0 || lastChunkDataLen > RS_CHUNK_DATA) throw new Error('INVALID_LAST_CHUNK_LEN');
+      if (argon2Memory < ARGON2_MIN_MEMORY || argon2Memory > ARGON2_MAX_MEMORY * 4) throw new Error('INVALID_ARGON2_PARAMS');
+      if (argon2Iterations < 1 || argon2Iterations > 100) throw new Error('INVALID_ARGON2_PARAMS');
+      if (argon2Parallelism < 1 || argon2Parallelism > 16) throw new Error('INVALID_ARGON2_PARAMS');
+      const armoredSize = numChunks * RS_CHUNK_TOTAL;
+      if (extractedBytes.length < RS_OUTER_HEADER_SIZE + armoredSize) throw new Error('TRUNCATED');
+      const envelopeLen = (numChunks - 1) * RS_CHUNK_DATA + lastChunkDataLen;
+      const envelope = new Uint8Array(envelopeLen);
+      for (let c = 0; c < numChunks; c++) {
+        const startIdx = RS_OUTER_HEADER_SIZE + c * RS_CHUNK_TOTAL;
+        const decoded = rsDecodeChunk(Array.from(extractedBytes.subarray(startIdx, startIdx + RS_CHUNK_TOTAL)));
+        const copyLen = (c === numChunks - 1) ? lastChunkDataLen : RS_CHUNK_DATA;
+        for (let i = 0; i < copyLen; i++) envelope[c * RS_CHUNK_DATA + i] = decoded[i];
+      }
+      return {
+        envelope, dataType, compressionId,
+        argon2Params: { memory: argon2Memory, iterations: argon2Iterations, parallelism: argon2Parallelism }
+      };
+    }
+
+    // ============================================================================
+    // СТЕГАНОГРАФИЯ v5 — keyed, 2-LSB per RGB channel
+    // ============================================================================
+    // Пиксели переставляются псевдослучайно через HMAC-DRBG seeded stegoKey.
+    // Каждый использованный пиксель хранит 6 бит (2 LSB R + 2 LSB G + 2 LSB B).
+    // Alpha-канал не трогается (для совместимости с PNG без alpha-проблем).
+    // Без знания stegoKey (а значит, без PIN) атакующий не может найти payload.
+
+    function stegoCapacityBytes(width, height) {
+      const pixelCount = width * height;
+      const capacityBits = pixelCount * STEGO_BITS_PER_PIXEL;
+      return Math.floor(capacityBits / 8);
+    }
+
+    async function computePixelPermutation(pixelCount, stegoKey) {
+      // Fisher-Yates требует (pixelCount - 1) uint32 = (pixelCount - 1) * 4 байт
+      const needed = Math.max(32, (pixelCount - 1) * 4);
+      const prng = await makeStegoPRNG(stegoKey, needed);
+      const perm = new Uint32Array(pixelCount);
+      for (let i = 0; i < pixelCount; i++) perm[i] = i;
+      await prng.shuffle(perm); // Chunked async — UI остаётся отзывчивым
+      return perm;
+    }
+
+    // Embed payload bytes into pixelData (RGBA buffer) using keyed permutation.
+    async function embedPayload(pixelData, width, height, payload, stegoKey) {
+      const pixelCount = width * height;
+      const capacityBits = pixelCount * STEGO_BITS_PER_PIXEL;
+      const capacityBytes = Math.floor(capacityBits / 8);
+      if (payload.length > capacityBytes) {
+        return { ok: false, req: payload.length, avail: capacityBytes };
+      }
+      const perm = await computePixelPermutation(pixelCount, stegoKey);
+
+      // Преобразуем payload в битовый массив (MSB first)
+      const bitsNeeded = payload.length * 8;
+      const pixelsNeeded = Math.ceil(bitsNeeded / STEGO_BITS_PER_PIXEL);
+
+      let bitIdx = 0;
+      for (let p = 0; p < pixelsNeeded; p++) {
+        const pxOffset = perm[p] * 4; // RGBA = 4 bytes per pixel
+        // Читаем до 6 бит
+        const chunk = [0,0,0,0,0,0];
+        for (let j = 0; j < 6 && bitIdx < bitsNeeded; j++) {
+          const byteIdx = bitIdx >> 3;
+          const bitInByte = 7 - (bitIdx & 7);
+          chunk[j] = (payload[byteIdx] >> bitInByte) & 1;
+          bitIdx++;
+        }
+        // R: 2 bits, G: 2 bits, B: 2 bits (alpha not touched)
+        pixelData[pxOffset]     = (pixelData[pxOffset]     & 0xFC) | (chunk[0] << 1) | chunk[1];
+        pixelData[pxOffset + 1] = (pixelData[pxOffset + 1] & 0xFC) | (chunk[2] << 1) | chunk[3];
+        pixelData[pxOffset + 2] = (pixelData[pxOffset + 2] & 0xFC) | (chunk[4] << 1) | chunk[5];
+      }
+      return { ok: true };
+    }
+
+    // Extract payload bytes from pixelData using keyed permutation.
+    async function extractPayload(pixelData, width, height, byteCount, stegoKey) {
+      const pixelCount = width * height;
+      const perm = await computePixelPermutation(pixelCount, stegoKey);
+      const bitsNeeded = byteCount * 8;
+      const pixelsNeeded = Math.ceil(bitsNeeded / STEGO_BITS_PER_PIXEL);
+      if (pixelsNeeded > pixelCount) throw new Error('IMAGE_TOO_SMALL');
+
+      const bits = new Uint8Array(bitsNeeded);
+      let bitIdx = 0;
+      for (let p = 0; p < pixelsNeeded && bitIdx < bitsNeeded; p++) {
+        const pxOffset = perm[p] * 4;
+        const r = pixelData[pxOffset];
+        const g = pixelData[pxOffset + 1];
+        const b = pixelData[pxOffset + 2];
+        // 2 bits per channel: high bit first
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (r >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = r & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (g >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = g & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (b >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = b & 1;
+      }
+
+      const out = new Uint8Array(byteCount);
+      for (let i = 0; i < byteCount; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) {
+          b = (b << 1) | (bits[i * 8 + j] || 0);
+        }
+        out[i] = b;
+      }
+      return out;
+    }
+
+    // Minimum bytes to extract for header probe
+    const MIN_HEADER_PROBE_BYTES = RS_OUTER_HEADER_SIZE + HEADER_AAD_SIZE;
+
+    // ============================================================================
+    // SELF-TEST UI helpers
+    // ============================================================================
+    function setSelftestStep(n, state) {
+      const el = document.getElementById('st-step-' + n);
+      if (!el) return;
+      el.classList.remove('active', 'done', 'fail');
+      if (state) el.classList.add(state);
+    }
+    function resetSelftest() {
+      for (let i = 1; i <= 5; i++) setSelftestStep(i, '');
+      const summary = document.getElementById('selftestSummary');
+      summary.textContent = '';
+      summary.classList.remove('pass', 'fail');
+    }
+    function setSelftestSummary(text, isPass) {
+      const summary = document.getElementById('selftestSummary');
+      summary.textContent = text;
+      summary.classList.remove('pass', 'fail');
+      summary.classList.add(isPass ? 'pass' : 'fail');
+    }
+
+    // ============================================================================
+    // PROGRESS BAR helpers
+    // ============================================================================
+    // Encode stages (8 phases): benchmark, kdf, compress, encrypt, rs, loadimg, embed, done
+    // Decode stages (8 phases): loadimg, kdf(1), extract, rs_decode, kdf(2 if params differ), decrypt, decompress, verify, done
+    // We use a percentage-based approach: each phase gets a weight, and the bar animates between.
+    function showProgress(id) {
+      const wrap = document.getElementById(id);
+      if (wrap) {
+        wrap.classList.add('active');
+        setProgress(id, 0, '');
+      }
+    }
+    function hideProgress(id) {
+      const wrap = document.getElementById(id);
+      if (wrap) {
+        // Animate to 100% before hiding
+        setProgress(id, 100, t('progress_stage_done'));
+        setTimeout(() => wrap.classList.remove('active'), 500);
+      }
+    }
+    function setProgress(id, pct, stageKey) {
+      const fill = document.getElementById(id + 'Fill');
+      const pctEl = document.getElementById(id + 'Pct');
+      const stageEl = document.getElementById(id + 'Stage');
+      const labelEl = document.getElementById(id + 'Label');
+      if (fill) fill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+      if (pctEl) pctEl.textContent = Math.round(Math.max(0, Math.min(100, pct))) + '%';
+      if (stageEl) stageEl.textContent = stageKey ? t(stageKey) : '';
+      if (labelEl && stageKey) labelEl.textContent = (id === 'encodeProgress' ? t('progress_encode_title') : t('progress_decode_title'));
+    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ============================================================================
+    // ПОТОК КОДИРОВАНИЯ (с self-test)
+    // ============================================================================
+    async function processUserImage() {
+      const fileInput = document.getElementById('userImageSource');
+      const pin = document.getElementById('pinInput').value;
+      const pinConfirm = document.getElementById('pinInputConfirm').value;
+      const btn = document.getElementById('btnEncode');
+
+      if (!fileInput.files.length) return alert(t('err_no_img'));
+      if (pin.length < 8 || !/^\d+$/.test(pin)) return alert(t('err_pin_len'));
+      if (pin !== pinConfirm) return alert(t('err_pin_match'));
+
+      let plainBytes, dataType;
+      if (currentDataMode === 'text') {
+        const plainText = document.getElementById('dataInput').value;
+        if (!plainText.trim()) return alert(t('err_no_text'));
+        plainBytes = track(utf8ToBytes(plainText));
+        dataType = DATA_TYPE_TEXT;
+      } else {
+        if (!pendingFileBuffer) return alert(t('err_no_file'));
+        const fileBytes = track(new Uint8Array(pendingFileBuffer));
+        const fileNameBytes = utf8ToBytes(pendingFileName || 'file.bin');
+        if (fileNameBytes.length > 65535) return alert(t('err_file_long'));
+        const mimeBytes = utf8ToBytes(pendingFileMime || 'application/octet-stream');
+        const fileSha = track(await sha256(fileBytes));
+        const recordLen = 4 + 2 + fileNameBytes.length + 2 + mimeBytes.length + 8 + 32 + fileBytes.length;
+        const record = track(new Uint8Array(recordLen));
+        let p = 0;
+        record[p++] = 0x46; record[p++] = 0x49; record[p++] = 0x4C; record[p++] = 0x45; // "FILE"
+        record[p++] = (fileNameBytes.length >> 8) & 0xFF; record[p++] = fileNameBytes.length & 0xFF;
+        record.set(fileNameBytes, p); p += fileNameBytes.length;
+        record[p++] = (mimeBytes.length >> 8) & 0xFF; record[p++] = mimeBytes.length & 0xFF;
+        record.set(mimeBytes, p); p += mimeBytes.length;
+        p = writeU64(record, p, fileBytes.length);
+        record.set(fileSha, p); p += 32;
+        record.set(fileBytes, p);
+        plainBytes = record;
+        dataType = DATA_TYPE_FILE;
+      }
+
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `⚙️ ${t('msg_processing')}`;
+      btn.disabled = true;
+      resetSelftest();
+      showProgress('encodeProgress');
+      document.getElementById('selftestPanel').classList.add('active');
+      document.getElementById('encodeOutput').style.display = 'none';
+
+      try {
+        // 0. Get benchmarked Argon2 params (auto-tuned for this device, cached 7 days)
+        setProgress('encodeProgress', 5, 'progress_stage_benchmark');
+        const argon2Params = await getArgon2Params((stage) => {
+          if (stage === 'benchmarking') {
+            btn.innerHTML = `📊 ${t('msg_benchmark_running')}`;
+          }
+        });
+        btn.innerHTML = `⚙️ ${t('msg_processing')}`;
+
+        // 1. Argon2id → masterKey (using benchmarked params)
+        setProgress('encodeProgress', 20, 'progress_stage_kdf');
+        const salt = track(randomBytes(SALT_BYTES));
+        const masterKey = track(await deriveMasterKey(pin, salt, argon2Params));
+
+        // 2. HKDF → subkeys
+        const { encKey, stegoKey } = await deriveSubkeys(masterKey);
+
+        // 3. Compression (optional)
+        setProgress('encodeProgress', 35, 'progress_stage_compress');
+        const { data: plainCompressed, compressed } = await compressData(plainBytes);
+        const compressionId = compressed ? COMPRESS_DEFLATE : COMPRESS_NONE;
+
+        // 4. AES-256-GCM encrypt (header is AAD)
+        setProgress('encodeProgress', 50, 'progress_stage_encrypt');
+        const nonce = track(randomBytes(NONCE_BYTES));
+        const payloadLen = plainCompressed.length; // GCM is stream cipher — no padding
+        const aadHeader = buildAadHeader(dataType, compressionId, payloadLen, argon2Params);
+        const { ciphertext, tag } = await aesGcmEncrypt(encKey, plainCompressed, nonce, aadHeader);
+
+        // 5. Assemble envelope
+        const envelope = assembleEnvelope(aadHeader, salt, nonce, ciphertext, tag);
+
+        // 6. RS-armoring (Argon2 params included in outer header)
+        setProgress('encodeProgress', 60, 'progress_stage_rs');
+        const armored = buildRsArmored(envelope, dataType, compressionId, argon2Params);
+
+        // 7. Load image and embed (salt unkeyed + armored keyed)
+        setProgress('encodeProgress', 70, 'progress_stage_loadimg');
+        const fileObj = fileInput.files[0];
+        const img = await loadImageFromFile(fileObj);
+        const canvas = document.getElementById('cryptoCanvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        canvas.width = img.width; canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        // Self-test step 1: embed
+        setProgress('encodeProgress', 80, 'progress_stage_embed');
+        setSelftestStep(1, 'active');
+        await sleep(20);
+        const embedResult = await embedPayloadWithSalt(imageData.data, canvas.width, canvas.height, salt, armored, stegoKey);
+        if (!embedResult.ok) {
+          setSelftestStep(1, 'fail');
+          setSelftestSummary(t('selftest_fail_summary'), false);
+          hideProgress('encodeProgress');
+          btn.innerHTML = originalText; btn.disabled = false;
+          alert(t('err_capacity', { req: embedResult.req, avail: embedResult.avail }));
+          return;
+        }
+        setSelftestStep(1, 'done');
+        setProgress('encodeProgress', 90, 'progress_stage_done');
+
+        // Put modified pixels back to canvas
+        ctx.putImageData(imageData, 0, 0);
+
+        // ===== SELF-TEST: extract → RS-decode → GCM-verify → SHA-256 compare =====
+        setSelftestStep(2, 'active');
+        await sleep(20);
+        // Extract salt back (unkeyed)
+        const saltBack = extractPayloadUnkeyed(imageData.data, SALT_BYTES);
+        // Extract armored back (keyed, shifted by SALT_BYTES)
+        const armoredBack = await extractPayloadShifted(imageData.data, canvas.width, canvas.height, armored.length, stegoKey, SALT_BYTES);
+        setSelftestStep(2, 'done');
+
+        setSelftestStep(3, 'active');
+        await sleep(20);
+        const { envelope: envBack } = parseRsArmored(armoredBack);
+        const parts = splitEnvelope(envBack);
+        setSelftestStep(3, 'done');
+
+        setSelftestStep(4, 'active');
+        await sleep(20);
+        // Re-derive keys from extracted salt + PIN (using same benchmarked params)
+        const masterKey2 = track(await deriveMasterKey(pin, parts.salt, argon2Params));
+        const { encKey: encKey2 } = await deriveSubkeys(masterKey2);
+        const plainBack = track(await aesGcmDecrypt(encKey2, parts.ciphertext, parts.tag, parts.nonce, parts.aad));
+        setSelftestStep(4, 'done');
+
+        setSelftestStep(5, 'active');
+        await sleep(20);
+        let plainFinal = plainBack;
+        if (parts.header.compressionId === COMPRESS_DEFLATE) {
+          plainFinal = track(await decompressData(plainBack));
+        }
+        const origSha = await sha256(plainBytes);
+        const backSha = await sha256(plainFinal);
+        const match = origSha.length === backSha.length && origSha.every((v, i) => v === backSha[i]);
+        if (match) {
+          setSelftestStep(5, 'done');
+          setSelftestSummary(t('selftest_pass_summary'), true);
+        } else {
+          setSelftestStep(5, 'fail');
+          setSelftestSummary(t('selftest_fail_summary'), false);
+          btn.innerHTML = originalText; btn.disabled = false;
+          return;
+        }
+
+        document.getElementById('encodeOutput').style.display = 'flex';
+        document.getElementById('encodeOutput').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        hideProgress('encodeProgress');
+
+        // Memory hygiene: clear PIN and textarea after successful encode
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInputConfirm').value = '';
+        if (currentDataMode === 'text') {
+          document.getElementById('dataInput').value = '';
+          checkBip39();
+        }
+      } catch (err) {
+        console.error(err);
+        for (let i = 5; i >= 1; i--) {
+          const el = document.getElementById('st-step-' + i);
+          if (el && el.classList.contains('active')) { setSelftestStep(i, 'fail'); break; }
+        }
+        setSelftestSummary(t('selftest_fail_summary'), false);
+        hideProgress('encodeProgress');
+        alert(t('err_decode_fail') + (err.message || ''));
+      } finally {
+        wipeAll();
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    function loadImageFromFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error('IMG_LOAD_FAIL'));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('FILE_READ_FAIL'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ============================================================================
+    // v4 LEGACY DECODER — for backward compatibility with Cryptoimg v4.0 photo-keys
+    // ============================================================================
+    // v4 format:
+    //   - Stego: 4 LSB per pixel-pair (R high nibble, G low nibble), SEQUENTIAL (no permutation)
+    //   - Outer header (8 bytes): MAGIC="CRPV" + numChunks[1] + lastChunkDataLen[1] + dataType[1] + reserved[1]
+    //   - RS chunks (191 data + 64 ECC = 255 bytes each)
+    //   - Envelope: salt[16] + iv[16] + ciphertext (AES-256-CBC, no auth)
+    //   - KDF: Argon2id(p=1, t=3, m=64MB) — FIXED params (not in header)
+    async function decodeV4Legacy(pixelData, width, height, pin) {
+      const maxBytes = Math.floor(pixelData.length / 4);
+      if (maxBytes < 8) throw new Error('IMG_SMALL');
+
+      // v4 extraction: 4 LSB on R+G of each pixel (sequential, no permutation)
+      const extractedBytes = new Uint8Array(maxBytes);
+      for (let i = 0; i < maxBytes; i++) {
+        extractedBytes[i] = ((pixelData[i * 4] & 0x0F) << 4) | (pixelData[i * 4 + 1] & 0x0F);
+      }
+
+      // v4 magic check
+      if (extractedBytes[0] !== MAGIC_V4[0] || extractedBytes[1] !== MAGIC_V4[1] ||
+          extractedBytes[2] !== MAGIC_V4[2] || extractedBytes[3] !== MAGIC_V4[3]) {
+        throw new Error('NOT_CRYPTOIMG_V4');
+      }
+
+      // v4 header (8 bytes)
+      const numChunks = extractedBytes[4];
+      const lastChunkDataLen = extractedBytes[5];
+      const dataType = extractedBytes[6];
+      if (numChunks === 0 || lastChunkDataLen === 0 || lastChunkDataLen > RS_CHUNK_DATA) {
+        throw new Error('INVALID_V4_HEADER');
+      }
+
+      // RS decode (v4 uses same RS params: 191 data + 64 ECC = 255 total)
+      const rawCryptoBytes = new Uint8Array((numChunks - 1) * RS_CHUNK_DATA + lastChunkDataLen);
+      for (let c = 0; c < numChunks; c++) {
+        const startIdx = 8 + c * RS_CHUNK_TOTAL;
+        const decoded = rsDecodeChunk(Array.from(extractedBytes.subarray(startIdx, startIdx + RS_CHUNK_TOTAL)));
+        const copyLen = (c === numChunks - 1) ? lastChunkDataLen : RS_CHUNK_DATA;
+        for (let i = 0; i < copyLen; i++) rawCryptoBytes[c * RS_CHUNK_DATA + i] = decoded[i];
+      }
+
+      // v4 layout: salt[16] + iv[16] + ciphertext (AES-256-CBC, PKCS7 padding)
+      const saltBytes = rawCryptoBytes.subarray(0, 16);
+      const ivBytes = rawCryptoBytes.subarray(16, 32);
+      const cipherBytes = rawCryptoBytes.subarray(32);
+
+      // v4 Argon2id FIXED params: p=1, t=3, m=64MB
+      const keyUint8 = await hashwasm.argon2id({
+        password: pin,
+        salt: saltBytes,
+        parallelism: ARGON2_V4_PARALLELISM,
+        iterations: ARGON2_V4_ITERATIONS,
+        memorySize: ARGON2_V4_MEMORY,
+        hashLength: ARGON2_HASH_LENGTH,
+        outputType: 'binary'
+      });
+      track(new Uint8Array(keyUint8));
+
+      // AES-CBC decrypt via Web Crypto API (PKCS7 padding is default)
+      const key = await crypto.subtle.importKey('raw', keyUint8, { name: 'AES-CBC' }, false, ['decrypt']);
+      let plainBuffer;
+      try {
+        plainBuffer = await crypto.subtle.decrypt({ name: 'AES-CBC', iv: ivBytes }, key, cipherBytes);
+      } catch (e) {
+        throw new Error('DECRYPT_FAILED_V4');
+      }
+      const plainBytes = track(new Uint8Array(plainBuffer));
+
+      return { plainBytes, dataType, isV4: true };
+    }
+
+    // Display decoded result (shared between v4 legacy and v5 paths)
+    async function displayDecodeResult(plainBytes, dataType) {
+      const resultBox = document.getElementById('decodeOutput');
+      const resultText = document.getElementById('resultText');
+
+      if (dataType === DATA_TYPE_TEXT) {
+        resultText.textContent = bytesToUtf8(plainBytes);
+        document.getElementById('btnCopyResult').style.display = 'block';
+        document.getElementById('btnDownloadExtracted').style.display = 'none';
+      } else {
+        // v4 file format: nameLen[2] + name + fileContent (simpler than v5)
+        let q = 0;
+        const fileNameLen = (plainBytes[q] << 8) | plainBytes[q+1]; q += 2;
+        if (fileNameLen > plainBytes.length - 2) throw new Error('BAD_V4_FILE_RECORD');
+        const fileName = bytesToUtf8(plainBytes.subarray(q, q + fileNameLen)); q += fileNameLen;
+        const fileContent = plainBytes.subarray(q);
+
+        lastExtractedFileBlob = new Blob([fileContent], { type: 'application/octet-stream' });
+        lastExtractedFileName = fileName;
+        resultText.textContent = t('msg_extracted_file', { name: fileName, size: formatBytes(fileContent.length) });
+        document.getElementById('btnCopyResult').style.display = 'none';
+        document.getElementById('btnDownloadExtracted').style.display = 'block';
+      }
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Memory hygiene
+      document.getElementById('pinInputDecode').value = '';
+    }
+
+    // ============================================================================
+    // ОСНОВНОЙ ПОТОК ДЕКОДИРОВАНИЯ (v5.1 + v4 legacy dispatch)
+    // ============================================================================
+    async function decodeRSImage() {
+      const fileInput = document.getElementById('fileLoader');
+      const pin = document.getElementById('pinInputDecode').value;
+      const btn = document.getElementById('btnDecode');
+
+      if (!fileInput.files.length) return alert(t('err_no_key'));
+      if (pin.length < 8 || !/^\d+$/.test(pin)) return alert(t('err_pin_len'));
+
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `⚙️ ${t('msg_processing')}`;
+      btn.disabled = true;
+      showProgress('decodeProgress');
+
+      try {
+        setProgress('decodeProgress', 5, 'progress_stage_loadimg');
+        const img = await loadImageFromFile(fileInput.files[0]);
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = img.width; tempCanvas.height = img.height;
+        const ctx = tempCanvas.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(img, 0, 0);
+        const pixelData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data;
+
+        if (tempCanvas.width * tempCanvas.height < 1) throw new Error('IMG_SMALL');
+
+        // ===== v4 LEGACY DISPATCH =====
+        const v4MagicProbe = new Uint8Array(4);
+        for (let i = 0; i < 4; i++) {
+          v4MagicProbe[i] = ((pixelData[i * 4] & 0x0F) << 4) | (pixelData[i * 4 + 1] & 0x0F);
+        }
+        const isV4 = (v4MagicProbe[0] === MAGIC_V4[0] && v4MagicProbe[1] === MAGIC_V4[1] &&
+                      v4MagicProbe[2] === MAGIC_V4[2] && v4MagicProbe[3] === MAGIC_V4[3]);
+
+        if (isV4) {
+          setProgress('decodeProgress', 30, 'progress_stage_kdf');
+          const v4Result = await decodeV4Legacy(pixelData, tempCanvas.width, tempCanvas.height, pin);
+          setProgress('decodeProgress', 100, 'progress_stage_done');
+          hideProgress('decodeProgress');
+          alert(t('warn_v4_deprecated'));
+          displayDecodeResult(v4Result.plainBytes, v4Result.dataType);
+          btn.innerHTML = originalText; btn.disabled = false;
+          return;
+        }
+
+        // ===== v5.1 PATH =====
+        const SALT_PIXELS_NEEDED = Math.ceil((SALT_BYTES * 8) / STEGO_BITS_PER_PIXEL);
+        if (tempCanvas.width * tempCanvas.height < SALT_PIXELS_NEEDED) {
+          throw new Error('IMG_SMALL');
+        }
+        const saltProbe = extractPayloadUnkeyed(pixelData, SALT_BYTES);
+
+        // Derive provisional keys
+        let cachedParams = null;
+        try {
+          const cached = JSON.parse(localStorage.getItem(ARGON2_BENCHMARK_KEY) || 'null');
+          if (cached && cached.params) cachedParams = cached.params;
+        } catch (e) {}
+        const initialParams = cachedParams || {
+          memory: ARGON2_DEFAULT_MEMORY,
+          iterations: ARGON2_DEFAULT_ITERATIONS,
+          parallelism: ARGON2_DEFAULT_PARALLELISM
+        };
+
+        setProgress('decodeProgress', 20, 'progress_stage_kdf');
+        let masterKey = track(await deriveMasterKey(pin, saltProbe, initialParams));
+        let { encKey, stegoKey } = await deriveSubkeys(masterKey);
+
+        // Extract outer RS header
+        setProgress('decodeProgress', 40, 'progress_stage_extract');
+        const skipSaltBytes = SALT_BYTES;
+        const outerHdr = await extractPayloadShifted(pixelData, tempCanvas.width, tempCanvas.height, RS_OUTER_HEADER_SIZE, stegoKey, skipSaltBytes);
+        let p = 0;
+        for (let i = 0; i < 4; i++) {
+          if (outerHdr[p++] !== MAGIC[i]) throw new Error('NOT_CRYPTOIMG_V5');
+        }
+        const numChunks = readU32(outerHdr, p); p += 4;
+        const lastChunkDataLen = outerHdr[p++];
+        const dataType = outerHdr[p++];
+        const compressionId = outerHdr[p++];
+        p++; // reserved
+        const hdrArgon2Memory = readU32(outerHdr, p); p += 4;
+        const hdrArgon2Iterations = readU32(outerHdr, p); p += 4;
+        const hdrArgon2Parallelism = outerHdr[p++];
+        if (numChunks === 0 || lastChunkDataLen === 0 || lastChunkDataLen > RS_CHUNK_DATA) {
+          throw new Error('INVALID_HEADER');
+        }
+        const argon2Params = { memory: hdrArgon2Memory, iterations: hdrArgon2Iterations, parallelism: hdrArgon2Parallelism };
+
+        // If Argon2 params from header differ from initial params, re-derive masterKey
+        const paramsDiffer = (argon2Params.memory !== initialParams.memory ||
+                              argon2Params.iterations !== initialParams.iterations ||
+                              argon2Params.parallelism !== initialParams.parallelism);
+        if (paramsDiffer) {
+          setProgress('decodeProgress', 50, 'progress_stage_kdf');
+          wipe(masterKey); wipe(encKey); wipe(stegoKey);
+          masterKey = track(await deriveMasterKey(pin, saltProbe, argon2Params));
+          ({ encKey, stegoKey } = await deriveSubkeys(masterKey));
+        }
+
+        // Full extract
+        setProgress('decodeProgress', 60, 'progress_stage_extract');
+        const armoredSize = RS_OUTER_HEADER_SIZE + numChunks * RS_CHUNK_TOTAL;
+        const fullArmored = await extractPayloadShifted(pixelData, tempCanvas.width, tempCanvas.height, armoredSize, stegoKey, skipSaltBytes);
+
+        // RS-decode
+        setProgress('decodeProgress', 70, 'progress_stage_rs_decode');
+        const { envelope } = parseRsArmored(fullArmored);
+        const parts = splitEnvelope(envelope);
+
+        // Salt consistency check
+        const saltFromEnv = parts.salt;
+        let saltMatch = saltProbe.length === saltFromEnv.length;
+        for (let i = 0; saltMatch && i < saltProbe.length; i++) {
+          if (saltProbe[i] !== saltFromEnv[i]) saltMatch = false;
+        }
+        if (!saltMatch) throw new Error('SALT_MISMATCH');
+
+        // AES-GCM decrypt
+        setProgress('decodeProgress', 80, 'progress_stage_decrypt');
+        let plainCompressed;
+        try {
+          plainCompressed = track(await aesGcmDecrypt(encKey, parts.ciphertext, parts.tag, parts.nonce, parts.aad));
+        } catch (e) {
+          if (e.message === 'GCM_AUTH_FAILED') throw new Error('DECRYPT_FAILED');
+          throw e;
+        }
+
+        // Decompress
+        let plainBytes = plainCompressed;
+        if (parts.header.compressionId === COMPRESS_DEFLATE) {
+          setProgress('decodeProgress', 90, 'progress_stage_decompress');
+          plainBytes = track(await decompressData(plainCompressed));
+        }
+
+        // Process by dataType
+        const resultBox = document.getElementById('decodeOutput');
+        const resultText = document.getElementById('resultText');
+
+        if (parts.header.dataType === DATA_TYPE_TEXT) {
+          resultText.textContent = bytesToUtf8(plainBytes);
+          document.getElementById('btnCopyResult').style.display = 'block';
+          document.getElementById('btnDownloadExtracted').style.display = 'none';
+        } else {
+          let q = 0;
+          if (plainBytes[q] !== 0x46 || plainBytes[q+1] !== 0x49 || plainBytes[q+2] !== 0x4C || plainBytes[q+3] !== 0x45) {
+            throw new Error('BAD_FILE_RECORD');
+          }
+          q += 4;
+          const fileNameLen = (plainBytes[q] << 8) | plainBytes[q+1]; q += 2;
+          const fileName = bytesToUtf8(plainBytes.subarray(q, q + fileNameLen)); q += fileNameLen;
+          const mimeLen = (plainBytes[q] << 8) | plainBytes[q+1]; q += 2;
+          const mime = bytesToUtf8(plainBytes.subarray(q, q + mimeLen)); q += mimeLen;
+          const fileSize = readU64(plainBytes, q); q += 8;
+          const fileSha = plainBytes.subarray(q, q + 32); q += 32;
+          const fileContent = plainBytes.subarray(q);
+
+          setProgress('decodeProgress', 95, 'progress_stage_verify');
+          const calcSha = await sha256(fileContent);
+          let shaMatch = calcSha.length === fileSha.length;
+          for (let i = 0; shaMatch && i < calcSha.length; i++) {
+            if (calcSha[i] !== fileSha[i]) shaMatch = false;
+          }
+          if (!shaMatch) throw new Error('SHA_MISMATCH');
+
+          lastExtractedFileBlob = new Blob([fileContent], { type: mime || 'application/octet-stream' });
+          lastExtractedFileName = fileName;
+          resultText.textContent = t('msg_extracted_file', { name: fileName, size: formatBytes(fileSize) });
+          document.getElementById('btnCopyResult').style.display = 'none';
+          document.getElementById('btnDownloadExtracted').style.display = 'block';
+        }
+        resultBox.style.display = 'block';
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        hideProgress('decodeProgress');
+
+        // Memory hygiene: clear PIN after successful decrypt
+        document.getElementById('pinInputDecode').value = '';
+      } catch (err) {
+        console.error(err);
+        const msg = err.message || '';
+        hideProgress('decodeProgress');
+        if (msg === 'NOT_CRYPTOIMG_V5' || msg === 'DECRYPT_FAILED' || msg === 'GCM_AUTH_FAILED') {
+          alert(t('err_decrypt'));
+        } else if (msg === 'IMG_SMALL') {
+          alert(t('err_img_small'));
+        } else {
+          alert(t('err_decode_fail') + msg);
+        }
+      } finally {
+        wipeAll();
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // ============================================================================
+    // UNKEYED EXTRACTION — только для salt (первые 16 байт stego-area)
+    // ============================================================================
+    function extractPayloadUnkeyed(pixelData, byteCount) {
+      const bitsNeeded = byteCount * 8;
+      const pixelsNeeded = Math.ceil(bitsNeeded / STEGO_BITS_PER_PIXEL);
+      const bits = new Uint8Array(bitsNeeded);
+      let bitIdx = 0;
+      for (let p = 0; p < pixelsNeeded; p++) {
+        const pxOffset = p * 4;
+        const r = pixelData[pxOffset];
+        const g = pixelData[pxOffset + 1];
+        const b = pixelData[pxOffset + 2];
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (r >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = r & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (g >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = g & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (b >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = b & 1;
+      }
+      const out = new Uint8Array(byteCount);
+      for (let i = 0; i < byteCount; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | (bits[i * 8 + j] || 0);
+        out[i] = b;
+      }
+      return out;
+    }
+
+    // Keyed extraction with ADAPTIVE walk.
+    // First RS_OUTER_HEADER_SIZE bytes (outer RS header) are extracted WITHOUT variance filter —
+    // this allows us to read the header to know numChunks.
+    // Rest is extracted WITH variance filter: pixels with variance >= meanVariance
+    // are used; smooth pixels are skipped. This concentrates stego in textured
+    // regions, making it harder to detect via statistical steganalysis.
+    async function extractPayloadShifted(pixelData, width, height, byteCount, stegoKey, skipBytes) {
+      const pixelCount = width * height;
+      const perm = await computePixelPermutation(pixelCount, stegoKey);
+      const startPixel = Math.floor((skipBytes * 8) / STEGO_BITS_PER_PIXEL);
+
+      // Compute variance map (robust to 2-LSB changes via upper-6-bits masking)
+      const { variance, meanVariance } = await computeVarianceMap(pixelData, width, height);
+
+      const bitsNeeded = byteCount * 8;
+      const bits = new Uint8Array(bitsNeeded);
+      let bitIdx = 0;
+      let permIdx = startPixel;
+
+      // Phase 1: extract outer RS header (RS_OUTER_HEADER_SIZE bytes) — NO filter
+      const noFilterBits = RS_OUTER_HEADER_SIZE * 8;
+      while (bitIdx < noFilterBits && bitIdx < bitsNeeded) {
+        if (permIdx >= perm.length) throw new Error('IMAGE_TOO_SMALL');
+        const pxOffset = perm[permIdx++] * 4;
+        const r = pixelData[pxOffset];
+        const g = pixelData[pxOffset + 1];
+        const b = pixelData[pxOffset + 2];
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (r >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = r & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (g >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = g & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = (b >> 1) & 1;
+        if (bitIdx < bitsNeeded) bits[bitIdx++] = b & 1;
+      }
+
+      // Phase 2: extract rest — WITH variance filter (skip smooth pixels)
+      // CHUNKED: yield to event loop every CHUNK iterations to keep UI responsive
+      const EXTRACT_CHUNK = 50000;
+      let sinceYield = 0;
+      while (bitIdx < bitsNeeded) {
+        if (permIdx >= perm.length) throw new Error('IMAGE_TOO_SMALL_ADAPTIVE');
+        const pixelIdx = perm[permIdx++];
+        if (variance[pixelIdx] >= meanVariance) {
+          const pxOffset = pixelIdx * 4;
+          const r = pixelData[pxOffset];
+          const g = pixelData[pxOffset + 1];
+          const b = pixelData[pxOffset + 2];
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = (r >> 1) & 1;
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = r & 1;
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = (g >> 1) & 1;
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = g & 1;
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = (b >> 1) & 1;
+          if (bitIdx < bitsNeeded) bits[bitIdx++] = b & 1;
+        }
+        if (++sinceYield >= EXTRACT_CHUNK) {
+          sinceYield = 0;
+          await sleep(0);
+        }
+      }
+
+      const out = new Uint8Array(byteCount);
+      for (let i = 0; i < byteCount; i++) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | (bits[i * 8 + j] || 0);
+        out[i] = b;
+      }
+      return out;
+    }
+
+    // ADAPTIVE EMBED — mirrors extractPayloadShifted.
+    // Phase 1: salt unkeyed (sequential). Phase 2: outer header keyed (no filter).
+    // Phase 3: rest of armored payload keyed WITH variance filter.
+    async function embedPayloadWithSalt(pixelData, width, height, salt, armoredPayload, stegoKey) {
+      // Phase 1: Embed salt unkeyed (sequential, first ~22 pixels)
+      const saltPixels = Math.ceil((salt.length * 8) / STEGO_BITS_PER_PIXEL);
+      const saltBits = new Uint8Array(salt.length * 8);
+      for (let i = 0; i < salt.length; i++) {
+        for (let j = 0; j < 8; j++) saltBits[i*8+j] = (salt[i] >> (7-j)) & 1;
+      }
+      let bitIdx = 0;
+      for (let p = 0; p < saltPixels; p++) {
+        const pxOffset = p * 4;
+        const chunk = [0,0,0,0,0,0];
+        for (let j = 0; j < 6 && bitIdx < saltBits.length; j++) {
+          chunk[j] = saltBits[bitIdx++];
+        }
+        pixelData[pxOffset]     = (pixelData[pxOffset]     & 0xFC) | (chunk[0] << 1) | chunk[1];
+        pixelData[pxOffset + 1] = (pixelData[pxOffset + 1] & 0xFC) | (chunk[2] << 1) | chunk[3];
+        pixelData[pxOffset + 2] = (pixelData[pxOffset + 2] & 0xFC) | (chunk[4] << 1) | chunk[5];
+      }
+
+      // Compute variance map BEFORE embedding payload (so it's based on
+      // the original image, not modified by payload bits)
+      const { variance, meanVariance } = await computeVarianceMap(pixelData, width, height);
+
+      const pixelCount = width * height;
+      const perm = await computePixelPermutation(pixelCount, stegoKey);
+      const startPixel = Math.floor((salt.length * 8) / STEGO_BITS_PER_PIXEL);
+
+      const payloadBits = new Uint8Array(armoredPayload.length * 8);
+      for (let i = 0; i < armoredPayload.length; i++) {
+        for (let j = 0; j < 8; j++) payloadBits[i*8+j] = (armoredPayload[i] >> (7-j)) & 1;
+      }
+
+      let permIdx = startPixel;
+
+      // Phase 2: Embed outer RS header (RS_OUTER_HEADER_SIZE bytes) — NO filter
+      const noFilterBits = RS_OUTER_HEADER_SIZE * 8;
+      bitIdx = 0;
+      while (bitIdx < noFilterBits && bitIdx < payloadBits.length) {
+        if (permIdx >= perm.length) {
+          return { ok: false, req: armoredPayload.length, avail: Math.floor((pixelCount - startPixel) * STEGO_BITS_PER_PIXEL / 8) };
+        }
+        const pxOffset = perm[permIdx++] * 4;
+        const chunk = [0,0,0,0,0,0];
+        for (let j = 0; j < 6 && bitIdx < payloadBits.length; j++) {
+          chunk[j] = payloadBits[bitIdx++];
+        }
+        pixelData[pxOffset]     = (pixelData[pxOffset]     & 0xFC) | (chunk[0] << 1) | chunk[1];
+        pixelData[pxOffset + 1] = (pixelData[pxOffset + 1] & 0xFC) | (chunk[2] << 1) | chunk[3];
+        pixelData[pxOffset + 2] = (pixelData[pxOffset + 2] & 0xFC) | (chunk[4] << 1) | chunk[5];
+      }
+
+      // Phase 3: Embed rest — WITH variance filter (skip smooth pixels)
+      // CHUNKED: yield to event loop every CHUNK iterations to keep UI responsive
+      const EMBED_CHUNK = 50000;
+      let sinceYield = 0;
+      while (bitIdx < payloadBits.length) {
+        if (permIdx >= perm.length) {
+          // Not enough high-variance pixels — capacity exceeded
+          return { ok: false, req: armoredPayload.length, avail: Math.floor((pixelCount - startPixel) * STEGO_BITS_PER_PIXEL / 8 * 0.5) };
+        }
+        const pixelIdx = perm[permIdx++];
+        if (variance[pixelIdx] >= meanVariance) {
+          const pxOffset = pixelIdx * 4;
+          const chunk = [0,0,0,0,0,0];
+          for (let j = 0; j < 6 && bitIdx < payloadBits.length; j++) {
+            chunk[j] = payloadBits[bitIdx++];
+          }
+          pixelData[pxOffset]     = (pixelData[pxOffset]     & 0xFC) | (chunk[0] << 1) | chunk[1];
+          pixelData[pxOffset + 1] = (pixelData[pxOffset + 1] & 0xFC) | (chunk[2] << 1) | chunk[3];
+          pixelData[pxOffset + 2] = (pixelData[pxOffset + 2] & 0xFC) | (chunk[4] << 1) | chunk[5];
+        }
+        if (++sinceYield >= EMBED_CHUNK) {
+          sinceYield = 0;
+          await sleep(0);
+        }
+      }
+      return { ok: true };
+    }
+
+    // ============================================================================
+    // СКАЧИВАНИЕ — без изменений, кроме триггера self-test
+    // ============================================================================
+    function downloadImage() {
+      const canvas = document.getElementById('cryptoCanvas');
+      const format = document.getElementById('outputFormat').value;
+      let mime = 'image/png', ext = 'png';
+      if (format === 'webp') { mime = 'image/webp'; ext = 'webp'; }
+      if (format === 'avif') { mime = 'image/avif'; ext = 'avif'; }
+      let dataUrl = canvas.toDataURL(mime, 1.0);
+      if (format === 'avif' && !dataUrl.startsWith('data:image/avif')) {
+        alert(t('alert_avif_fallback')); ext = 'png';
+      } else if (format === 'webp' && !dataUrl.startsWith('data:image/webp')) {
+        alert(t('alert_webp_fallback')); ext = 'png';
+      }
+      const link = document.createElement('a');
+      link.download = `cryptoimg-v5-key.${ext}`;
+      link.href = dataUrl;
+      link.click();
+    }
+
+    function downloadExtractedFile() {
+      if (!lastExtractedFileBlob) return;
+      const url = URL.createObjectURL(lastExtractedFileBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = lastExtractedFileName || 'extracted.bin';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    // Clipboard auto-clear после 30 секунд
+    let clipboardClearTimer = null;
+    async function copyResultAndAutoClear() {
+      try {
+        const text = document.getElementById('resultText').textContent;
+        await navigator.clipboard.writeText(text);
+        const old = this.innerHTML; this.innerHTML = t('msg_copied');
+        setTimeout(() => this.innerHTML = old, 2000);
+        // Auto-clear clipboard after 30 seconds
+        if (clipboardClearTimer) clearTimeout(clipboardClearTimer);
+        clipboardClearTimer = setTimeout(async () => {
+          try {
+            // Only clear if clipboard still contains our text
+            const current = await navigator.clipboard.readText().catch(() => '');
+            if (current === text) {
+              await navigator.clipboard.writeText('');
+            }
+          } catch (e) { /* ignore */ }
+        }, 30000);
+      } catch(e) { alert(t('msg_copy_hint')); }
+    }
+
+    // ============================================================================
+    // UI BINDINGS
+    // ============================================================================
+    function bindUI() {
+      document.getElementById('langSwitcher').addEventListener('change', function(e) {
+        setLanguage(e.target.value);
+      });
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById(this.dataset.tab).classList.add('active');
+        });
+      });
+
+      document.querySelectorAll('.data-type-toggle button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.data-type-toggle button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentDataMode = this.dataset.mode;
+          document.getElementById('textModeBlock').style.display = currentDataMode === 'text' ? 'block' : 'none';
+          document.getElementById('fileModeBlock').style.display = currentDataMode === 'file' ? 'block' : 'none';
+        });
+      });
+
+      document.querySelectorAll('.pin-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const input = document.getElementById(this.dataset.target);
+          if (input.type === 'password') { input.type = 'text'; this.textContent = '🙈'; }
+          else { input.type = 'password'; this.textContent = '👁'; }
+        });
+      });
+
+      document.getElementById('userImageSource').addEventListener('change', function(e) {
+        if(this.files[0]) {
+          const meta = document.getElementById('imageSourceMeta');
+          meta.textContent = t('msg_file_selected', { name: this.files[0].name, size: formatBytes(this.files[0].size) });
+          meta.style.display = 'block';
+        }
+      });
+
+      document.getElementById('fileLoader').addEventListener('change', function(e) {
+        if(this.files[0]) {
+          const meta = document.getElementById('imageDecodeMeta');
+          meta.textContent = t('msg_key_loaded', { name: this.files[0].name });
+          meta.style.display = 'block';
+        }
+      });
+
+      document.getElementById('dataFileInput').addEventListener('change', function() {
+        if (!this.files.length) return;
+        const file = this.files[0];
+        if (file.size > 50 * 1024 * 1024) return alert(t('err_file_large'));
+        pendingFileName = file.name;
+        pendingFileMime = file.type || 'application/octet-stream';
+        const reader = new FileReader();
+        reader.onload = e => {
+          pendingFileBuffer = e.target.result;
+          document.getElementById('dataFileName').textContent = file.name;
+          document.getElementById('dataFileMeta').textContent = formatBytes(file.size) + ' · ' + (file.type || 'unknown');
+          document.getElementById('dataFileInfo').style.display = 'block';
+        };
+        reader.readAsArrayBuffer(file);
+      });
+
+      document.getElementById('dataFileClear').addEventListener('click', () => {
+        pendingFileBuffer = null; pendingFileName = null; pendingFileMime = null;
+        document.getElementById('dataFileInput').value = '';
+        document.getElementById('dataFileInfo').style.display = 'none';
+      });
+
+      document.getElementById('outputFormat').addEventListener('change', function() {
+        const hint = document.getElementById('formatHintMsg');
+        hint.innerHTML = t(`hint_${this.value}`);
+      });
+
+      document.getElementById('dataInput').addEventListener('input', checkBip39);
+
+      document.getElementById('btnPaste').addEventListener('click', async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          document.getElementById('dataInput').value = text;
+          checkBip39();
+        } catch(e) { alert(t('msg_paste_hint')); document.getElementById('dataInput').focus(); }
+      });
+
+      document.getElementById('btnCopyResult').addEventListener('click', copyResultAndAutoClear);
+      document.getElementById('btnEncode').addEventListener('click', processUserImage);
+      document.getElementById('btnDecode').addEventListener('click', decodeRSImage);
+      document.getElementById('btnDownload').addEventListener('click', downloadImage);
+      document.getElementById('btnDownloadExtracted').addEventListener('click', downloadExtractedFile);
+    }
+
+    // ============================================================================
+    // МОДУЛЬ ДОНАТОВ (без изменений относительно v4.0)
+    // ============================================================================
+    const DONATE_WALLETS = {
+      btc:  { address: 'bc1q8f6sxqsmrt5l57at3vqmuhg4saa3p822n7klca',       uri: 'bitcoin:bc1q8f6sxqsmrt5l57at3vqmuhg4saa3p822n7klca' },
+      eth:  { address: '0xD8F2cFE3B7D0864DC4db3Afda52C7a30978Df703',        uri: 'ethereum:0xD8F2cFE3B7D0864DC4db3Afda52C7a30978Df703' },
+      usdt: { address: 'TFRHPnSJMa4pm7WPxKYH5UuYZeHM9cLAuP',                uri: 'TFRHPnSJMa4pm7WPxKYH5UuYZeHM9cLAuP' }
+    };
+    const DONATE_QR_GENERATED = { btc: false, eth: false, usdt: false };
+
+    function initDonateModule() {
+      document.querySelectorAll('.donate-tab').forEach(function(tabBtn) {
+        tabBtn.addEventListener('click', function() {
+          const coin = tabBtn.getAttribute('data-coin');
+          document.querySelectorAll('.donate-tab').forEach(function(b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          tabBtn.classList.add('active');
+          tabBtn.setAttribute('aria-selected', 'true');
+          document.querySelectorAll('.donate-pane').forEach(function(pane) {
+            pane.classList.toggle('active', pane.getAttribute('data-coin-pane') === coin);
+          });
+          if (!DONATE_QR_GENERATED[coin]) {
+            renderDonateQR(coin);
+            DONATE_QR_GENERATED[coin] = true;
+          }
+        });
+      });
+
+      document.querySelectorAll('.donate-copy-btn').forEach(function(btn) {
+        btn.addEventListener('click', async function() {
+          const targetId = btn.getAttribute('data-copy-target');
+          const addrEl = document.getElementById(targetId);
+          if (!addrEl) return;
+          const address = addrEl.textContent.trim();
+          const textSpan = btn.querySelector('.copy-text');
+          const originalText = textSpan ? textSpan.textContent : '';
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(address);
+            } else {
+              const tmp = document.createElement('textarea');
+              tmp.value = address;
+              tmp.style.position = 'fixed';
+              tmp.style.opacity = '0';
+              document.body.appendChild(tmp);
+              tmp.select();
+              document.execCommand('copy');
+              document.body.removeChild(tmp);
+            }
+            if (textSpan) textSpan.textContent = t('donate_copied');
+            btn.classList.add('copied');
+            setTimeout(function() {
+              if (textSpan) textSpan.textContent = originalText;
+              btn.classList.remove('copied');
+            }, 1800);
+          } catch (err) {
+            const range = document.createRange();
+            range.selectNode(addrEl);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            alert(address);
+          }
+        });
+      });
+
+      renderDonateQR('btc');
+      DONATE_QR_GENERATED.btc = true;
+    }
+
+    function renderDonateQR(coin) {
+      const box = document.getElementById('qr-' + coin);
+      if (!box) return;
+      const data = DONATE_WALLETS[coin];
+      if (!data) return;
+      box.innerHTML = '';
+      try {
+        if (typeof QRCode === 'undefined') {
+          const fallback = document.createElement('div');
+          fallback.style.cssText = 'font-size:0.8rem;color:var(--text-gray);text-align:center;padding:10px;';
+          fallback.textContent = data.address;
+          box.appendChild(fallback);
+          return;
+        }
+        new QRCode(box, {
+          text: data.uri, width: 176, height: 176,
+          colorDark: '#1a2b1e', colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } catch (e) { console.error('QR render error:', e); }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDonateModule);
+    } else {
+      initDonateModule();
+    }
+
+    initWhenReady();
+  </script>
+</body>
+</html>

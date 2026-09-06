@@ -1,0 +1,32 @@
+# Cryptoimg — Hide Any Secret Inside Any Image
+
+## Overview
+Cryptoimg is an open-source, client-side steganography tool that hides files inside images using military-grade encryption. All processing happens locally in the browser — no data ever leaves your device.
+
+## Core Technology
+- **Encryption**: AES-256-GCM (authenticated encryption)
+- **Key Derivation**: Argon2id (memory-hard KDF resistant to GPU/ASIC attacks)
+- **Error Correction**: Reed-Solomon codes (survives JPEG recompression)
+- **Steganography**: LSB (Least Significant Bit) embedding in variance-filtered pixels
+- **Compression**: DEFLATE (zlib)
+
+## Features
+1. **Encode**: Hide any file (documents, archives, executables) inside an image
+2. **Decode**: Extract hidden data using PIN code
+3. **Album Mode**: Split large files across multiple images with automatic reassembly
+4. **Inspector**: View image metadata and detect steganographic content
+5. **Self-Test**: Automatic verification that encoded data can be extracted
+
+## Supported Formats
+- Input: JPEG, PNG, WebP, AVIF, BMP, TIFF (auto-converts to lossless)
+- Output: PNG, WebP, AVIF (lossless)
+- Maximum capacity: ~6.5 KB per 1920×1080 image, ~65 KB per 3840×2160 image
+
+## Platforms
+- **Web**: https://cryptoimg.wasmer.app
+- **Windows**: NSIS installer + portable executable
+- **Android**: APK (Android 7.0+)
+
+## Links
+- Repository: https://github.com/cryptoimg
+- Website: https://cryptoimg.wasmer.app

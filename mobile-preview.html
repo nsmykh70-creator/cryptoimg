@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cryptoimg Android Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0c1222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 24px;
+  }
+  .container { text-align: center; }
+  .phone {
+    width: 375px;
+    height: 812px;
+    border: 3px solid #334155;
+    border-radius: 40px;
+    overflow: hidden;
+    background: #020617;
+    box-shadow: 0 0 80px rgba(16,185,129,0.12), 0 25px 50px rgba(0,0,0,0.6);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: #1e293b;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+  .label {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 16px;
+    font-weight: 600;
+  }
+  .label span { color: #10b981; }
+
+  /* Header */
+  .app-header {
+    height: 48px;
+    background: rgba(2,6,23,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(30,41,59,0.8);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 30;
+    padding-top: 8px;
+  }
+  .header-left { display: flex; align-items: center; gap: 8px; }
+  .shield-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .shield-icon svg { width: 16px; height: 16px; color: #10b981; }
+  .app-title { font-weight: 700; font-size: 14px; color: #e2e8f0; letter-spacing: 0.5px; }
+  .version-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    background: rgba(16,185,129,0.1); color: #10b981;
+    border: 1px solid rgba(16,185,129,0.3);
+    font-family: monospace; font-weight: 600;
+  }
+  .lang-btns { display: flex; gap: 4px; }
+  .lang-btn {
+    padding: 4px 8px; font-size: 10px; font-weight: 700;
+    border-radius: 4px; border: none; cursor: pointer;
+  }
+  .lang-active { background: #059669; color: #fff; }
+  .lang-inactive { background: transparent; color: #64748b; }
+
+  /* Donate banner */
+  .donate-bar {
+    background: linear-gradient(90deg, rgba(234,179,8,0.08), rgba(234,179,8,0.03));
+    border-bottom: 1px solid rgba(234,179,8,0.15);
+    padding: 8px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; color: #fbbf24;
+  }
+  .countdown { display: flex; align-items: center; gap: 6px; }
+  .countdown-ring { width: 22px; height: 22px; position: relative; }
+  .countdown-ring svg { width: 22px; height: 22px; transform: rotate(-90deg); }
+  .countdown-ring circle { fill: none; stroke-width: 2; }
+  .ring-bg { stroke: rgba(251,191,36,0.2); }
+  .ring-fg { stroke: #fbbf24; stroke-dasharray: 56; stroke-dashoffset: 10; stroke-linecap: round; }
+  .countdown-num {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 8px; font-weight: 700; color: #fbbf24;
+  }
+
+  /* Main */
+  .main-content { flex: 1; overflow-y: auto; background: rgba(15,23,42,0.5); padding-bottom: 12px; }
+  .section { padding: 12px 16px; }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: #f1f5f9;
+    display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  }
+  .section-title svg { width: 14px; height: 14px; }
+  .section-desc { font-size: 11px; color: #94a3b8; margin-bottom: 12px; line-height: 1.4; }
+  .step-label { font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+  .dropzone {
+    border: 2px dashed #1e293b; border-radius: 12px; padding: 20px;
+    text-align: center; background: rgba(2,6,23,0.4); margin-bottom: 12px;
+  }
+  .dropzone-icon { color: #64748b; margin-bottom: 4px; }
+  .dropzone-text { font-size: 12px; color: #94a3b8; }
+  .dropzone-sub { font-size: 9px; color: #475569; margin-top: 2px; }
+  .tab-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tab-btn {
+    flex: 1; padding: 8px; text-align: center;
+    border-radius: 10px; font-size: 11px; font-weight: 600;
+    border: 1px solid transparent; cursor: pointer;
+  }
+  .tab-active { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #10b981; }
+  .tab-inactive { background: rgba(15,23,42,0.6); border-color: #1e293b; color: #94a3b8; }
+  .pin-wrapper { position: relative; }
+  .pin-input {
+    width: 100%; background: rgba(2,6,23,0.8);
+    border: 1px solid #1e293b; border-radius: 10px;
+    padding: 10px 32px 10px 12px;
+    font-size: 11px; color: #e2e8f0; font-family: monospace;
+  }
+  .pin-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+  .pin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .pin-hint {
+    font-size: 10px; color: #64748b;
+    display: flex; align-items: center; gap: 4px; margin-bottom: 12px;
+  }
+  .pin-hint svg { width: 12px; height: 12px; color: #10b981; }
+  .format-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .fmt-btn {
+    flex: 1; padding: 8px; text-align: center;
+    border-radius: 10px; font-size: 11px; font-weight: 600;
+    border: 1px solid transparent; cursor: pointer;
+  }
+  .fmt-active { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #10b981; }
+  .fmt-inactive { background: rgba(15,23,42,0.6); border-color: #1e293b; color: #94a3b8; }
+  .encode-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    border: none; border-radius: 12px;
+    color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+  }
+
+  /* Bottom nav — 5 items */
+  .bottom-nav {
+    height: 60px;
+    background: rgba(2,6,23,0.98);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(30,41,59,0.8);
+    display: flex; align-items: center; justify-content: space-around;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 8px; color: #64748b; cursor: pointer; padding: 4px 2px;
+    flex: 1;
+  }
+  .nav-item.active { color: #10b981; }
+  .nav-item svg { width: 18px; height: 18px; }
+  .nav-item.active svg { filter: drop-shadow(0 0 6px rgba(16,185,129,0.4)); }
+  .nav-label { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 56px; }
+
+  /* Pages */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .capacity-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 10px; color: #10b981; font-weight: 600; margin-bottom: 12px;
+  }
+
+  .extract-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    border: none; border-radius: 12px;
+    color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(16,185,129,0.3); margin-bottom: 12px;
+  }
+  .result-card {
+    background: rgba(2,6,23,0.7); border: 1px solid #1e293b;
+    border-radius: 12px; padding: 16px; text-align: center;
+  }
+  .result-title { font-size: 14px; font-weight: 700; color: #10b981; margin-bottom: 4px; }
+  .result-meta { font-size: 11px; color: #94a3b8; margin-bottom: 12px; }
+  .download-btn {
+    width: 100%; padding: 12px;
+    background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4);
+    border-radius: 10px; color: #10b981; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+
+  /* Donate page */
+  .donate-card {
+    background: rgba(2,6,23,0.7); border: 1px solid #1e293b;
+    border-radius: 12px; padding: 16px; margin-bottom: 12px;
+  }
+  .donate-card-title { font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+  .donate-card-addr {
+    background: rgba(15,23,42,0.8); border: 1px solid #1e293b;
+    border-radius: 8px; padding: 8px 10px; font-size: 10px; color: #10b981;
+    font-family: monospace; word-break: break-all; margin-bottom: 8px;
+  }
+  .donate-card-warn { font-size: 9px; color: #fbbf24; }
+  .copy-btn {
+    width: 100%; padding: 8px;
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 8px; color: #10b981; font-size: 11px; font-weight: 600; cursor: pointer;
+  }
+  .qr-placeholder {
+    width: 120px; height: 120px; margin: 0 auto 12px;
+    background: rgba(255,255,255,0.95); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="phone">
+    <!-- Header -->
+    <div class="app-header">
+      <div class="header-left">
+        <div class="shield-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <span class="app-title">CRYPTOIMG</span>
+        <span class="version-badge">v5.1</span>
+      </div>
+      <div class="lang-btns">
+        <button class="lang-btn lang-active">RU</button>
+        <button class="lang-btn lang-inactive">EN</button>
+        <button class="lang-btn lang-inactive">ES</button>
+      </div>
+    </div>
+
+    <!-- Donate banner -->
+    <div class="donate-bar">
+      <div class="countdown">
+        <div class="countdown-ring">
+          <svg viewBox="0 0 22 22"><circle class="ring-bg" cx="11" cy="11" r="9"/><circle class="ring-fg" cx="11" cy="11" r="9"/></svg>
+          <span class="countdown-num">7</span>
+        </div>
+        <span>♥ Donate Crypto</span>
+      </div>
+      <span style="color:#64748b; font-size:10px;">▾ свернуть</span>
+    </div>
+
+    <!-- Content -->
+    <div class="main-content">
+
+      <!-- ===== ENCODE ===== -->
+      <div class="page active" id="page-encode">
+        <div class="section">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Сокрытие данных в изображении
+          </div>
+          <div class="section-desc">AES-256-GCM + Argon2id + Reed-Solomon ECC</div>
+
+          <div class="step-label">1. Исходное изображение (Контейнер)</div>
+          <div class="dropzone">
+            <div class="dropzone-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+            <div class="dropzone-text">Нажмите для выбора изображения</div>
+            <div class="dropzone-sub">PNG, JPG, BMP, WebP, TIFF, AVIF</div>
+          </div>
+
+          <div class="step-label">2. Секретные данные</div>
+          <div class="tab-row">
+            <div class="tab-btn tab-active">📝 Текст / Seed</div>
+            <div class="tab-btn tab-inactive">📁 Файл (до 50 MB)</div>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <div style="background: rgba(2,6,23,0.8); border:1px solid #1e293b; border-radius:10px; padding:10px 12px; font-size:11px; color:#475569;">
+              Введите секретный текст или вставьте 12/24 слова...
+            </div>
+          </div>
+
+          <div class="step-label">3. ПИН-код шифрования</div>
+          <div class="pin-row">
+            <div class="pin-wrapper"><div class="pin-input">••••••••</div><span class="pin-eye">👁</span></div>
+            <div class="pin-wrapper"><div class="pin-input" style="color:#475569;">Подтверждение</div><span class="pin-eye">👁</span></div>
+          </div>
+          <div class="pin-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            ПИН → 256-битный ключ через Argon2id (GPU/ASIC attack)
+          </div>
+
+          <div class="step-label">4. Формат фото-ключа</div>
+          <div class="format-row">
+            <div class="fmt-btn fmt-active">PNG</div>
+            <div class="fmt-btn fmt-inactive">WEBP</div>
+            <div class="fmt-btn fmt-inactive">AVIF</div>
+          </div>
+
+          <button class="encode-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Зашифровать и создать фото-ключ
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== EXTRACT ===== -->
+      <div class="page" id="page-extract">
+        <div class="section">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            Извлечение скрытых данных
+          </div>
+          <div class="section-desc">Загрузите фото-ключ и введите ПИН-код</div>
+
+          <div class="step-label">1. Фото-ключ (Контейнер)</div>
+          <div class="dropzone">
+            <div class="dropzone-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+            <div class="dropzone-text">Нажмите или перетащите фото-ключ</div>
+          </div>
+
+          <div class="step-label">2. ПИН-код расшифровки</div>
+          <div class="pin-wrapper" style="margin-bottom:12px"><div class="pin-input">••••••••</div><span class="pin-eye">👁</span></div>
+
+          <button class="extract-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Извлечь данные
+          </button>
+
+          <div class="result-card">
+            <div style="margin-bottom:8px;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+            <div class="result-title">Данные извлечены!</div>
+            <div class="result-meta">📄 secret_seed.txt · 2.4 KB</div>
+            <div class="download-btn">⬇ Скачать файл</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ALBUM ENCODE ===== -->
+      <div class="page" id="page-album-enc">
+        <div class="section">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Режим фотоальбома
+          </div>
+          <div class="section-desc">Разбейте большой файл на несколько фото-ключей</div>
+          <div class="capacity-badge">📷 6 изображений · 3420 KB</div>
+
+          <div class="dropzone" style="border-color: #92400e;">
+            <div class="dropzone-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg></div>
+            <div class="dropzone-text" style="color:#fbbf24;">Выберите изображения (мин. 2)</div>
+            <div class="dropzone-sub">Множественный выбор</div>
+          </div>
+
+          <div class="step-label">Файл для сокрытия</div>
+          <div style="background:rgba(2,6,23,0.7); border:1px solid #1e293b; border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span style="font-size:16px;">📄</span>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:11px; color:#e2e8f0; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">important_document.pdf</div>
+              <div style="font-size:9px; color:#64748b; font-family:monospace;">2847.3 KB</div>
+            </div>
+          </div>
+          <div style="padding:6px 10px; border-radius:8px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); font-size:10px; color:#10b981; margin-bottom:12px;">
+            ✓ Файл (2847 KB) → 5 из 6 изображений
+          </div>
+
+          <div class="step-label">ПИН-код шифрования</div>
+          <div class="pin-row">
+            <div class="pin-wrapper"><div class="pin-input">••••••••</div><span class="pin-eye">👁</span></div>
+            <div class="pin-wrapper"><div class="pin-input" style="color:#475569;">Подтверждение</div><span class="pin-eye">👁</span></div>
+          </div>
+
+          <button class="encode-btn" style="background:linear-gradient(135deg, #d97706, #f59e0b);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Зашифровать и разбить на 5 фото
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== ALBUM DECODE ===== -->
+      <div class="page" id="page-album-dec">
+        <div class="section">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+            Извлечение из альбома
+          </div>
+          <div class="section-desc">Выберите все фото-ключи сразу</div>
+
+          <div class="pin-wrapper" style="margin-bottom:12px"><div class="pin-input">••••••••</div><span class="pin-eye">👁</span></div>
+
+          <button class="extract-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Выбрать изображения альбома
+          </button>
+
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; margin-bottom:6px;">
+            <span>Чанки: 4 / 5</span>
+            <span>document.pdf (2847 KB)</span>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;">
+            <div style="width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981;">✓</div>
+            <div style="width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981;">✓</div>
+            <div style="width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981;">✓</div>
+            <div style="width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; background:rgba(2,6,23,0.8); border:1px solid #1e293b; color:#475569;">4</div>
+            <div style="width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10b981;">✓</div>
+          </div>
+
+          <div style="text-align:center; padding:16px;">
+            <div style="font-size:32px; font-weight:700; color:#f59e0b;">4/5</div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">1 чанк ещё нужен</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DONATE ===== -->
+      <div class="page" id="page-donate">
+        <div class="section">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            Поддержать проект
+          </div>
+          <div class="section-desc">Открытое ПО, нулевая телеметрия, 100% приватность</div>
+
+          <!-- BTC -->
+          <div class="donate-card">
+            <div class="donate-card-title">₿ Bitcoin (BTC)</div>
+            <div class="qr-placeholder">QR</div>
+            <div class="donate-card-addr">bc1q...x9kz</div>
+            <div class="donate-card-warn">⚠ Только сеть Bitcoin SegWit</div>
+            <button class="copy-btn">📋 Копировать адрес</button>
+          </div>
+
+          <!-- ETH -->
+          <div class="donate-card">
+            <div class="donate-card-title">Ξ Ethereum (ETH / ERC-20)</div>
+            <div class="qr-placeholder">QR</div>
+            <div class="donate-card-addr">0x742d...35Ff</div>
+            <div class="donate-card-warn">⚠ ETH и любые токены ERC-20</div>
+            <button class="copy-btn">📋 Копировать адрес</button>
+          </div>
+
+          <!-- USDT -->
+          <div class="donate-card">
+            <div class="donate-card-title">₮ Tether (USDT — TRC-20)</div>
+            <div class="qr-placeholder">QR</div>
+            <div class="donate-card-addr">TN3Wj...pQvR</div>
+            <div class="donate-card-warn">⚠ Только сеть Tron (TRC-20)</div>
+            <button class="copy-btn">📋 Копировать адрес</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation — 5 tabs -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchTab('encode')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <span class="nav-label">Зашифр.</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('extract')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+        <span class="nav-label">Извлечь</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('album-enc')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <span class="nav-label">Альбом</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('album-dec')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+        <span class="nav-label">Распаков.</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('donate')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        <span class="nav-label">Донаты</span>
+      </div>
+    </div>
+  </div>
+  <p class="label">📱 Android — <span>375 × 812 (Capacitor WebView)</span></p>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>

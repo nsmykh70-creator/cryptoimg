@@ -1,0 +1,57 @@
+{
+  "appId": "com.cryptoimg.desktop",
+  "productName": "Cryptoimg Desktop",
+  "copyright": "Copyright © 2026 Cryptoimg Team",
+  "directories": {
+    "output": "release",
+    "buildResources": "build"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "package.json",
+    "!android/**",
+    "!web/**",
+    "!web-version/**",
+    "!node_modules/@capacitor/android/**"
+  ],
+  "extraMetadata": {
+    "main": "electron/main.cjs"
+  },
+  "win": {
+    "icon": "build/icon.ico",
+    "target": [
+      {
+        "target": "dir",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      },
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "zip",
+        "arch": ["x64"]
+      }
+    ],
+    "artifactName": "Cryptoimg-${version}-${arch}.${ext}",
+    "requestedExecutionLevel": "asInvoker"
+  },
+  "portable": {
+    "artifactName": "Cryptoimg-Portable-v${version}.exe",
+    "requestExecutionLevel": "user",
+    "unpackDirName": "cryptoimg-temp"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Cryptoimg Desktop",
+    "uninstallDisplayName": "Cryptoimg Desktop v5.1"
+  }
+}

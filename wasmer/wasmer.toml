@@ -1,0 +1,12 @@
+[package]
+name = "cryptoimg"
+version = "5.2.0"
+description = "Hide Any Secret Inside Any Image"
+license = "MIT"
+
+[fs]
+public_dir = "web"
+
+[deploy]
+command = "node server.js"
+workdir = "web"
